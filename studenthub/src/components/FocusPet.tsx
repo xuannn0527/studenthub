@@ -16,7 +16,7 @@ const DEFAULT_PET_STATE: PetState = {
   happiness: 100,
 };
 
-// 🌟 造型清單定義（與 PetWorkshop 同步）
+// 🌟 造型清單定義（與工坊同步）
 const OUTFITS = [
   { id: "default", name: "預設造型", icon: "🐣", unlockLevel: 1 },
   { id: "scholar", name: "學霸方帽", icon: "🎓", unlockLevel: 3 },
@@ -25,18 +25,8 @@ const OUTFITS = [
   { id: "dragon", name: "時空守護龍神", icon: "🐉", unlockLevel: 10 },
 ];
 
-const getPetProfile = (level: number, currentOutfitId: string) => {
-  const outfit = OUTFITS.find(o => o.id === currentOutfitId);
-  if (outfit && level >= outfit.unlockLevel) {
-    let title = "初生好奇雛鳥";
-    let color = "#eab308";
-    if (level >= 10) { title = "時空守護龍神"; color = "#8b5cf6"; }
-    else if (level >= 7) { title = "專注幻獸鹿"; color = "#06b6d4"; }
-    else if (level >= 5) { title = "靈性學業狐"; color = "#f97316"; }
-    else if (level >= 3) { title = "資深學霸精靈"; color = "#3b82f6"; }
-    return { icon: outfit.icon, title, color };
-  }
-
+// 🌟 讓本體專心依照等級顯示動物，不被造型完全覆蓋
+const getPetProfile = (level: number) => {
   if (level < 4) return { icon: "🐣", title: "初生好奇雛鳥", color: "#eab308" };
   if (level < 7) return { icon: "🦊", title: "靈性學業狐", color: "#f97316" };
   if (level < 10) return { icon: "🦌", title: "專注幻獸鹿", color: "#06b6d4" };
@@ -295,10 +285,12 @@ export default function FocusPet() {
     window.dispatchEvent(new CustomEvent("pet_visibility_changed", { detail: { visible } }));
   };
 
-  const profile = getPetProfile(pet.level, currentOutfit);
+  const profile = getPetProfile(pet.level);
+  const equippedOutfit = OUTFITS.find(o => o.id === currentOutfit);
   const expPercentage = Math.min(100, Math.round((pet.exp / pet.maxExp) * 100));
   const currentDisplayName = customName || (customAvatar ? "自訂專屬守護獸" : profile.title);
 
+  // 🌟 雙層疊加渲染：底層是動物本體，頂層是帽子或配件
   const renderAvatarContent = (size = "44px") => {
     if (customAvatar) {
       return (
@@ -315,7 +307,30 @@ export default function FocusPet() {
         />
       );
     }
-    return <span style={{ fontSize: size, filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.15))" }}>{profile.icon}</span>;
+
+    return (
+      <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: "60px", height: "60px" }}>
+        {/* 底層：動物本體 (例如 🐣, 🦊, 🦌, 🐉) */}
+        <span style={{ fontSize: size, filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.15))" }}>
+          {profile.icon}
+        </span>
+
+        {/* 頂層：戴在頭上的帽子或裝飾 */}
+        {currentOutfit !== "default" && equippedOutfit && (
+          <span style={{
+            position: "absolute",
+            top: "-6px",
+            right: "4px",
+            fontSize: "22px",
+            transform: "rotate(-12deg)",
+            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.25))",
+            animation: "floatBubble 2s infinite ease-in-out"
+          }}>
+            {equippedOutfit.icon}
+          </span>
+        )}
+      </div>
+    );
   };
 
   if (!isVisible) {
