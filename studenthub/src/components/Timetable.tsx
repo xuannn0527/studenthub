@@ -31,6 +31,9 @@ export default function Timetable() {
   const [isMobileView, setIsMobileView] = useState(false);
   const [isManageMode, setIsManageMode] = useState(false);
 
+  // 🌟 新增：控制右側面板收合的狀態（預設為展開 true）
+  const [isSettingsOpen, setIsSettingsOpen] = useState(true);
+
   // 背景桌布與調色
   const [bgImage, setBgImage] = useState<string | null>(() => localStorage.getItem("hub_bg_image") || null);
   const [bgPosX, setBgPosX] = useState<number>(() => {
@@ -73,7 +76,7 @@ export default function Timetable() {
     updateScale();
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
-  }, [isMobileView]);
+  }, [isMobileView, isSettingsOpen]); // 當收合狀態改變時，也重新計算縮放
 
   // 合併連續課堂
   const mergedCourses = useMemo(() => {
@@ -244,14 +247,15 @@ export default function Timetable() {
   return (
     <div style={{ 
       display: "flex", 
-      gap: "32px", 
+      gap: "24px", 
       alignItems: "center", 
       justifyContent: "center",
       height: "100%", 
       width: "100%", 
       boxSizing: "border-box", 
       overflow: "hidden", 
-      position: "relative" 
+      position: "relative",
+      paddingRight: "16px"
     }}>
       
       {/* 獨立彈窗 */}
@@ -264,7 +268,7 @@ export default function Timetable() {
       {/* 左側：課表預覽畫布元件 */}
       <div 
         ref={previewContainerRef}
-        style={{ display: "flex", justifyContent: "center", alignItems: "center", flex: 1, height: "100%", overflow: "hidden" }}
+        style={{ display: "flex", justifyContent: "center", alignItems: "center", flex: 1, height: "100%", overflow: "hidden", transition: "all 0.3s ease" }}
       >
         <TimetableCanvas
           ref={exportRef}
@@ -284,40 +288,81 @@ export default function Timetable() {
         />
       </div>
 
-      {/* 🌟 右側：精緻緊湊自然卡片（不再強制拉長或變大） */}
-      <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
-        <TimetableControls
-          isMobileView={isMobileView}
-          setIsMobileView={setIsMobileView}
-          onOpenImportModal={() => setIsImportModalOpen(true)}
-          name={name}
-          setName={setName}
-          classroom={classroom}
-          setClassroom={setClassroom}
-          day={day}
-          setDay={setDay}
-          period={period}
-          setPeriod={setPeriod}
-          editTargetIds={editTargetIds}
-          onCancelEdit={() => { setEditTargetIds(null); setName(""); setClassroom(""); }}
-          onSaveCourse={handleSaveCourse}
-          isManageMode={isManageMode}
-          setIsManageMode={setIsManageMode}
-          onClearAll={handleClearAll}
-          cardColor={cardColor}
-          textColor={textColor}
-          cardOpacity={cardOpacity}
-          onUpdateSettings={updateSettings}
-          bgImage={bgImage}
-          bgPosX={bgPosX}
-          bgPosY={bgPosY}
-          bgZoom={bgZoom}
-          onUpdateBgPos={updateBgPos}
-          onResetBgPos={() => updateBgPos(50, 50, 100)}
-          onImageUpload={handleImageUpload}
-          onRemoveImage={handleRemoveImage}
-          onExportImage={handleExportImage}
-        />
+      {/* 🌟 右側設定面板外層容器（含收合切換按鈕） */}
+      <div style={{ display: "flex", alignItems: "center", height: "100%", flexShrink: 0, position: "relative" }}>
+        
+        {/* 收合 / 展開切換按鈕 */}
+        <button
+          onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+          style={{
+            position: "absolute",
+            left: isSettingsOpen ? "-40px" : "-44px",
+            top: "24px",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e2e8f0",
+            borderRadius: "8px 0 0 8px",
+            width: "40px",
+            height: "40px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "-2px 2px 8px rgba(0,0,0,0.04)",
+            fontSize: "16px",
+            zIndex: 20,
+            transition: "all 0.2s"
+          }}
+          title={isSettingsOpen ? "收合設定面板" : "展開設定面板"}
+        >
+          {isSettingsOpen ? "▶" : "◀ ⚙️"}
+        </button>
+
+        {/* 右側：精緻緊湊設定面板 (透過 width 與 opacity 做平滑收合) */}
+        <div style={{
+          width: isSettingsOpen ? "auto" : "0px",
+          opacity: isSettingsOpen ? 1 : 0,
+          overflow: "hidden",
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          height: "100%",
+          display: "flex",
+          alignItems: "center"
+        }}>
+          <div style={{ width: "380px", boxSizing: "border-box" }}>
+            <TimetableControls
+              isMobileView={isMobileView}
+              setIsMobileView={setIsMobileView}
+              onOpenImportModal={() => setIsImportModalOpen(true)}
+              name={name}
+              setName={setName}
+              classroom={classroom}
+              setClassroom={setClassroom}
+              day={day}
+              setDay={setDay}
+              period={period}
+              setPeriod={setPeriod}
+              editTargetIds={editTargetIds}
+              onCancelEdit={() => { setEditTargetIds(null); setName(""); setClassroom(""); }}
+              onSaveCourse={handleSaveCourse}
+              isManageMode={isManageMode}
+              setIsManageMode={setIsManageMode}
+              onClearAll={handleClearAll}
+              cardColor={cardColor}
+              textColor={textColor}
+              cardOpacity={cardOpacity}
+              onUpdateSettings={updateSettings}
+              bgImage={bgImage}
+              bgPosX={bgPosX}
+              bgPosY={bgPosY}
+              bgZoom={bgZoom}
+              onUpdateBgPos={updateBgPos}
+              onResetBgPos={() => updateBgPos(50, 50, 100)}
+              onImageUpload={handleImageUpload}
+              onRemoveImage={handleRemoveImage}
+              onExportImage={handleExportImage}
+            />
+          </div>
+        </div>
+
       </div>
 
     </div>
