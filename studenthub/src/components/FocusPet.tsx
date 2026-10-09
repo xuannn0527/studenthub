@@ -16,7 +16,27 @@ const DEFAULT_PET_STATE: PetState = {
   happiness: 100,
 };
 
-const getPetProfile = (level: number) => {
+// 🌟 造型清單定義（與 PetWorkshop 同步）
+const OUTFITS = [
+  { id: "default", name: "預設造型", icon: "🐣", unlockLevel: 1 },
+  { id: "scholar", name: "學霸方帽", icon: "🎓", unlockLevel: 3 },
+  { id: "fox", name: "靈性學業狐", icon: "🦊", unlockLevel: 5 },
+  { id: "crown", name: "榮耀皇冠", icon: "👑", unlockLevel: 7 },
+  { id: "dragon", name: "時空守護龍神", icon: "🐉", unlockLevel: 10 },
+];
+
+const getPetProfile = (level: number, currentOutfitId: string) => {
+  const outfit = OUTFITS.find(o => o.id === currentOutfitId);
+  if (outfit && level >= outfit.unlockLevel) {
+    let title = "初生好奇雛鳥";
+    let color = "#eab308";
+    if (level >= 10) { title = "時空守護龍神"; color = "#8b5cf6"; }
+    else if (level >= 7) { title = "專注幻獸鹿"; color = "#06b6d4"; }
+    else if (level >= 5) { title = "靈性學業狐"; color = "#f97316"; }
+    else if (level >= 3) { title = "資深學霸精靈"; color = "#3b82f6"; }
+    return { icon: outfit.icon, title, color };
+  }
+
   if (level < 4) return { icon: "🐣", title: "初生好奇雛鳥", color: "#eab308" };
   if (level < 7) return { icon: "🦊", title: "靈性學業狐", color: "#f97316" };
   if (level < 10) return { icon: "🦌", title: "專注幻獸鹿", color: "#06b6d4" };
@@ -49,9 +69,13 @@ export default function FocusPet() {
     return localStorage.getItem("hub_custom_pet_avatar") || null;
   });
 
-  // 🌟 自訂名稱狀態追蹤
   const [customName, setCustomName] = useState<string>(() => {
     return localStorage.getItem("hub_custom_pet_name") || "";
+  });
+
+  // 🌟 追蹤目前裝備的造型
+  const [currentOutfit, setCurrentOutfit] = useState<string>(() => {
+    return localStorage.getItem("hub_pet_outfit") || "default";
   });
 
   const [dialogue, setDialogue] = useState<string>("我出發散步囉！🐾");
@@ -87,18 +111,22 @@ export default function FocusPet() {
     return () => window.removeEventListener("toggle_pet_visibility", handleToggleVisibility);
   }, [isVisible]);
 
-  // 🌟 監聽外觀與名稱的雙向同步
+  // 🌟 監聽外觀、名稱與造型的雙向同步
   useEffect(() => {
-    const handleSyncAvatarAndName = () => {
+    const handleSyncAvatarNameAndOutfit = () => {
       setCustomAvatar(localStorage.getItem("hub_custom_pet_avatar") || null);
       setCustomName(localStorage.getItem("hub_custom_pet_name") || "");
+      setCurrentOutfit(localStorage.getItem("hub_pet_outfit") || "default");
     };
 
-    window.addEventListener("custom_pet_avatar_updated", handleSyncAvatarAndName);
-    window.addEventListener("custom_pet_name_updated", handleSyncAvatarAndName);
+    window.addEventListener("custom_pet_avatar_updated", handleSyncAvatarNameAndOutfit);
+    window.addEventListener("custom_pet_name_updated", handleSyncAvatarNameAndOutfit);
+    window.addEventListener("pet_outfit_updated", handleSyncAvatarNameAndOutfit);
+    
     return () => {
-      window.removeEventListener("custom_pet_avatar_updated", handleSyncAvatarAndName);
-      window.removeEventListener("custom_pet_name_updated", handleSyncAvatarAndName);
+      window.removeEventListener("custom_pet_avatar_updated", handleSyncAvatarNameAndOutfit);
+      window.removeEventListener("custom_pet_name_updated", handleSyncAvatarNameAndOutfit);
+      window.removeEventListener("pet_outfit_updated", handleSyncAvatarNameAndOutfit);
     };
   }, []);
 
@@ -267,10 +295,8 @@ export default function FocusPet() {
     window.dispatchEvent(new CustomEvent("pet_visibility_changed", { detail: { visible } }));
   };
 
-  const profile = getPetProfile(pet.level);
+  const profile = getPetProfile(pet.level, currentOutfit);
   const expPercentage = Math.min(100, Math.round((pet.exp / pet.maxExp) * 100));
-
-  // 🌟 名稱顯示判定：若有自訂名稱優先使用，其次若是自訂頭像則為「自訂專屬守護獸」，最後為等級稱號
   const currentDisplayName = customName || (customAvatar ? "自訂專屬守護獸" : profile.title);
 
   const renderAvatarContent = (size = "44px") => {
@@ -429,7 +455,7 @@ export default function FocusPet() {
         <span style={{ color: "#fbbf24" }}>🪙{pet.coins}</span>
       </div>
 
-      {/* 雙擊展開詳細養成卡片 (🌟 已同步顯示自訂名稱) */}
+      {/* 雙擊展開詳細養成卡片 */}
       {isExpanded && (
         <div
           onClick={(e) => e.stopPropagation()}

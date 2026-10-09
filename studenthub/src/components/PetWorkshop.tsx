@@ -42,7 +42,29 @@ const FOODS = [
   { id: "f4", name: "時空星光能量果", icon: "🌟", cost: 100, exp: 320, desc: "蘊含星辰之力，急速提升等級" },
 ];
 
-const getPetProfile = (level: number) => {
+// 🌟 新增：造型衣櫃清單
+const OUTFITS = [
+  { id: "default", name: "預設造型", icon: "🐣", unlockLevel: 1, desc: "初生萌芽的可愛雛鳥造型" },
+  { id: "scholar", name: "學霸方帽", icon: "🎓", unlockLevel: 3, desc: "象徵認真學習與智慧的學者帽" },
+  { id: "fox", name: "靈性學業狐", icon: "🦊", unlockLevel: 5, desc: "敏捷聰明的小狐狸造型" },
+  { id: "crown", name: "榮耀皇冠", icon: "👑", unlockLevel: 7, desc: "專注力滿點的王者榮耀象徵" },
+  { id: "dragon", name: "時空守護龍神", icon: "🐉", unlockLevel: 10, desc: "終極進化，擁有強大時空之力的神龍" },
+];
+
+const getPetProfile = (level: number, currentOutfitId: string) => {
+  // 如果玩家有裝備特定造型，優先使用該造型的外觀
+  const outfit = OUTFITS.find(o => o.id === currentOutfitId);
+  if (outfit && level >= outfit.unlockLevel) {
+    let title = "初生好奇雛鳥";
+    let color = "#eab308";
+    if (level >= 10) { title = "時空守護龍神"; color = "#8b5cf6"; }
+    else if (level >= 7) { title = "專注幻獸鹿"; color = "#06b6d4"; }
+    else if (level >= 5) { title = "靈性學業狐"; color = "#f97316"; }
+    else if (level >= 3) { title = "資深學霸精靈"; color = "#3b82f6"; }
+    return { icon: outfit.icon, title, color };
+  }
+
+  // 預設根據等級切換
   if (level < 4) return { icon: "🐣", title: "初生好奇雛鳥", color: "#eab308" };
   if (level < 7) return { icon: "🦊", title: "靈性學業狐", color: "#f97316" };
   if (level < 10) return { icon: "🦌", title: "專注幻獸鹿", color: "#06b6d4" };
@@ -75,7 +97,11 @@ export default function PetWorkshop() {
     return localStorage.getItem("hub_custom_pet_avatar") || null;
   });
 
-  // 🌟 自訂名稱與編輯狀態
+  // 🌟 造型穿戴狀態
+  const [currentOutfit, setCurrentOutfit] = useState<string>(() => {
+    return localStorage.getItem("hub_pet_outfit") || "default";
+  });
+
   const [customName, setCustomName] = useState<string>(() => {
     return localStorage.getItem("hub_custom_pet_name") || "";
   });
@@ -107,7 +133,16 @@ export default function PetWorkshop() {
     window.dispatchEvent(new CustomEvent("focus_pet_reward", { detail: {} }));
   };
 
-  // 🌟 儲存自訂名稱並廣播全域同步
+  // 🌟 換裝處理函數
+  const handleEquipOutfit = (outfitId: string) => {
+    setCurrentOutfit(outfitId);
+    localStorage.setItem("hub_pet_outfit", outfitId);
+    window.dispatchEvent(new CustomEvent("pet_outfit_updated"));
+    const outfitObj = OUTFITS.find(o => o.id === outfitId);
+    setMessage(`✨ 成功換上新造型：【${outfitObj?.name}】！`);
+    setTimeout(() => setMessage(""), 3000);
+  };
+
   const handleSaveName = () => {
     const trimmed = nameInput.trim();
     if (trimmed) {
@@ -130,7 +165,6 @@ export default function PetWorkshop() {
     setIsEditingName(true);
   };
 
-  // 去背上傳處理
   const handleImageUploadAndRemoveBg = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -177,10 +211,7 @@ export default function PetWorkshop() {
           const g = data[i + 1];
           const b = data[i + 2];
 
-          // 保留黑色與深色細節
-          if (r < 65 && g < 65 && b < 65) {
-            continue; 
-          }
+          if (r < 65 && g < 65 && b < 65) continue; 
 
           const dist = Math.sqrt(
             Math.pow(r - bgR, 2) +
@@ -214,22 +245,21 @@ export default function PetWorkshop() {
   const handleResetAvatar = () => {
     localStorage.removeItem("hub_custom_pet_avatar");
     localStorage.removeItem("hub_custom_pet_name");
+    localStorage.removeItem("hub_pet_outfit");
     setCustomAvatar(null);
     setCustomName("");
+    setCurrentOutfit("default");
     if (fileInputRef.current) fileInputRef.current.value = "";
     window.dispatchEvent(new CustomEvent("custom_pet_avatar_updated"));
     window.dispatchEvent(new CustomEvent("custom_pet_name_updated"));
+    window.dispatchEvent(new CustomEvent("pet_outfit_updated"));
     setMessage("🔄 已恢復為預設精靈外觀與稱號！");
     setTimeout(() => setMessage(""), 3000);
   };
 
   const handleToggleDemo = () => {
     if (!isDemoMode) {
-      const demoPet: PetState = {
-        ...pet,
-        coins: 9999,
-        happiness: 100
-      };
+      const demoPet: PetState = { ...pet, coins: 9999, happiness: 100 };
       updatePet(demoPet);
       setIsDemoMode(true);
       localStorage.setItem("hub_is_demo", "true");
@@ -309,10 +339,8 @@ export default function PetWorkshop() {
     setTimeout(() => setMessage(""), 2000);
   };
 
-  const profile = getPetProfile(pet.level);
+  const profile = getPetProfile(pet.level, currentOutfit);
   const expPercentage = Math.min(100, Math.round((pet.exp / pet.maxExp) * 100));
-  
-  // 顯示名稱
   const currentDisplayName = customName || (customAvatar ? "自訂專屬守護獸" : profile.title);
 
   return (
@@ -331,7 +359,6 @@ export default function PetWorkshop() {
           </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              {/* 🌟 支援即時編輯名稱 */}
               {isEditingName ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <input
@@ -352,16 +379,7 @@ export default function PetWorkshop() {
                   <button
                     onClick={handleStartEditName}
                     title="點擊修改名稱"
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#64748b",
-                      cursor: "pointer",
-                      padding: "2px 4px",
-                      borderRadius: "4px",
-                      display: "flex",
-                      alignItems: "center"
-                    }}
+                    style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", padding: "2px 4px", borderRadius: "4px", display: "flex", alignItems: "center" }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -422,8 +440,7 @@ export default function PetWorkshop() {
               fontSize: "12px",
               fontWeight: "bold",
               cursor: "pointer",
-              boxShadow: isDemoMode ? "0 4px 12px rgba(239,68,68,0.3)" : "0 4px 12px rgba(139,92,246,0.3)",
-              transition: "transform 0.15s, background-color 0.2s"
+              boxShadow: isDemoMode ? "0 4px 12px rgba(239,68,68,0.3)" : "0 4px 12px rgba(139,92,246,0.3)"
             }}
           >
             {isDemoMode ? "✕ 結束 DEMO" : "⚡ DEMO: 無限金幣"}
@@ -432,14 +449,70 @@ export default function PetWorkshop() {
 
       </div>
 
+      {/* 🌟 守護獸造型衣櫃專區 */}
+      <div style={{ backgroundColor: "#ffffff", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: "16px", color: "#1e293b", display: "flex", alignItems: "center", gap: "8px" }}>
+            👗 守護獸衣櫃與造型解鎖
+          </h3>
+          <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
+            隨著守護獸等級提升，將自動解鎖對應的專屬服飾與頭銜！
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "12px" }}>
+          {OUTFITS.map((outfit) => {
+            const isUnlocked = pet.level >= outfit.unlockLevel;
+            const isEquipped = currentOutfit === outfit.id;
+
+            return (
+              <div 
+                key={outfit.id} 
+                style={{ 
+                  padding: "16px", 
+                  borderRadius: "12px", 
+                  border: isEquipped ? "2px solid #2563eb" : "1px solid #e2e8f0", 
+                  backgroundColor: isEquipped ? "#eff6ff" : (isUnlocked ? "#fafafa" : "#f1f5f9"), 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center", 
+                  textAlign: "center", 
+                  gap: "8px",
+                  opacity: isUnlocked ? 1 : 0.6
+                }}
+              >
+                <span style={{ fontSize: "36px" }}>{outfit.icon}</span>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#1e293b" }}>{outfit.name}</div>
+                <div style={{ fontSize: "11px", color: "#64748b" }}>{outfit.desc}</div>
+
+                {isEquipped ? (
+                  <span style={{ marginTop: "auto", fontSize: "11px", color: "#2563eb", fontWeight: "bold", padding: "4px 10px", backgroundColor: "#dbeafe", borderRadius: "6px" }}>使用中 ✔</span>
+                ) : isUnlocked ? (
+                  <button 
+                    onClick={() => handleEquipOutfit(outfit.id)}
+                    style={{ marginTop: "auto", width: "100%", padding: "6px", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", fontSize: "11px", fontWeight: "bold", cursor: "pointer" }}
+                  >
+                    穿戴造型
+                  </button>
+                ) : (
+                  <span style={{ marginTop: "auto", fontSize: "11px", color: "#94a3b8", backgroundColor: "#e2e8f0", padding: "4px 8px", borderRadius: "6px", fontWeight: "600" }}>
+                    Lv.{outfit.unlockLevel} 解鎖
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* 自訂寵物與去背功能區 */}
       <div style={{ backgroundColor: "#ffffff", padding: "18px 24px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
         <div>
           <h4 style={{ margin: 0, fontSize: "14px", color: "#1e293b", display: "flex", alignItems: "center", gap: "6px" }}>
-            🎨 自訂守護獸造型 (保留黑色線條與黑髮)
+            🎨 自訂專屬照片去背
           </h4>
           <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
-            自動清除底色背景，同時完整保護角色的黑髮、深色衣服與黑色線稿！
+            上傳自定義角色照片，自動清除底色背景！
           </p>
         </div>
 
@@ -454,38 +527,17 @@ export default function PetWorkshop() {
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#f5f3ff",
-              color: "#7c3aed",
-              border: "1px solid #ddd6fe",
-              borderRadius: "8px",
-              fontSize: "12px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px"
-            }}
+            style={{ padding: "8px 16px", backgroundColor: "#f5f3ff", color: "#7c3aed", border: "1px solid #ddd6fe", borderRadius: "8px", fontSize: "12px", fontWeight: "bold", cursor: "pointer" }}
           >
             🖼️ 上傳照片自動去背
           </button>
 
-          {(customAvatar || customName) && (
+          {(customAvatar || customName || currentOutfit !== "default") && (
             <button
               onClick={handleResetAvatar}
-              style={{
-                padding: "8px 14px",
-                backgroundColor: "#fee2e2",
-                color: "#ef4444",
-                border: "none",
-                borderRadius: "8px",
-                fontSize: "12px",
-                fontWeight: "bold",
-                cursor: "pointer"
-              }}
+              style={{ padding: "8px 14px", backgroundColor: "#fee2e2", color: "#ef4444", border: "none", borderRadius: "8px", fontSize: "12px", fontWeight: "bold", cursor: "pointer" }}
             >
-              🔄 恢復預設精靈與稱號
+              🔄 恢復預設
             </button>
           )}
         </div>
@@ -523,7 +575,7 @@ export default function PetWorkshop() {
                 {q.claimed ? (
                   <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "bold", padding: "6px 12px" }}>已領取 ✔</span>
                 ) : q.completed ? (
-                  <button onClick={() => handleClaimQuest(q.id)} style={{ padding: "8px 16px", backgroundColor: "#22c55e", color: "#fff", border: "none", borderRadius: "8px", fontWeight: "bold", fontSize: "12px", cursor: "pointer", boxShadow: "0 2px 6px rgba(34,197,94,0.3)" }}>
+                  <button onClick={() => handleClaimQuest(q.id)} style={{ padding: "8px 16px", backgroundColor: "#22c55e", color: "#fff", border: "none", borderRadius: "8px", fontWeight: "bold", fontSize: "12px", cursor: "pointer" }}>
                     領取獎勵
                   </button>
                 ) : (
@@ -552,9 +604,7 @@ export default function PetWorkshop() {
                 
                 <button 
                   onClick={() => handleBuyFood(food)} 
-                  style={{ marginTop: "6px", width: "100%", padding: "6px", backgroundColor: isDemoMode ? "#f5f3ff" : "#ffffff", color: isDemoMode ? "#7c3aed" : "#ea580c", border: isDemoMode ? "1px solid #ddd6fe" : "1px solid #fed7aa", borderRadius: "6px", fontSize: "11px", fontWeight: "bold", cursor: "pointer", transition: "all 0.2s" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = isDemoMode ? "#ede9fe" : "#fff7ed")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = isDemoMode ? "#f5f3ff" : "#ffffff")}
+                  style={{ marginTop: "6px", width: "100%", padding: "6px", backgroundColor: isDemoMode ? "#f5f3ff" : "#ffffff", color: isDemoMode ? "#7c3aed" : "#ea580c", border: isDemoMode ? "1px solid #ddd6fe" : "1px solid #fed7aa", borderRadius: "6px", fontSize: "11px", fontWeight: "bold", cursor: "pointer" }}
                 >
                   {isDemoMode ? "⚡ 免費無限餵食" : `🪙 ${food.cost} 購買餵食`}
                 </button>
