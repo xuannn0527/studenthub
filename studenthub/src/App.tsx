@@ -3,7 +3,7 @@ import Timetable from "./components/Timetable";
 import AssignmentTracker from "./components/AssignmentTracker";
 import PomodoroTimer from "./components/PomodoroTimer";
 import FocusPet from "./components/FocusPet";
-import PetWorkshop from "./components/PetWorkshop"; // 🌟 引入任務與餵食頁面
+import PetWorkshop from "./components/PetWorkshop";
 
 type Tab = "timetable" | "pomodoro" | "assignments" | "pet";
 
@@ -37,7 +37,6 @@ export default function App() {
           <h1 style={{ margin: "0 0 6px 0", fontSize: "21px", color: "#1e293b", display: "flex", alignItems: "center", gap: "8px" }}>
             🎓 StudentHub
           </h1>
-          {/* 放大副標題字體與行高 */}
           <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>個人化學業專注儀表板</p>
         </div>
 
@@ -53,7 +52,7 @@ export default function App() {
               borderRadius: "10px",
               cursor: "pointer",
               fontWeight: "600",
-              fontSize: "14px", // 放大選單字體
+              fontSize: "14px",
               transition: "all 0.2s ease"
             }}
           >
@@ -96,7 +95,6 @@ export default function App() {
             📝 作業與待辦
           </button>
 
-          {/* 🌟 守護獸任務 */}
           <button
             onClick={() => setActiveTab("pet")}
             style={{
@@ -127,20 +125,15 @@ export default function App() {
         )}
 
         {activeTab === "pomodoro" && (
-          <section className="fade-in" style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <div style={{ width: "100%", maxWidth: "600px", backgroundColor: "#ffffff", padding: "40px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" }}>
-              <h2 style={{ margin: "0 0 32px 0", fontSize: "22px", textAlign: "center", color: "#1e293b" }}>專注番茄鐘</h2>
-              <PomodoroTimer />
-            </div>
+          <section className="fade-in" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            <PomodoroTimer />
           </section>
         )}
 
+        {/* 🌟 修正後的作業與待辦區塊：移除包裹的白色多餘卡片容器，直接獨立平鋪 */}
         {activeTab === "assignments" && (
-          <section className="fade-in" style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <div style={{ width: "100%", maxWidth: "800px", backgroundColor: "#ffffff", padding: "40px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" }}>
-              <h2 style={{ margin: "0 0 24px 0", fontSize: "22px", color: "#1e293b", textAlign: "center" }}>作業與待辦管理</h2>
-              <AssignmentTracker />
-            </div>
+          <section className="fade-in" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            <AssignmentTracker />
           </section>
         )}
 

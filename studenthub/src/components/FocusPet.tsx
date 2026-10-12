@@ -1,48 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-
-export interface PetState {
-  level: number;
-  exp: number;
-  maxExp: number;
-  coins: number;
-  happiness: number;
-}
-
-const DEFAULT_PET_STATE: PetState = {
-  level: 1,
-  exp: 0,
-  maxExp: 100,
-  coins: 50,
-  happiness: 100,
-};
-
-// 🌟 造型清單定義（與工坊同步）
-const OUTFITS = [
-  { id: "default", name: "預設造型", icon: "🐣", unlockLevel: 1 },
-  { id: "scholar", name: "學霸方帽", icon: "🎓", unlockLevel: 3 },
-  { id: "fox", name: "靈性學業狐", icon: "🦊", unlockLevel: 5 },
-  { id: "crown", name: "榮耀皇冠", icon: "👑", unlockLevel: 7 },
-  { id: "dragon", name: "時空守護龍神", icon: "🐉", unlockLevel: 10 },
-];
-
-// 🌟 讓本體專心依照等級顯示動物，不被造型完全覆蓋
-const getPetProfile = (level: number) => {
-  if (level < 4) return { icon: "🐣", title: "初生好奇雛鳥", color: "#eab308" };
-  if (level < 7) return { icon: "🦊", title: "靈性學業狐", color: "#f97316" };
-  if (level < 10) return { icon: "🦌", title: "專注幻獸鹿", color: "#06b6d4" };
-  return { icon: "🐉", title: "時空守護龍神", color: "#8b5cf6" };
-};
-
-const MOTIVATION_QUOTES = [
-  "今天也要元氣滿滿！✨",
-  "散步散步～到處巡邏！🐾",
-  "專注是通往自由的捷徑 📖",
-  "寫完作業我們就可以去玩了！🎮",
-  "讀累了嗎？喝口水休息一下 💧",
-  "你超棒的，保持這個節奏！🔥",
-  "摸摸我～專注力 +100% 💖",
-  "呼嚕嚕～好舒服喔 💤"
-];
+// 🌟 使用 import type 匯入型別，符合 verbatimModuleSyntax 規範
+import type { PetState } from "./petConfig";
+import {
+  DEFAULT_PET_STATE,
+  OUTFITS,
+  getPetProfile,
+  MOTIVATION_QUOTES,
+  FOCUS_QUOTES,
+} from "./petConfig";
 
 export default function FocusPet() {
   const [pet, setPet] = useState<PetState>(() => {
@@ -63,7 +28,6 @@ export default function FocusPet() {
     return localStorage.getItem("hub_custom_pet_name") || "";
   });
 
-  // 🌟 追蹤目前裝備的造型
   const [currentOutfit, setCurrentOutfit] = useState<string>(() => {
     return localStorage.getItem("hub_pet_outfit") || "default";
   });
@@ -74,6 +38,10 @@ export default function FocusPet() {
   
   const [isMoving, setIsMoving] = useState<boolean>(false);
   const [facingLeft, setFacingLeft] = useState<boolean>(false);
+
+  // 專注狀態監聽
+  const [isFocusing, setIsFocusing] = useState<boolean>(false);
+  const [focusTitle, setFocusTitle] = useState<string>("");
 
   const [pos, setPos] = useState(() => {
     const savedPos = localStorage.getItem("hub_pet_pos");
@@ -90,6 +58,80 @@ export default function FocusPet() {
     localStorage.setItem("hub_focus_pet", JSON.stringify(nextState));
   };
 
+  // 監聽專注狀態
+  useEffect(() => {
+    const handleFocusStateChange = (e: any) => {
+      const { isFocusing: focusing, todoTitle } = e.detail || {};
+      setIsFocusing(!!focusing);
+      setFocusTitle(todoTitle || "");
+
+      if (focusing) {
+        setDialogue(`正在陪你【${todoTitle || "專注"}】中！加油 🐱🔥`);
+        setShowBubble(true);
+      } else {
+        setDialogue("辛苦囉！休息一下吧 ☕");
+        setShowBubble(true);
+      }
+    };
+
+    window.addEventListener("hub_focus_state_change", handleFocusStateChange);
+    return () => window.removeEventListener("hub_focus_state_change", handleFocusStateChange);
+  }, []);
+
+  // 散步與專注跑動計時器
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const intervalTime = isFocusing ? 3000 : 5000;
+
+    const roamInterval = setInterval(() => {
+      if (isDragging.current) return;
+
+      const willMove = isFocusing ? Math.random() > 0.1 : Math.random() > 0.3;
+
+      if (willMove) {
+        setIsMoving(true);
+        const dx = (Math.random() - 0.5) * (isFocusing ? 260 : 140);
+        const dy = (Math.random() - 0.5) * (isFocusing ? 180 : 100);
+
+        const current = posRef.current;
+        const targetX = Math.max(40, Math.min(window.innerWidth - 140, current.x + dx));
+        const targetY = Math.max(60, Math.min(window.innerHeight - 160, current.y + dy));
+
+        if (dx < 0) {
+          setFacingLeft(true);
+        } else if (dx > 0) {
+          setFacingLeft(false);
+        }
+
+        setPos({ x: targetX, y: targetY });
+
+        setTimeout(() => {
+          setIsMoving(false);
+        }, 1200);
+
+        if (isFocusing) {
+          const quotes = [...FOCUS_QUOTES, `專注【${focusTitle}】中...`];
+          setDialogue(quotes[Math.floor(Math.random() * quotes.length)]);
+          setShowBubble(true);
+        } else if (Math.random() < 0.25) {
+          const quotes = ["散步好開心～", "巡邏中！👀", "看看你在做什麼～", "偷偷跟著你 🐾"];
+          setDialogue(quotes[Math.floor(Math.random() * quotes.length)]);
+          setShowBubble(true);
+        }
+      } else {
+        setIsMoving(false);
+        if (!isFocusing && Math.random() < 0.3) {
+          setDialogue("呼嚕嚕～休息一下 💤");
+          setShowBubble(true);
+        }
+      }
+    }, intervalTime);
+
+    return () => clearInterval(roamInterval);
+  }, [isVisible, isFocusing, focusTitle]);
+
+  // 顯隱與外觀同步事件
   useEffect(() => {
     const handleToggleVisibility = (e: any) => {
       const targetState = e.detail?.visible !== undefined ? e.detail.visible : !isVisible;
@@ -97,29 +139,26 @@ export default function FocusPet() {
       localStorage.setItem("hub_pet_visible", String(targetState));
     };
 
-    window.addEventListener("toggle_pet_visibility", handleToggleVisibility);
-    return () => window.removeEventListener("toggle_pet_visibility", handleToggleVisibility);
-  }, [isVisible]);
-
-  // 🌟 監聽外觀、名稱與造型的雙向同步
-  useEffect(() => {
     const handleSyncAvatarNameAndOutfit = () => {
       setCustomAvatar(localStorage.getItem("hub_custom_pet_avatar") || null);
       setCustomName(localStorage.getItem("hub_custom_pet_name") || "");
       setCurrentOutfit(localStorage.getItem("hub_pet_outfit") || "default");
     };
 
+    window.addEventListener("toggle_pet_visibility", handleToggleVisibility);
     window.addEventListener("custom_pet_avatar_updated", handleSyncAvatarNameAndOutfit);
     window.addEventListener("custom_pet_name_updated", handleSyncAvatarNameAndOutfit);
     window.addEventListener("pet_outfit_updated", handleSyncAvatarNameAndOutfit);
-    
+
     return () => {
+      window.removeEventListener("toggle_pet_visibility", handleToggleVisibility);
       window.removeEventListener("custom_pet_avatar_updated", handleSyncAvatarNameAndOutfit);
       window.removeEventListener("custom_pet_name_updated", handleSyncAvatarNameAndOutfit);
       window.removeEventListener("pet_outfit_updated", handleSyncAvatarNameAndOutfit);
     };
-  }, []);
+  }, [isVisible]);
 
+  // 獎勵事件監聽
   useEffect(() => {
     const handlePetReward = (e: any) => {
       const { expBonus = 0, coinsBonus = 0, message = "" } = e.detail || {};
@@ -159,52 +198,7 @@ export default function FocusPet() {
     return () => window.removeEventListener("focus_pet_reward", handlePetReward);
   }, [pet]);
 
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const roamInterval = setInterval(() => {
-      if (isDragging.current) return;
-
-      const willMove = Math.random() > 0.3;
-
-      if (willMove) {
-        setIsMoving(true);
-        const dx = (Math.random() - 0.5) * 140;
-        const dy = (Math.random() - 0.5) * 100;
-
-        const current = posRef.current;
-        const targetX = Math.max(30, Math.min(window.innerWidth - 120, current.x + dx));
-        const targetY = Math.max(50, Math.min(window.innerHeight - 150, current.y + dy));
-
-        if (dx < 0) {
-          setFacingLeft(true);
-        } else if (dx > 0) {
-          setFacingLeft(false);
-        }
-
-        setPos({ x: targetX, y: targetY });
-
-        setTimeout(() => {
-          setIsMoving(false);
-        }, 1500);
-
-        if (Math.random() < 0.25) {
-          const quotes = ["散步好開心～", "巡邏中！👀", "看看你在做什麼～", "偷偷跟著你 🐾"];
-          setDialogue(quotes[Math.floor(Math.random() * quotes.length)]);
-          setShowBubble(true);
-        }
-      } else {
-        setIsMoving(false);
-        if (Math.random() < 0.3) {
-          setDialogue("呼嚕嚕～休息一下 💤");
-          setShowBubble(true);
-        }
-      }
-    }, 4500);
-
-    return () => clearInterval(roamInterval);
-  }, [isVisible]);
-
+  // 拖曳處理
   const handleMouseDown = (e: React.MouseEvent) => {
     isDragging.current = true;
     dragOffset.current = {
@@ -290,7 +284,6 @@ export default function FocusPet() {
   const expPercentage = Math.min(100, Math.round((pet.exp / pet.maxExp) * 100));
   const currentDisplayName = customName || (customAvatar ? "自訂專屬守護獸" : profile.title);
 
-  // 🌟 雙層疊加渲染：底層是動物本體，頂層是帽子或配件
   const renderAvatarContent = (size = "44px") => {
     if (customAvatar) {
       return (
@@ -310,12 +303,10 @@ export default function FocusPet() {
 
     return (
       <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: "60px", height: "60px" }}>
-        {/* 底層：動物本體 (例如 🐣, 🦊, 🦌, 🐉) */}
         <span style={{ fontSize: size, filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.15))" }}>
           {profile.icon}
         </span>
 
-        {/* 頂層：戴在頭上的帽子或裝飾 */}
         {currentOutfit !== "default" && equippedOutfit && (
           <span style={{
             position: "absolute",
@@ -378,23 +369,24 @@ export default function FocusPet() {
         flexDirection: "column",
         alignItems: "center",
         gap: "4px",
-        transition: isDragging.current ? "none" : "left 1.2s cubic-bezier(0.25, 1, 0.5, 1), top 1.2s cubic-bezier(0.25, 1, 0.5, 1)"
+        transition: isDragging.current ? "none" : "left 1s cubic-bezier(0.25, 1, 0.5, 1), top 1s cubic-bezier(0.25, 1, 0.5, 1)"
       }}
       onMouseDown={handleMouseDown}
     >
       {/* 浮動對話氣泡 */}
       {showBubble && (
         <div style={{
-          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          backgroundColor: isFocusing ? "#eff6ff" : "rgba(255, 255, 255, 0.95)",
           backdropFilter: "blur(6px)",
-          padding: "5px 10px",
-          borderRadius: "10px",
+          padding: "6px 12px",
+          borderRadius: "12px",
           fontSize: "11px",
-          fontWeight: "600",
-          color: "#334155",
-          border: "1px solid #e2e8f0",
+          fontWeight: "700",
+          color: isFocusing ? "#1d4ed8" : "#334155",
+          border: "1px solid",
+          borderColor: isFocusing ? "#93c5fd" : "#e2e8f0",
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-          maxWidth: "160px",
+          maxWidth: "180px",
           textAlign: "center",
           animation: "floatBubble 2s infinite ease-in-out",
           whiteSpace: "nowrap"
@@ -455,7 +447,7 @@ export default function FocusPet() {
 
       {/* 等級與金幣膠囊標籤 */}
       <div style={{
-        backgroundColor: "rgba(15, 23, 42, 0.75)",
+        backgroundColor: isFocusing ? "rgba(37, 99, 235, 0.9)" : "rgba(15, 23, 42, 0.75)",
         backdropFilter: "blur(4px)",
         color: "#fff",
         padding: "2px 8px",
@@ -468,9 +460,10 @@ export default function FocusPet() {
       }}>
         <span>Lv.{pet.level}</span>
         <span style={{ color: "#fbbf24" }}>🪙{pet.coins}</span>
+        {isFocusing && <span style={{ color: "#60a5fa" }}>🔥陪讀中</span>}
       </div>
 
-      {/* 雙擊展開詳細養成卡片 */}
+      {/* 雙擊展開詳細卡片 */}
       {isExpanded && (
         <div
           onClick={(e) => e.stopPropagation()}
