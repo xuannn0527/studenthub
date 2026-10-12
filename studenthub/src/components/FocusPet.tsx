@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-// 🌟 使用 import type 匯入型別，符合 verbatimModuleSyntax 規範
+import { useState, useEffect, useRef } from "react";
 import type { PetState } from "./petConfig";
 import {
   DEFAULT_PET_STATE,
@@ -10,6 +9,7 @@ import {
 } from "./petConfig";
 
 export default function FocusPet() {
+  // 從 localStorage 讀取寵物狀態（預設金幣為 DEFAULT_PET_STATE 的 50 🪙，絕不鎖定在 9999）
   const [pet, setPet] = useState<PetState>(() => {
     const saved = localStorage.getItem("hub_focus_pet");
     return saved ? JSON.parse(saved) : DEFAULT_PET_STATE;
@@ -58,7 +58,7 @@ export default function FocusPet() {
     localStorage.setItem("hub_focus_pet", JSON.stringify(nextState));
   };
 
-  // 監聽專注狀態
+  // 監聽專注狀態：開始專注時自動喚醒寵物並開啟跑動
   useEffect(() => {
     const handleFocusStateChange = (e: any) => {
       const { isFocusing: focusing, todoTitle } = e.detail || {};
@@ -66,6 +66,7 @@ export default function FocusPet() {
       setFocusTitle(todoTitle || "");
 
       if (focusing) {
+        setIsVisible(true);
         setDialogue(`正在陪你【${todoTitle || "專注"}】中！加油 🐱🔥`);
         setShowBubble(true);
       } else {
@@ -78,25 +79,25 @@ export default function FocusPet() {
     return () => window.removeEventListener("hub_focus_state_change", handleFocusStateChange);
   }, []);
 
-  // 散步與專注跑動計時器
+  // 專注跑動計時器
   useEffect(() => {
     if (!isVisible) return;
 
-    const intervalTime = isFocusing ? 3000 : 5000;
+    const intervalTime = isFocusing ? 2500 : 5000;
 
     const roamInterval = setInterval(() => {
       if (isDragging.current) return;
 
-      const willMove = isFocusing ? Math.random() > 0.1 : Math.random() > 0.3;
+      const willMove = isFocusing ? true : Math.random() > 0.3;
 
       if (willMove) {
         setIsMoving(true);
-        const dx = (Math.random() - 0.5) * (isFocusing ? 260 : 140);
-        const dy = (Math.random() - 0.5) * (isFocusing ? 180 : 100);
+        const dx = (Math.random() - 0.5) * (isFocusing ? 320 : 160);
+        const dy = (Math.random() - 0.5) * (isFocusing ? 220 : 120);
 
         const current = posRef.current;
-        const targetX = Math.max(40, Math.min(window.innerWidth - 140, current.x + dx));
-        const targetY = Math.max(60, Math.min(window.innerHeight - 160, current.y + dy));
+        const targetX = Math.max(60, Math.min(window.innerWidth - 160, current.x + dx));
+        const targetY = Math.max(80, Math.min(window.innerHeight - 180, current.y + dy));
 
         if (dx < 0) {
           setFacingLeft(true);
@@ -108,21 +109,15 @@ export default function FocusPet() {
 
         setTimeout(() => {
           setIsMoving(false);
-        }, 1200);
+        }, 1000);
 
         if (isFocusing) {
-          const quotes = [...FOCUS_QUOTES, `專注【${focusTitle}】中...`];
+          const quotes = [...FOCUS_QUOTES, `認真【${focusTitle}】中...`, "看你寫作業好療癒 ✨"];
           setDialogue(quotes[Math.floor(Math.random() * quotes.length)]);
           setShowBubble(true);
         } else if (Math.random() < 0.25) {
           const quotes = ["散步好開心～", "巡邏中！👀", "看看你在做什麼～", "偷偷跟著你 🐾"];
           setDialogue(quotes[Math.floor(Math.random() * quotes.length)]);
-          setShowBubble(true);
-        }
-      } else {
-        setIsMoving(false);
-        if (!isFocusing && Math.random() < 0.3) {
-          setDialogue("呼嚕嚕～休息一下 💤");
           setShowBubble(true);
         }
       }
@@ -131,7 +126,7 @@ export default function FocusPet() {
     return () => clearInterval(roamInterval);
   }, [isVisible, isFocusing, focusTitle]);
 
-  // 顯隱與外觀同步事件
+  // 同步外觀與隱藏狀態
   useEffect(() => {
     const handleToggleVisibility = (e: any) => {
       const targetState = e.detail?.visible !== undefined ? e.detail.visible : !isVisible;
@@ -158,7 +153,7 @@ export default function FocusPet() {
     };
   }, [isVisible]);
 
-  // 獎勵事件監聽
+  // 監聽獲得獎勵事件（專注完成後會增加真實金幣與經驗）
   useEffect(() => {
     const handlePetReward = (e: any) => {
       const { expBonus = 0, coinsBonus = 0, message = "" } = e.detail || {};
@@ -180,7 +175,7 @@ export default function FocusPet() {
           level: newLevel,
           exp: newExp,
           maxExp: newMaxExp,
-          coins: basePet.coins + coinsBonus,
+          coins: basePet.coins + coinsBonus, // 正確累加賺到的金幣
           happiness: Math.min(100, basePet.happiness + 10)
         };
         savePet(next);
@@ -237,17 +232,15 @@ export default function FocusPet() {
     setShowBubble(true);
   };
 
+  // 餵食邏輯：扣除真實金幣 15 🪙
   const handleFeed = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const isDemo = localStorage.getItem("hub_is_demo") === "true";
-
-    if (!isDemo && pet.coins < 15) {
+    if (pet.coins < 15) {
       setDialogue("金幣不夠買零食啦 (需要 15 🪙)！");
       setShowBubble(true);
       return;
     }
 
-    const newCoins = isDemo ? pet.coins : pet.coins - 15;
     let newExp = pet.exp + 25;
     let newLevel = pet.level;
     let newMaxExp = pet.maxExp;
@@ -262,13 +255,11 @@ export default function FocusPet() {
       level: newLevel,
       exp: newExp,
       maxExp: newMaxExp,
-      coins: newCoins,
+      coins: pet.coins - 15, // 扣除 15 金幣
       happiness: Math.min(100, pet.happiness + 20)
     };
 
     savePet(nextState);
-    window.dispatchEvent(new CustomEvent("focus_pet_reward", { detail: {} }));
-
     setDialogue("好呷好呷！EXP +25 🍖✨");
     setShowBubble(true);
   };
@@ -276,7 +267,6 @@ export default function FocusPet() {
   const setPetVisibleState = (visible: boolean) => {
     setIsVisible(visible);
     localStorage.setItem("hub_pet_visible", String(visible));
-    window.dispatchEvent(new CustomEvent("pet_visibility_changed", { detail: { visible } }));
   };
 
   const profile = getPetProfile(pet.level);
@@ -333,25 +323,22 @@ export default function FocusPet() {
           position: "fixed",
           right: "24px",
           bottom: "24px",
-          width: "48px",
-          height: "48px",
+          width: "52px",
+          height: "52px",
           borderRadius: "50%",
           backgroundColor: "#ffffff",
-          border: `2px solid ${profile.color}`,
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          border: `3px solid ${profile.color}`,
+          boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          zIndex: 9999,
-          transition: "transform 0.2s",
+          zIndex: 99999, // 用來確保浮在圖層最頂層的 CSS 屬性
           padding: 0,
           overflow: "hidden"
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
-        {renderAvatarContent("24px")}
+        {renderAvatarContent("26px")}
       </button>
     );
   }
@@ -362,18 +349,18 @@ export default function FocusPet() {
         position: "fixed",
         left: `${pos.x}px`,
         top: `${pos.y}px`,
-        zIndex: 9999,
+        zIndex: 99999,
         userSelect: "none",
         cursor: "grab",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         gap: "4px",
-        transition: isDragging.current ? "none" : "left 1s cubic-bezier(0.25, 1, 0.5, 1), top 1s cubic-bezier(0.25, 1, 0.5, 1)"
+        transition: isDragging.current ? "none" : "left 0.8s cubic-bezier(0.25, 1, 0.5, 1), top 0.8s cubic-bezier(0.25, 1, 0.5, 1)"
       }}
       onMouseDown={handleMouseDown}
     >
-      {/* 浮動對話氣泡 */}
+      {/* 氣泡語錄 */}
       {showBubble && (
         <div style={{
           backgroundColor: isFocusing ? "#eff6ff" : "rgba(255, 255, 255, 0.95)",
@@ -430,27 +417,23 @@ export default function FocusPet() {
             justifyContent: "center",
             alignItems: "center",
             cursor: "pointer",
-            background: "transparent",
-            border: "none",
-            boxShadow: "none",
             transform: facingLeft ? "scaleX(-1)" : "scaleX(1)",
             transition: "transform 0.3s ease",
             padding: "4px"
           }}
           onClick={handlePetClick}
           onDoubleClick={() => setIsExpanded(!isExpanded)}
-          title="按一下互動，點兩下展開狀態面板"
         >
-          {renderAvatarContent("48px")}
+          {renderAvatarContent("52px")}
         </div>
       </div>
 
-      {/* 等級與金幣膠囊標籤 */}
+      {/* 顯示真實等級與當前金幣數量 */}
       <div style={{
-        backgroundColor: isFocusing ? "rgba(37, 99, 235, 0.9)" : "rgba(15, 23, 42, 0.75)",
+        backgroundColor: isFocusing ? "#2563eb" : "rgba(15, 23, 42, 0.75)",
         backdropFilter: "blur(4px)",
         color: "#fff",
-        padding: "2px 8px",
+        padding: "3px 10px",
         borderRadius: "12px",
         fontSize: "10px",
         fontWeight: "bold",
@@ -460,10 +443,10 @@ export default function FocusPet() {
       }}>
         <span>Lv.{pet.level}</span>
         <span style={{ color: "#fbbf24" }}>🪙{pet.coins}</span>
-        {isFocusing && <span style={{ color: "#60a5fa" }}>🔥陪讀中</span>}
+        {isFocusing && <span style={{ color: "#93c5fd" }}>🔥陪讀中</span>}
       </div>
 
-      {/* 雙擊展開詳細卡片 */}
+      {/* 雙擊詳細選單 */}
       {isExpanded && (
         <div
           onClick={(e) => e.stopPropagation()}

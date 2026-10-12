@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-// 🌟 使用 import type 符合 verbatimModuleSyntax 規範
 import type { TodoItem, FocusRecord } from "./pomodoro/pomodoroTypes";
 import PomodoroAddModal from "./pomodoro/PomodoroAddModal";
 
@@ -50,7 +49,7 @@ export default function PomodoroTimer() {
     audioRef.current = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3");
   }, []);
 
-  // 通知 FocusPet 寵物專注狀態
+  // 全域廣播：通知 FocusPet 寵物專注狀態
   useEffect(() => {
     if (activeTodo && !isPaused && mode === "focus") {
       window.dispatchEvent(
@@ -237,7 +236,126 @@ export default function PomodoroTimer() {
       gap: "20px"
     }}>
 
-      {/* 卡片一：頁籤列 */}
+      {/* 🌟 1. 強制全螢幕專注畫面 (Full-Screen Focus Overlay) */}
+      {activeTodo && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: mode === "break" ? "#f0fdf4" : "#f8fafc",
+          zIndex: 99999, // 鋪滿整頁，擋住側邊欄與其他控制區域
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px",
+          boxSizing: "border-box"
+        }}>
+          <div style={{
+            width: "100%",
+            maxWidth: "680px",
+            backgroundColor: "#ffffff",
+            padding: "48px 40px",
+            borderRadius: "24px",
+            border: "1px solid #e2e8f0",
+            boxShadow: "0 20px 40px -10px rgba(0,0,0,0.08)",
+            textAlign: "center"
+          }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginBottom: "16px" }}>
+              <span style={{
+                fontSize: "12px",
+                fontWeight: "800",
+                color: mode === "break" ? "#16a34a" : "#2563eb",
+                backgroundColor: mode === "break" ? "#dcfce7" : "#eff6ff",
+                padding: "4px 14px",
+                borderRadius: "20px",
+                letterSpacing: "0.5px"
+              }}>
+                {mode === "break" ? "☕ SHORT BREAK 休息中" : activeTodo.timingType === "countdown" ? "⏱ 倒計時專注" : "⏱ 正向計時專注"}
+              </span>
+            </div>
+
+            <h3 style={{ fontSize: "32px", fontWeight: "800", color: "#1e293b", margin: "0 0 32px 0" }}>
+              {mode === "break" ? "放鬆一下，喝口水吧！" : activeTodo.title}
+            </h3>
+
+            {/* 超大沉浸計時器 */}
+            <div style={{
+              fontSize: "100px",
+              fontWeight: "800",
+              fontFamily: "monospace, sans-serif",
+              color: mode === "break" ? "#16a34a" : "#1e293b",
+              lineHeight: 1,
+              marginBottom: "48px",
+              letterSpacing: "2px"
+            }}>
+              {formatSeconds(seconds)}
+            </div>
+
+            <div style={{ display: "flex", gap: "16px", justifyContent: "center", alignItems: "center" }}>
+              <button
+                onClick={() => setIsPaused(!isPaused)}
+                style={{
+                  padding: "12px 36px",
+                  backgroundColor: isPaused ? "#16a34a" : "#334155",
+                  color: "#ffffff",
+                  border: "none",
+                  borderRadius: "12px",
+                  fontWeight: "700",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                }}
+              >
+                {isPaused ? "▶ 繼續" : "❚❚ 暫停"}
+              </button>
+
+              {mode === "focus" && activeTodo.timingType === "countup" && (
+                <button
+                  onClick={() => handleCompleteFocus(Math.floor(seconds / 60))}
+                  style={{
+                    padding: "12px 36px",
+                    backgroundColor: "#2563eb",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "12px",
+                    fontWeight: "700",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    boxShadow: "0 4px 12px rgba(37,99,235,0.2)"
+                  }}
+                >
+                  ✓ 完成專注
+                </button>
+              )}
+
+              <button
+                onClick={() => {
+                  if (window.confirm("確定要退出專注嗎？退出後即可恢復操作其他功能。")) {
+                    setActiveTodo(null);
+                  }
+                }}
+                style={{
+                  padding: "12px 28px",
+                  backgroundColor: "#fee2e2",
+                  color: "#ef4444",
+                  border: "1px solid #fca5a5",
+                  borderRadius: "12px",
+                  fontWeight: "700",
+                  fontSize: "16px",
+                  cursor: "pointer"
+                }}
+              >
+                ✕ 結束 / 退出全螢幕
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🌟 2. 非專注狀態下的常態儀表板 */}
       <div style={{
         backgroundColor: "#ffffff",
         borderRadius: "20px",
@@ -319,7 +437,7 @@ export default function PomodoroTimer() {
         )}
       </div>
 
-      {/* 卡片二：內容區 */}
+      {/* 🌟 3. 待辦清單與數據統計內容 */}
       <div style={{
         backgroundColor: "#ffffff",
         borderRadius: "20px",
@@ -327,107 +445,7 @@ export default function PomodoroTimer() {
         border: "1px solid #e2e8f0",
         boxShadow: "0 4px 16px rgba(0, 0, 0, 0.03)"
       }}>
-
-        {activeTodo ? (
-          <div style={{
-            padding: "40px 20px",
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: mode === "break" ? "#f0fdf4" : "#fafaf9",
-            borderRadius: "16px",
-            border: "1px solid",
-            borderColor: mode === "break" ? "#bbf7d0" : "#e7e5e4"
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-              <span style={{
-                fontSize: "11px",
-                fontWeight: "800",
-                color: mode === "break" ? "#16a34a" : "#2563eb",
-                backgroundColor: mode === "break" ? "#dcfce7" : "#eff6ff",
-                padding: "3px 10px",
-                borderRadius: "12px",
-                letterSpacing: "0.5px"
-              }}>
-                {mode === "break" ? "☕ SHORT BREAK 休息中" : activeTodo.timingType === "countdown" ? "⏱ 倒計時專注" : "⏱ 正向計時專注"}
-              </span>
-            </div>
-
-            <h3 style={{ fontSize: "28px", fontWeight: "800", color: "#1e293b", margin: "4px 0 24px 0" }}>
-              {mode === "break" ? "放鬆一下，喝口水吧！" : activeTodo.title}
-            </h3>
-
-            <div style={{
-              fontSize: "84px",
-              fontWeight: "800",
-              fontFamily: "monospace, sans-serif",
-              color: mode === "break" ? "#16a34a" : "#1e293b",
-              lineHeight: 1,
-              marginBottom: "36px",
-              letterSpacing: "2px"
-            }}>
-              {formatSeconds(seconds)}
-            </div>
-
-            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-              <button
-                onClick={() => setIsPaused(!isPaused)}
-                style={{
-                  padding: "10px 28px",
-                  backgroundColor: isPaused ? "#16a34a" : "#334155",
-                  color: "#ffffff",
-                  border: "none",
-                  borderRadius: "10px",
-                  fontWeight: "700",
-                  fontSize: "14px",
-                  cursor: "pointer"
-                }}
-              >
-                {isPaused ? "▶ 繼續" : "❚❚ 暫停"}
-              </button>
-
-              {mode === "focus" && activeTodo.timingType === "countup" && (
-                <button
-                  onClick={() => handleCompleteFocus(Math.floor(seconds / 60))}
-                  style={{
-                    padding: "10px 28px",
-                    backgroundColor: "#2563eb",
-                    color: "#ffffff",
-                    border: "none",
-                    borderRadius: "10px",
-                    fontWeight: "700",
-                    fontSize: "14px",
-                    cursor: "pointer"
-                  }}
-                >
-                  ✓ 完成專注
-                </button>
-              )}
-
-              <button
-                onClick={() => {
-                  if (window.confirm("確定要結束/放棄本次計時嗎？")) {
-                    setActiveTodo(null);
-                  }
-                }}
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#fee2e2",
-                  color: "#ef4444",
-                  border: "1px solid #fca5a5",
-                  borderRadius: "10px",
-                  fontWeight: "700",
-                  fontSize: "14px",
-                  cursor: "pointer"
-                }}
-              >
-                ✕ 結束
-              </button>
-            </div>
-          </div>
-        ) : activeTab === "todo" ? (
+        {activeTab === "todo" ? (
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))",
@@ -497,7 +515,7 @@ export default function PomodoroTimer() {
                       boxShadow: "0 2px 4px rgba(0,0,0,0.06)"
                     }}
                   >
-                    {todo.timingType === "none" ? "打卡" : "開始"}
+                    {todo.timingType === "none" ? "打卡" : "開始專注"}
                   </button>
                   <button
                     onClick={(e) => handleDeleteTodo(todo.id, e)}
@@ -569,7 +587,7 @@ export default function PomodoroTimer() {
               </div>
             </div>
 
-            {/* 🌟 7 日直條圖（修正原本標籤語法與 justifyBetween 屬性） */}
+            {/* 7 日直條圖 */}
             <div style={{ backgroundColor: "#f8fafc", border: "1px solid #e2e8f0", padding: "20px", borderRadius: "14px" }}>
               <div style={{ fontSize: "13px", color: "#64748b", fontWeight: "700", marginBottom: "20px" }}>
                 📊 近 7 日專注時長分佈 (分鐘)
@@ -582,7 +600,7 @@ export default function PomodoroTimer() {
                       <span style={{ fontSize: "11px", fontWeight: "700", color: day.dayMins > 0 ? "#2563eb" : "#cbd5e1", marginBottom: "6px" }}>
                         {day.dayMins}m
                       </span>
-                        <div style={{
+                      <div style={{
                         width: "100%",
                         maxWidth: "36px",
                         height: `${heightPercent}%`,
