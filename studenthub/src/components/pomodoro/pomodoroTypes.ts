@@ -3,7 +3,7 @@ export interface TodoItem {
   title: string;
   type: "timer" | "habit" | "target";
   timingType: "countdown" | "countup" | "none";
-  durationMinutes: number;
+  durationMinutes: number; // 倒計時或預設時間
 
   // 養習慣專屬欄位
   habitFrequency?: "daily" | "weekly" | "monthly";
@@ -24,4 +24,17 @@ export interface FocusRecord {
   durationMinutes: number;
   timestamp: string; // YYYY-MM-DD
   timeStr: string; // HH:mm
+}
+
+export interface BgAdjustment {
+  scale: number; // 30 ~ 300 (%)
+  posX: number;  // 0 ~ 100 (%)
+  posY: number;  // 0 ~ 100 (%)
+}
+
+export interface WallpaperItem {
+  id: string;
+  name: string;
+  previewUrl: string;
+  url: string;
 }
