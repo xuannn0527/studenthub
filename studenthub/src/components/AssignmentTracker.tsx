@@ -1,115 +1,374 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import type { AssignmentItem } from "./assignment";
+import {
+  DEFAULT_ASSIGNMENTS,
+  ACCENT_COLORS,
+  playVictoryChime,
+  extractDateOnly,
+  AssignmentCalendar,
+  AssignmentTodoList,
+  AssignmentModal,
+} from "./assignment";
 
-export interface Assignment {
-  id: string;
-  title: string;
-  dueDate: string;
-  completed: boolean;
-}
+export type { AssignmentItem };
+export { ACCENT_COLORS, extractDateOnly };
 
 export default function AssignmentTracker() {
-  const [assignments, setAssignments] = useState<Assignment[]>(() => {
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+  // 日曆導航狀態
+  const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState<number>(today.getMonth()); // 0 ~ 11
+  const [selectedDate, setSelectedDate] = useState<string>(todayStr);
+
+  // 待辦資料
+  const [assignments, setAssignments] = useState<AssignmentItem[]>(() => {
     const saved = localStorage.getItem("hub_assignments");
-    return saved ? JSON.parse(saved) : [];
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((item: any, idx: number) => {
+            let validDate = item.dueDate || item.date || "";
+            if (!validDate) {
+              const dNum = String(((idx * 4 + 10) % 28) + 1).padStart(2, "0");
+              validDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${dNum} 23:59`;
+            }
+            return {
+              id: item.id || Date.now().toString() + idx,
+              title: item.title || "待辦事項",
+              dueDate: validDate.replace("T", " "),
+              completed: Boolean(item.completed),
+              category: item.category || "作業",
+              difficulty: item.difficulty || "normal",
+              color: item.color || ACCENT_COLORS[idx % ACCENT_COLORS.length].id,
+              expReward: item.expReward || 20,
+              coinReward: item.coinReward || 10,
+            };
+          });
+        }
+      } catch {}
+    }
+    return DEFAULT_ASSIGNMENTS;
   });
-  const [title, setTitle] = useState("");
-  const [dueDate, setDueDate] = useState("");
 
-  const handleAdd = (e: React.FormEvent) => {
+  // 篩選模式：只留下「待繳交 (pending)」與「所選日期 (selected)」
+  const [filterMode, setFilterMode] = useState<"pending" | "selected">("pending");
+
+  // 標籤文字顯示方式：單行截斷 (false) vs 自動換行 (true)
+  const [isWrapText, setIsWrapText] = useState<boolean>(() => {
+    return localStorage.getItem("hub_calendar_wrap_text") === "true";
+  });
+
+  // 新增 / 編輯對話框狀態
+  const [modalMode, setModalMode] = useState<"add" | "edit" | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formTitle, setFormTitle] = useState("");
+  const [formDate, setFormDate] = useState<string>(todayStr);
+  const [formTime, setFormTime] = useState<string>("23:59");
+  const [formCategory, setFormCategory] = useState("作業");
+  const [formDifficulty, setFormDifficulty] = useState<"normal" | "elite" | "boss">("normal");
+  const [formColor, setFormColor] = useState("blue");
+
+  // 通關飄字通知
+  const [rewardToast, setRewardToast] = useState<{ title: string; exp: number; coins: number; isRestore?: boolean } | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem("hub_assignments", JSON.stringify(assignments));
+  }, [assignments]);
+
+  // 前往今天
+  const handleGoToday = () => {
+    const now = new Date();
+    setCurrentYear(now.getFullYear());
+    setCurrentMonth(now.getMonth());
+    setSelectedDate(todayStr);
+    setFilterMode("selected");
+  };
+
+  // 月份導航
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentYear((y) => y - 1);
+      setCurrentMonth(11);
+    } else {
+      setCurrentMonth((m) => m - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentYear((y) => y + 1);
+      setCurrentMonth(0);
+    } else {
+      setCurrentMonth((m) => m + 1);
+    }
+  };
+
+  // 打開新增 Modal
+  const handleOpenAddModal = () => {
+    setModalMode("add");
+    setEditingId(null);
+    setFormTitle("");
+    setFormDate(selectedDate || todayStr);
+    setFormTime("23:59");
+    setFormCategory("作業");
+    setFormDifficulty("normal");
+    setFormColor("blue");
+  };
+
+  // 打開編輯 Modal
+  const handleOpenEditModal = (item: AssignmentItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setModalMode("edit");
+    setEditingId(item.id);
+    setFormTitle(item.title);
+
+    const datePart = extractDateOnly(item.dueDate) || todayStr;
+    const timePart = item.dueDate.includes(" ")
+      ? item.dueDate.split(" ")[1]
+      : item.dueDate.includes("T")
+      ? item.dueDate.split("T")[1].slice(0, 5)
+      : "23:59";
+
+    setFormDate(datePart);
+    setFormTime(timePart || "23:59");
+    setFormCategory(item.category || "作業");
+    setFormDifficulty(item.difficulty || "normal");
+    setFormColor(item.color || "blue");
+  };
+
+  // 新增或編輯送出
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!formTitle.trim()) return;
 
-    const updated = [...assignments, { id: Date.now().toString(), title, dueDate, completed: false }];
-    setAssignments(updated);
-    localStorage.setItem("hub_assignments", JSON.stringify(updated));
-    setTitle("");
-    setDueDate("");
+    let exp = 20;
+    let coins = 10;
+    if (formDifficulty === "elite") {
+      exp = 35;
+      coins = 20;
+    } else if (formDifficulty === "boss") {
+      exp = 60;
+      coins = 35;
+    }
+
+    const targetDate = formDate || selectedDate || todayStr;
+    const finalDueDate = `${targetDate} ${formTime || "23:59"}`;
+
+    if (modalMode === "edit" && editingId) {
+      setAssignments((prev) =>
+        prev.map((item) =>
+          item.id === editingId
+            ? {
+                ...item,
+                title: formTitle.trim(),
+                dueDate: finalDueDate,
+                category: formCategory.trim() || "作業",
+                difficulty: formDifficulty,
+                color: formColor,
+                expReward: exp,
+                coinReward: coins,
+              }
+            : item
+        )
+      );
+    } else {
+      const newItem: AssignmentItem = {
+        id: Date.now().toString(),
+        title: formTitle.trim(),
+        dueDate: finalDueDate,
+        completed: false,
+        category: formCategory.trim() || "作業",
+        difficulty: formDifficulty,
+        color: formColor,
+        expReward: exp,
+        coinReward: coins,
+      };
+
+      setAssignments((prev) => [newItem, ...prev]);
+
+      const [y, m] = targetDate.split("-").map(Number);
+      if (!isNaN(y) && !isNaN(m)) {
+        setCurrentYear(y);
+        setCurrentMonth(m - 1);
+      }
+      setSelectedDate(targetDate);
+    }
+
+    setModalMode(null);
   };
 
-  const handleToggle = (id: string) => {
-    const updated = assignments.map((a) => (a.id === id ? { ...a, completed: !a.completed } : a));
-    setAssignments(updated);
-    localStorage.setItem("hub_assignments", JSON.stringify(updated));
+  // 任務討伐完成 / ↺ 復原
+  const handleToggleTask = (id: string) => {
+    setAssignments((prev) =>
+      prev.map((item) => {
+        if (item.id === id) {
+          const nextCompleted = !item.completed;
+          if (nextCompleted) {
+            playVictoryChime();
+            const exp = item.expReward || 20;
+            const coins = item.coinReward || 10;
+
+            window.dispatchEvent(
+              new CustomEvent("hub_add_pet_exp", { detail: { exp, coins } })
+            );
+
+            setRewardToast({ title: item.title, exp, coins, isRestore: false });
+            setTimeout(() => setRewardToast(null), 2800);
+          } else {
+            setRewardToast({ title: item.title, exp: 0, coins: 0, isRestore: true });
+            setTimeout(() => setRewardToast(null), 2200);
+          }
+          return { ...item, completed: nextCompleted };
+        }
+        return item;
+      })
+    );
   };
 
-  const handleDelete = (id: string) => {
-    const updated = assignments.filter((a) => a.id !== id);
-    setAssignments(updated);
-    localStorage.setItem("hub_assignments", JSON.stringify(updated));
+  // 刪除任務
+  const handleDeleteTask = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm("確定要刪除這筆作業/待辦事項嗎？")) {
+      setAssignments((prev) => prev.filter((item) => item.id !== id));
+    }
   };
+
+  // 點擊待辦卡片：左側日曆同步跳轉高亮
+  const handleCardClick = (item: AssignmentItem) => {
+    const dStr = extractDateOnly(item.dueDate);
+    if (dStr) {
+      const [y, m] = dStr.split("-").map(Number);
+      if (!isNaN(y) && !isNaN(m)) {
+        setCurrentYear(y);
+        setCurrentMonth(m - 1);
+      }
+      setSelectedDate(dStr);
+    }
+  };
+
+  // 清單過濾
+  const pendingAssignments = assignments.filter((item) => !item.completed);
+  const selectedDayAssignments = assignments.filter((item) => {
+    return extractDateOnly(item.dueDate) === (selectedDate || "");
+  });
+  const displayedAssignments = filterMode === "selected" ? selectedDayAssignments : pendingAssignments;
 
   return (
-    <div>
-      <form onSubmit={handleAdd} style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
-        <input
-          type="text"
-          placeholder="作業或待辦事項"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
-        />
-        <input
-          type="datetime-local"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          style={{ padding: "6px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
-        />
-        <button
-          type="submit"
-          style={{ padding: "6px", backgroundColor: "#10b981", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "1320px",
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      }}
+    >
+      {/* 🏆 通關獎勵 / ↺ 復原提示 Toast */}
+      {rewardToast && (
+        <div
+          style={{
+            position: "fixed",
+            top: "24px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: rewardToast.isRestore ? "#1e293b" : "#0f172a",
+            color: "#ffffff",
+            padding: "10px 24px",
+            borderRadius: "30px",
+            boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
+            zIndex: 999999,
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            border: rewardToast.isRestore
+              ? "1px solid rgba(148, 163, 184, 0.4)"
+              : "1px solid rgba(255, 255, 255, 0.15)",
+          }}
         >
-          新增作業
-        </button>
-      </form>
+          <span style={{ fontSize: "18px" }}>{rewardToast.isRestore ? "↺" : "🎉"}</span>
+          <span style={{ fontWeight: "700", fontSize: "13px" }}>
+            {rewardToast.isRestore
+              ? `【${rewardToast.title}】已復原為待繳交！`
+              : `【${rewardToast.title}】討伐成功！已劃線歸檔`}
+          </span>
+          {!rewardToast.isRestore && (
+            <span style={{ color: "#fbbf24", fontWeight: "800", fontSize: "13px" }}>
+              +{rewardToast.exp} EXP · +{rewardToast.coins} 🪙
+            </span>
+          )}
+        </div>
+      )}
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "280px", overflowY: "auto" }}>
-        {assignments.length === 0 ? (
-          <div style={{ color: "#94a3b8", fontSize: "13px", textAlign: "center", padding: "16px" }}>
-            尚無作業項目
-          </div>
-        ) : (
-          assignments.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "8px 12px",
-                borderRadius: "6px",
-                border: "1px solid #e2e8f0",
-                backgroundColor: item.completed ? "#f8fafc" : "#ffffff",
-                opacity: item.completed ? 0.6 : 1,
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <input
-                  type="checkbox"
-                  checked={item.completed}
-                  onChange={() => handleToggle(item.id)}
-                />
-                <div>
-                  <div style={{ fontSize: "13px", fontWeight: "bold", textDecoration: item.completed ? "line-through" : "none" }}>
-                    {item.title}
-                  </div>
-                  {item.dueDate && (
-                    <div style={{ fontSize: "11px", color: "#64748b" }}>
-                      截止：{item.dueDate.replace("T", " ")}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <button
-                onClick={() => handleDelete(item.id)}
-                style={{ border: "none", background: "none", color: "#94a3b8", cursor: "pointer" }}
-              >
-                ✕
-              </button>
-            </div>
-          ))
-        )}
+      {/* 🌟 核心雙欄佈局：左側行事曆更寬大 + 右側小巧精緻待辦事項清單 */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(600px, 1.4fr) minmax(360px, 1fr)",
+          gap: "22px",
+          alignItems: "start",
+        }}
+      >
+        {/* 左欄：行事曆月曆 */}
+        <AssignmentCalendar
+          currentYear={currentYear}
+          currentMonth={currentMonth}
+          selectedDate={selectedDate}
+          todayStr={todayStr}
+          assignments={assignments}
+          isWrapText={isWrapText}
+          onSelectDate={(dateStr) => {
+            setSelectedDate(dateStr);
+            setFilterMode("selected");
+          }}
+          onPrevMonth={handlePrevMonth}
+          onNextMonth={handleNextMonth}
+          onGoToday={handleGoToday}
+          onToggleWrap={() => {
+            const next = !isWrapText;
+            setIsWrapText(next);
+            localStorage.setItem("hub_calendar_wrap_text", String(next));
+          }}
+        />
+
+        {/* 右欄：待辦事項清單 */}
+        <AssignmentTodoList
+          pendingCount={pendingAssignments.length}
+          selectedDayCount={selectedDayAssignments.length}
+          displayedAssignments={displayedAssignments}
+          filterMode={filterMode}
+          selectedDate={selectedDate}
+          onSetFilterMode={setFilterMode}
+          onOpenAddModal={handleOpenAddModal}
+          onOpenEditModal={handleOpenEditModal}
+          onToggleTask={handleToggleTask}
+          onDeleteTask={handleDeleteTask}
+          onCardClick={handleCardClick}
+        />
       </div>
+
+      {/* 新增 / 編輯待辦事項 Modal */}
+      <AssignmentModal
+        modalMode={modalMode}
+        formTitle={formTitle}
+        formDate={formDate}
+        formTime={formTime}
+        formCategory={formCategory}
+        formDifficulty={formDifficulty}
+        formColor={formColor}
+        onSetFormTitle={setFormTitle}
+        onSetFormDate={setFormDate}
+        onSetFormTime={setFormTime}
+        onSetFormCategory={setFormCategory}
+        onSetFormDifficulty={setFormDifficulty}
+        onSetFormColor={setFormColor}
+        onClose={() => setModalMode(null)}
+        onSubmit={handleFormSubmit}
+      />
     </div>
   );
 }
