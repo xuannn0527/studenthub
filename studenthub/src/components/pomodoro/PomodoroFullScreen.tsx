@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import type { TodoItem, BgAdjustment, WallpaperItem } from "./pomodoroTypes";
-import { pomodoroAudio, type AmbientSoundType } from "./PomodoroAudio";
 
 // 精選 8 款 1080p 高清桌布 (Unsplash 經常用高畫質自然與專注美學)
 const DEFAULT_WALLPAPERS: WallpaperItem[] = [
@@ -54,13 +53,7 @@ const DEFAULT_WALLPAPERS: WallpaperItem[] = [
   },
 ];
 
-const SOUND_LIST: { id: AmbientSoundType; name: string; icon: string }[] = [
-  { id: "rain", name: "窗外雨聲", icon: "🌧" },
-  { id: "birds", name: "森林鳥鳴", icon: "🌲" },
-  { id: "cafe", name: "咖啡廳環境音", icon: "☕" },
-  { id: "waves", name: "岸邊海浪", icon: "🌊" },
-  { id: "lofi", name: "Lofi 輕音樂", icon: "🎵" },
-];
+
 
 interface PomodoroFullScreenProps {
   todo: TodoItem;
@@ -98,34 +91,7 @@ export default function PomodoroFullScreen({
     getInitialSeconds(false, isDemoMode)
   );
 
-  // 白噪音播放器狀態
-  const [soundTrack, setSoundTrack] = useState<AmbientSoundType | null>(() => {
-    return (localStorage.getItem("hub_pomodoro_sound_track") as AmbientSoundType) || "rain";
-  });
-  const [isSoundPlaying, setIsSoundPlaying] = useState<boolean>(false);
-  const [volume, setVolume] = useState<number>(() => {
-    const saved = localStorage.getItem("hub_pomodoro_sound_vol");
-    return saved !== null ? Number(saved) : 0.6;
-  });
 
-  // 音量初始化與同步
-  useEffect(() => {
-    pomodoroAudio.setVolume(volume);
-    localStorage.setItem("hub_pomodoro_sound_vol", volume.toString());
-  }, [volume]);
-
-  // 切換白噪音
-  const toggleSound = (type: AmbientSoundType) => {
-    if (isSoundPlaying && soundTrack === type) {
-      pomodoroAudio.stopSound();
-      setIsSoundPlaying(false);
-    } else {
-      setSoundTrack(type);
-      localStorage.setItem("hub_pomodoro_sound_track", type);
-      pomodoroAudio.playSound(type);
-      setIsSoundPlaying(true);
-    }
-  };
 
   // 桌布選擇狀態
   const [activeWallpaperId, setActiveWallpaperId] = useState<string>(() => {
@@ -147,7 +113,7 @@ export default function PomodoroFullScreen({
   });
 
   // 控制面板展開狀態
-  const [activePanel, setActivePanel] = useState<"sound" | "wallpaper" | "adjust" | null>(null);
+  const [activePanel, setActivePanel] = useState<"wallpaper" | "adjust" | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -236,8 +202,7 @@ export default function PomodoroFullScreen({
           // 1. 休息時間倒數
           if (mode === "break") {
             if (prev <= 1) {
-              // 休息結束，鈴聲提醒並自動回到專注模式
-              pomodoroAudio.playChime("rest_end");
+              // 休息結束，自動回到專注模式
               setMode("focus");
               setCycleCount((c) => c + 1);
               showToast("🔔 休息結束！已自動為你開啟下一輪專注 ✨");
@@ -251,7 +216,6 @@ export default function PomodoroFullScreen({
             if (prev <= 1) {
               // 倒數專注完成！
               const actualMins = isDemoMode ? 1 : Math.max(1, todo.durationMinutes);
-              pomodoroAudio.playChime("complete");
               onRecordCompleted(actualMins);
 
               // 自動切換至休息模式
@@ -276,7 +240,6 @@ export default function PomodoroFullScreen({
   // 手動結算正向計時
   const handleCompleteCountup = () => {
     const actualMins = isDemoMode ? 1 : Math.max(1, Math.floor(seconds / 60));
-    pomodoroAudio.playChime("complete");
     onRecordCompleted(actualMins);
     setMode("break");
     setSeconds(getInitialSeconds(true, isDemoMode));
@@ -286,7 +249,6 @@ export default function PomodoroFullScreen({
   // 離開沉浸全螢幕
   const handleExit = () => {
     if (window.confirm("確定要退出沉浸專注模式嗎？")) {
-      pomodoroAudio.stopSound();
       if (document.fullscreenElement && document.exitFullscreen) {
         document.exitFullscreen().catch(() => {});
       }
@@ -442,28 +404,6 @@ export default function PomodoroFullScreen({
 
         {/* 右側工具選單按鈕組 */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          {/* 白噪音開關按鈕 */}
-          <button
-            onClick={() => setActivePanel((p) => (p === "sound" ? null : "sound"))}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "12px",
-              backgroundColor: activePanel === "sound" || isSoundPlaying ? "rgba(59, 130, 246, 0.3)" : "rgba(255, 255, 255, 0.1)",
-              border: `1px solid ${isSoundPlaying ? "rgba(96, 165, 250, 0.5)" : "rgba(255, 255, 255, 0.15)"}`,
-              color: "#ffffff",
-              fontSize: "13px",
-              fontWeight: "600",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              backdropFilter: "blur(8px)",
-              transition: "all 0.2s",
-            }}
-          >
-            <span>🔊</span>
-            <span>{isSoundPlaying ? "播放中" : "環境音效"}</span>
-          </button>
 
           {/* 精選壁紙按鈕 */}
           <button
@@ -547,69 +487,7 @@ export default function PomodoroFullScreen({
             zIndex: 100,
           }}
         >
-          {/* 1. 白噪音環境音控制 */}
-          {activePanel === "sound" && (
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                <h4 style={{ margin: 0, fontSize: "15px", fontWeight: "700" }}>🎧 環境白噪音播放器</h4>
-                <button
-                  onClick={() => setActivePanel(null)}
-                  style={{ background: "none", border: "none", color: "#94a3b8", cursor: "pointer", fontSize: "16px" }}
-                >
-                  ✕
-                </button>
-              </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "18px" }}>
-                {SOUND_LIST.map((s) => {
-                  const isActive = isSoundPlaying && soundTrack === s.id;
-                  return (
-                    <button
-                      key={s.id}
-                      onClick={() => toggleSound(s.id)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "10px 14px",
-                        borderRadius: "12px",
-                        backgroundColor: isActive ? "rgba(59, 130, 246, 0.35)" : "rgba(255, 255, 255, 0.05)",
-                        border: `1px solid ${isActive ? "rgba(96, 165, 250, 0.5)" : "rgba(255, 255, 255, 0.08)"}`,
-                        color: "#ffffff",
-                        cursor: "pointer",
-                        transition: "all 0.15s",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "13px", fontWeight: "600" }}>
-                        <span style={{ fontSize: "18px" }}>{s.icon}</span>
-                        <span>{s.name}</span>
-                      </div>
-                      <span style={{ fontSize: "12px", color: isActive ? "#60a5fa" : "#64748b" }}>
-                        {isActive ? "❚❚ 暫停" : "▶ 播放"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* 音量控制拉桿 */}
-              <div style={{ paddingTop: "12px", borderTop: "1px solid rgba(255, 255, 255, 0.1)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#94a3b8", marginBottom: "8px" }}>
-                  <span>音量大小</span>
-                  <span style={{ color: "#ffffff", fontWeight: "700" }}>{Math.round(volume * 100)}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.05"
-                  value={volume}
-                  onChange={(e) => setVolume(Number(e.target.value))}
-                  style={{ width: "100%", cursor: "pointer", accentColor: "#3b82f6" }}
-                />
-              </div>
-            </div>
-          )}
 
           {/* 2. 精選壁紙庫 */}
           {activePanel === "wallpaper" && (
@@ -923,7 +801,6 @@ export default function PomodoroFullScreen({
                 if (window.confirm("確定要提前結算目前的專注時間嗎？")) {
                   const elapsedSecs = Math.max(1, (todo.durationMinutes * 60) - seconds);
                   const actualMins = Math.max(1, Math.floor(elapsedSecs / 60));
-                  pomodoroAudio.playChime("complete");
                   onRecordCompleted(actualMins);
                   setMode("break");
                   setSeconds(getInitialSeconds(true, isDemoMode));
@@ -962,12 +839,6 @@ export default function PomodoroFullScreen({
           fontSize: "13px",
         }}
       >
-        <div>
-          <span>💡 提示：原生全螢幕可完全隱藏瀏覽器網址列；專注倒數結束後會自動結算並開始休息</span>
-        </div>
-        <div>
-          <span>{isSoundPlaying ? `🎧 正在播放：${SOUND_LIST.find((s) => s.id === soundTrack)?.name}` : "🔇 白噪音靜音中"}</span>
-        </div>
       </footer>
     </div>
   );

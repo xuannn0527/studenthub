@@ -3,12 +3,13 @@ import type { AssignmentItem } from "./assignment";
 import {
   DEFAULT_ASSIGNMENTS,
   ACCENT_COLORS,
-  playVictoryChime,
   extractDateOnly,
   AssignmentCalendar,
   AssignmentTodoList,
   AssignmentModal,
 } from "./assignment";
+import PomodoroFullScreen from "./pomodoro/PomodoroFullScreen";
+import type { TodoItem } from "./pomodoro/pomodoroTypes";
 
 export type { AssignmentItem };
 export { ACCENT_COLORS, extractDateOnly };
@@ -45,6 +46,8 @@ export default function AssignmentTracker() {
               color: item.color || ACCENT_COLORS[idx % ACCENT_COLORS.length].id,
               expReward: item.expReward || 20,
               coinReward: item.coinReward || 10,
+              pomodoroCount: item.pomodoroCount || 0,
+              totalFocusMinutes: item.totalFocusMinutes || 0,
             };
           });
         }
@@ -60,6 +63,9 @@ export default function AssignmentTracker() {
   const [isWrapText, setIsWrapText] = useState<boolean>(() => {
     return localStorage.getItem("hub_calendar_wrap_text") === "true";
   });
+
+  // 當前正在專注討伐的作業項目
+  const [activeFocusAssignment, setActiveFocusAssignment] = useState<AssignmentItem | null>(null);
 
   // 新增 / 編輯對話框狀態
   const [modalMode, setModalMode] = useState<"add" | "edit" | null>(null);
@@ -185,6 +191,8 @@ export default function AssignmentTracker() {
         color: formColor,
         expReward: exp,
         coinReward: coins,
+        pomodoroCount: 0,
+        totalFocusMinutes: 0,
       };
 
       setAssignments((prev) => [newItem, ...prev]);
@@ -207,7 +215,6 @@ export default function AssignmentTracker() {
         if (item.id === id) {
           const nextCompleted = !item.completed;
           if (nextCompleted) {
-            playVictoryChime();
             const exp = item.expReward || 20;
             const coins = item.coinReward || 10;
 
@@ -249,11 +256,72 @@ export default function AssignmentTracker() {
     }
   };
 
-  // 清單過濾
+  // 🍅 一鍵帶入番茄鐘專注討伐
+  const handleStartFocus = (item: AssignmentItem) => {
+    setActiveFocusAssignment(item);
+  };
+
+  // 番茄鐘專注完成回調
+  const handleFocusComplete = (focusMins: number) => {
+    if (!activeFocusAssignment) return;
+    const mins = focusMins || 25;
+
+    // 1. 更新作業累計專注次數與分鐘
+    setAssignments((prev) =>
+      prev.map((a) =>
+        a.id === activeFocusAssignment.id
+          ? {
+              ...a,
+              pomodoroCount: (a.pomodoroCount || 0) + 1,
+              totalFocusMinutes: (a.totalFocusMinutes || 0) + mins,
+            }
+          : a
+      )
+    );
+
+    // 2. 同步寫入番茄鐘歷史紀錄 (供番茄鐘統計圖表呈現)
+    try {
+      const savedRecords = localStorage.getItem("hub_pomodoro_records");
+      const records = savedRecords ? JSON.parse(savedRecords) : [];
+      const newRecord = {
+        id: "r_" + Date.now(),
+        todoId: activeFocusAssignment.id,
+        todoTitle: `【${activeFocusAssignment.category || "作業"}】${activeFocusAssignment.title}`,
+        durationMinutes: mins,
+        timestamp: todayStr,
+        timeStr: new Date().toTimeString().slice(0, 5),
+      };
+      localStorage.setItem("hub_pomodoro_records", JSON.stringify([newRecord, ...records]));
+    } catch {}
+
+    // 3. 發送守護獸寵物獎勵
+    window.dispatchEvent(
+      new CustomEvent("hub_add_pet_exp", {
+        detail: {
+          exp: Math.min(mins, 60),
+          coins: 10 + Math.floor(mins / 5),
+        },
+      })
+    );
+
+    // 4. 飄字反饋
+    setRewardToast({
+      title: `${activeFocusAssignment.title} (專注 ${mins}m)`,
+      exp: Math.min(mins, 60),
+      coins: 10 + Math.floor(mins / 5),
+      isRestore: false,
+    });
+    setTimeout(() => setRewardToast(null), 3000);
+
+    setActiveFocusAssignment(null);
+  };
+
+  // 清單過濾：只留下「待繳交」或「所選日期」
   const pendingAssignments = assignments.filter((item) => !item.completed);
   const selectedDayAssignments = assignments.filter((item) => {
     return extractDateOnly(item.dueDate) === (selectedDate || "");
   });
+
   const displayedAssignments = filterMode === "selected" ? selectedDayAssignments : pendingAssignments;
 
   return (
@@ -304,7 +372,7 @@ export default function AssignmentTracker() {
         </div>
       )}
 
-      {/* 🌟 核心雙欄佈局：左側行事曆更寬大 + 右側小巧精緻待辦事項清單 */}
+      {/* 🌟 核心雙欄佈局：左側行事曆 (支援月/週切換) + 右側小巧精緻待辦事項清單 */}
       <div
         style={{
           display: "grid",
@@ -313,7 +381,7 @@ export default function AssignmentTracker() {
           alignItems: "start",
         }}
       >
-        {/* 左欄：行事曆月曆 */}
+        {/* 左欄：行事曆月曆 / 週死線視圖 */}
         <AssignmentCalendar
           currentYear={currentYear}
           currentMonth={currentMonth}
@@ -335,7 +403,7 @@ export default function AssignmentTracker() {
           }}
         />
 
-        {/* 右欄：待辦事項清單 */}
+        {/* 右欄：待辦事項清單 (支援一鍵專注討伐) */}
         <AssignmentTodoList
           pendingCount={pendingAssignments.length}
           selectedDayCount={selectedDayAssignments.length}
@@ -348,10 +416,11 @@ export default function AssignmentTracker() {
           onToggleTask={handleToggleTask}
           onDeleteTask={handleDeleteTask}
           onCardClick={handleCardClick}
+          onStartFocus={handleStartFocus}
         />
       </div>
 
-      {/* 新增 / 編輯待辦事項 Modal */}
+      {/* 新增 / 編輯待辦事項 Modal (課表科目自動綁定) */}
       <AssignmentModal
         modalMode={modalMode}
         formTitle={formTitle}
@@ -369,6 +438,21 @@ export default function AssignmentTracker() {
         onClose={() => setModalMode(null)}
         onSubmit={handleFormSubmit}
       />
+
+      {/* 🍅 全螢幕番茄鐘沉浸專注視圖 (作業討伐專用模式) */}
+      {activeFocusAssignment && (
+        <PomodoroFullScreen
+          todo={{
+            id: `assignment-${activeFocusAssignment.id}`,
+            title: `【${activeFocusAssignment.category || "作業"}】${activeFocusAssignment.title}`,
+            type: "timer",
+            timingType: "countdown",
+            durationMinutes: 25,
+          } as TodoItem}
+          onExit={() => setActiveFocusAssignment(null)}
+          onRecordCompleted={handleFocusComplete}
+        />
+      )}
     </div>
   );
 }

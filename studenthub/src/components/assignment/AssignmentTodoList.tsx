@@ -14,6 +14,7 @@ interface AssignmentTodoListProps {
   onToggleTask: (id: string) => void;
   onDeleteTask: (id: string, e: React.MouseEvent) => void;
   onCardClick: (item: AssignmentItem) => void;
+  onStartFocus: (item: AssignmentItem) => void; // 🍅 專注討伐
 }
 
 export const AssignmentTodoList: React.FC<AssignmentTodoListProps> = ({
@@ -28,6 +29,7 @@ export const AssignmentTodoList: React.FC<AssignmentTodoListProps> = ({
   onToggleTask,
   onDeleteTask,
   onCardClick,
+  onStartFocus,
 }) => {
   return (
     <div
@@ -166,7 +168,7 @@ export const AssignmentTodoList: React.FC<AssignmentTodoListProps> = ({
                 />
 
                 <div style={{ flex: 1, minWidth: 0, paddingRight: "8px" }}>
-                  {/* 第一行：標題 + 分類標籤 [作業] + 遊戲難度徽章 */}
+                  {/* 第一行：標題 + 分類標籤 [作業] + 番茄專注徽章 + 遊戲難度徽章 */}
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px", flexWrap: "wrap" }}>
                     <span
                       style={{
@@ -181,7 +183,7 @@ export const AssignmentTodoList: React.FC<AssignmentTodoListProps> = ({
                       {item.title}
                     </span>
 
-                    {/* 灰邊框分類標籤 [作業] */}
+                    {/* 灰邊框分類標籤 [作業 / 科目] */}
                     <span
                       style={{
                         fontSize: "11px",
@@ -195,6 +197,23 @@ export const AssignmentTodoList: React.FC<AssignmentTodoListProps> = ({
                     >
                       {item.category || "作業"}
                     </span>
+
+                    {/* 🍅 累計專注番茄鐘次數徽章 */}
+                    {(item.pomodoroCount || 0) > 0 && (
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          backgroundColor: "#fee2e2",
+                          color: "#b91c1c",
+                          padding: "1px 5px",
+                          borderRadius: "4px",
+                          fontWeight: "800",
+                        }}
+                        title={`已專注討伐 ${item.pomodoroCount} 次 (${item.totalFocusMinutes || (item.pomodoroCount || 0) * 25} 分鐘)`}
+                      >
+                        🍅 {item.pomodoroCount}
+                      </span>
+                    )}
 
                     {/* 遊戲難度獎勵徽章 */}
                     {item.difficulty === "boss" && (
@@ -231,13 +250,37 @@ export const AssignmentTodoList: React.FC<AssignmentTodoListProps> = ({
                   </div>
                 </div>
 
-                {/* 右側操作：討伐完成 / ↺ 復原按鈕、✏️ 編輯、✕ 刪除 */}
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }} onClick={(e) => e.stopPropagation()}>
+                {/* 右側操作：專注討伐 / 完成討伐 / ↺ 復原按鈕、✏️ 編輯、✕ 刪除 */}
+                <div style={{ display: "flex", alignItems: "center", gap: "5px" }} onClick={(e) => e.stopPropagation()}>
+                  {/* 🍅 專注討伐按鈕 (未完成時可點擊進入番茄鐘) */}
+                  {!item.completed && (
+                    <button
+                      onClick={() => onStartFocus(item)}
+                      style={{
+                        padding: "4px 8px",
+                        borderRadius: "6px",
+                        border: "1px solid #fca5a5",
+                        backgroundColor: "#fff1f2",
+                        color: "#e11d48",
+                        fontSize: "11px",
+                        fontWeight: "800",
+                        cursor: "pointer",
+                        whiteSpace: "nowrap",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "2px",
+                      }}
+                      title="一鍵帶入全螢幕番茄鐘沉浸專注"
+                    >
+                      <span>🍅</span> 專注
+                    </button>
+                  )}
+
                   {item.completed ? (
                     <button
                       onClick={() => onToggleTask(item.id)}
                       style={{
-                        padding: "4px 10px",
+                        padding: "4px 9px",
                         borderRadius: "6px",
                         border: "1.5px solid #cbd5e1",
                         backgroundColor: "#ffffff",
@@ -259,7 +302,7 @@ export const AssignmentTodoList: React.FC<AssignmentTodoListProps> = ({
                     <button
                       onClick={() => onToggleTask(item.id)}
                       style={{
-                        padding: "4px 10px",
+                        padding: "4px 9px",
                         borderRadius: "6px",
                         border: "none",
                         backgroundColor: "#10b981",
@@ -272,7 +315,7 @@ export const AssignmentTodoList: React.FC<AssignmentTodoListProps> = ({
                       }}
                       title="標記完成並獲得獎勵"
                     >
-                      ⚔️ 完成討伐
+                      ⚔️ 討伐
                     </button>
                   )}
 

@@ -7,12 +7,59 @@ export interface AssignmentItem {
   title: string;
   dueDate: string; // YYYY-MM-DD 或 YYYY-MM-DD HH:mm
   completed: boolean;
-  category?: string; // 作業 / 考試 / 報告 / 待辦
+  category?: string; // 作業 / 考試 / 報告 / 課表科目
   difficulty?: "normal" | "elite" | "boss"; // 普通 / 菁英 / Boss
   color?: string; // 邊條顏色
   expReward?: number;
   coinReward?: number;
+  pomodoroCount?: number; // 累計專注討伐番茄鐘次數
+  totalFocusMinutes?: number; // 累計專注分鐘數
 }
+
+// 取得課表科目名稱列表 (去重)
+export const getTimetableCourseNames = (): string[] => {
+  try {
+    const saved = localStorage.getItem("hub_courses");
+    if (!saved) return [];
+    const parsed: Array<{ name?: string }> = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return [];
+    const names = parsed.map((c) => c.name?.trim()).filter(Boolean) as string[];
+    return Array.from(new Set(names));
+  } catch {
+    return [];
+  }
+};
+
+// 計算指定日期所在週的 7 天 (週一 ~ 週日)
+export const getWeekDays = (baseDateStr: string): { dateStr: string; dayNumber: number; dayOfWeekName: string }[] => {
+  const [y, m, d] = (baseDateStr || "").split("-").map(Number);
+  const target = !isNaN(y) && !isNaN(m) && !isNaN(d) ? new Date(y, m - 1, d) : new Date();
+  
+  let dayOfWeek = target.getDay() - 1; // 0=週一, 6=週日
+  if (dayOfWeek === -1) dayOfWeek = 6;
+
+  const monday = new Date(target);
+  monday.setDate(target.getDate() - dayOfWeek);
+
+  const weekNames = ["一", "二", "三", "四", "五", "六", "日"];
+  const days: { dateStr: string; dayNumber: number; dayOfWeekName: string }[] = [];
+
+  for (let i = 0; i < 7; i++) {
+    const curr = new Date(monday);
+    curr.setDate(monday.getDate() + i);
+    const yStr = curr.getFullYear();
+    const mStr = String(curr.getMonth() + 1).padStart(2, "0");
+    const dStr = String(curr.getDate()).padStart(2, "0");
+
+    days.push({
+      dateStr: `${yStr}-${mStr}-${dStr}`,
+      dayNumber: curr.getDate(),
+      dayOfWeekName: weekNames[i],
+    });
+  }
+
+  return days;
+};
 
 // 邊條色彩配方 (14 款高顏值色票 + 支援任意自訂色彩)
 export const ACCENT_COLORS = [
@@ -100,33 +147,6 @@ export const DEFAULT_ASSIGNMENTS: AssignmentItem[] = [
   },
 ];
 
-// 播放通關經驗音效
-export const playVictoryChime = () => {
-  try {
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    const ctx = new AudioCtx();
-    const notes = [329.63, 392.0, 523.25, 659.25]; // E4, G4, C5, E5
-    const now = ctx.currentTime;
-
-    notes.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-
-      gain.gain.setValueAtTime(0, now + idx * 0.08);
-      gain.gain.linearRampToValueAtTime(0.2, now + idx * 0.08 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.28);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now + idx * 0.08);
-      osc.stop(now + idx * 0.08 + 0.3);
-    });
-  } catch {}
-};
 
 // 日期解析工具：一律回傳 "YYYY-MM-DD"
 export const extractDateOnly = (dueDateStr?: string): string => {

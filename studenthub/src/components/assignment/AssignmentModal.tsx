@@ -1,5 +1,5 @@
-import React from "react";
-import { ACCENT_COLORS, getColorTheme } from "./assignmentTypes";
+import React, { useMemo } from "react";
+import { ACCENT_COLORS, getColorTheme, getTimetableCourseNames } from "./assignmentTypes";
 
 interface AssignmentModalProps {
   modalMode: "add" | "edit" | null;
@@ -36,6 +36,9 @@ export const AssignmentModal: React.FC<AssignmentModalProps> = ({
   onClose,
   onSubmit,
 }) => {
+  // 自動從課表中載入現有課程名稱
+  const timetableCourses = useMemo(() => getTimetableCourseNames(), [modalMode]);
+
   if (!modalMode) return null;
 
   return (
@@ -106,14 +109,22 @@ export const AssignmentModal: React.FC<AssignmentModalProps> = ({
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
             <div>
-              <label style={{ display: "block", fontSize: "12px", fontWeight: "700", color: "#475569", marginBottom: "4px" }}>
-                分類標籤
-              </label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                <label style={{ fontSize: "12px", fontWeight: "700", color: "#475569" }}>
+                  分類標籤
+                </label>
+                {timetableCourses.length > 0 && (
+                  <span style={{ fontSize: "10px", color: "#2563eb", fontWeight: "600" }}>
+                    可選課表科目 ▾
+                  </span>
+                )}
+              </div>
               <input
                 type="text"
+                list="course-category-options"
                 value={formCategory}
                 onChange={(e) => onSetFormCategory(e.target.value)}
-                placeholder="例：作業、考試"
+                placeholder="例：作業、考試，或選課表科目"
                 style={{
                   width: "100%",
                   padding: "8px 10px",
@@ -123,6 +134,39 @@ export const AssignmentModal: React.FC<AssignmentModalProps> = ({
                   boxSizing: "border-box",
                 }}
               />
+              <datalist id="course-category-options">
+                <option value="作業" />
+                <option value="考試" />
+                <option value="報告" />
+                {timetableCourses.map((cName) => (
+                  <option key={cName} value={cName} />
+                ))}
+              </datalist>
+
+              {/* 課表科目快速填入快捷 Pill */}
+              {timetableCourses.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginTop: "5px" }}>
+                  {timetableCourses.slice(0, 4).map((cName) => (
+                    <button
+                      key={cName}
+                      type="button"
+                      onClick={() => onSetFormCategory(cName)}
+                      style={{
+                        padding: "2px 6px",
+                        fontSize: "10px",
+                        fontWeight: "600",
+                        borderRadius: "4px",
+                        border: formCategory === cName ? "1px solid #2563eb" : "1px solid #e2e8f0",
+                        backgroundColor: formCategory === cName ? "#eff6ff" : "#f8fafc",
+                        color: formCategory === cName ? "#2563eb" : "#64748b",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {cName}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div>
               <label style={{ display: "block", fontSize: "12px", fontWeight: "700", color: "#475569", marginBottom: "4px" }}>
