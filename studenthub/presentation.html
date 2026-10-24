@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StudentHub 產品介紹簡報</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060814;--cy:#22d3ee;--mg:#e879f9;--gr:#4ade80;--am:#fbbf24;--rs:#fb7185;--mu:#8aa0b8;--hd:'Orbitron','Noto Sans TC','PingFang TC','Microsoft JhengHei','Segoe UI',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;user-select:none}
+body{background:var(--bg);color:#e0f2fe;font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;overflow:hidden;width:100vw;height:100vh;
+background-image:linear-gradient(rgba(34,211,238,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.06) 1px,transparent 1px);background-size:48px 48px}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 15% 10%,rgba(34,211,238,.16),transparent 45%),radial-gradient(circle at 85% 90%,rgba(232,121,249,.16),transparent 45%);pointer-events:none}
+body::after{content:"";position:fixed;top:0;left:0;right:0;height:9%;will-change:transform;background:linear-gradient(transparent,rgba(34,211,238,.12),transparent);animation:scan 4s linear infinite;pointer-events:none;z-index:99}
+@keyframes scan{from{transform:translateY(-100%)}to{transform:translateY(1111%)}}
+.top{position:fixed;top:24px;left:40px;right:40px;display:flex;justify-content:space-between;align-items:center;z-index:90;font-family:var(--hd);font-weight:900;letter-spacing:2px;color:var(--cy)}
+.top span{display:flex;align-items:center;gap:10px}.cnt{font-size:14px;color:var(--mu);border:1px solid rgba(34,211,238,.3);padding:4px 14px}
+.ic{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.deck{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;padding:0 48px}
+.slide{position:absolute;width:calc(100% - 96px);max-width:1340px;height:min(740px,calc(100vh - 130px));padding:48px 56px;display:none;border:1px solid rgba(34,211,238,.3);background:rgba(8,12,28,.82);box-shadow:0 0 50px rgba(34,211,238,.12),inset 0 0 60px rgba(34,211,238,.04)}
+.slide::before,.slide::after{content:"";position:absolute;width:26px;height:26px;border:3px solid var(--cy)}
+.slide::before{top:-2px;left:-2px;border-right:0;border-bottom:0}.slide::after{bottom:-2px;right:-2px;border-left:0;border-top:0}
+.slide.on{display:flex}.slide.enter{display:flex;z-index:3;animation:inA .5s ease-out both}.slide.leave{display:flex;z-index:2;animation:outA .4s ease-in forwards}
+@keyframes inA{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes outA{to{opacity:0;transform:translateX(-40px)}}
+.slide.on .tag,.slide.on h2,.slide.on .item,.slide.on .mock,.slide.on .hero>*{animation:rise .6s cubic-bezier(.16,1,.3,1) backwards}
+.slide.on h2{animation-delay:.1s}.slide.on .item:nth-child(1){animation-delay:.2s}.slide.on .item:nth-child(2){animation-delay:.3s}.slide.on .item:nth-child(3){animation-delay:.4s}.slide.on .mock{animation-delay:.25s}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:56px;width:100%;align-items:center}
+.tag{display:inline-block;font-family:var(--hd);font-size:14px;font-weight:600;letter-spacing:2px;color:var(--c,var(--cy));border:1px solid var(--c,var(--cy));padding:5px 14px;margin-bottom:14px}
+h2{font-size:40px;font-weight:900;line-height:1.25;margin-bottom:26px;color:#fff;text-shadow:0 0 18px rgba(34,211,238,.5),2px 0 rgba(232,121,249,.6)}
+.list{display:flex;flex-direction:column;gap:14px}
+.item{display:flex;align-items:center;gap:16px;padding:16px 20px;font-size:18px;font-weight:700;border:1px solid rgba(255,255,255,.1);border-left:3px solid var(--c,var(--cy));background:rgba(255,255,255,.03);transition:.25s}
+.item:hover{transform:translateX(8px);background:rgba(34,211,238,.1);box-shadow:0 0 20px rgba(34,211,238,.2)}
+.item .ic{font-size:26px;color:var(--c,var(--cy));filter:drop-shadow(0 0 6px var(--c,var(--cy)))}
+.mock{position:relative;padding:22px;border:1px solid rgba(34,211,238,.35);background:rgba(4,8,20,.85);display:flex;flex-direction:column;max-height:520px;overflow:hidden;box-shadow:0 0 30px rgba(34,211,238,.1)}
+.mh{display:flex;justify-content:space-between;font-family:var(--hd);font-size:14px;letter-spacing:1px;padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid rgba(34,211,238,.25);color:var(--cy)}
+.center{flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px 40px}
+.art{width:min(300px,38vh);margin-bottom:6px}
+.rot{transform-box:fill-box;transform-origin:center;animation:spin 9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.bar{transform-box:fill-box;transform-origin:bottom;animation:eq 1s ease-in-out infinite alternate}@keyframes eq{from{transform:scaleY(.2)}to{transform:scaleY(1)}}
+.hero-t{font-family:var(--hd);font-weight:900;font-size:clamp(36px,min(12vh,7vw),96px);letter-spacing:5px;color:var(--cy);text-shadow:0 0 18px var(--cy),3px 0 var(--mg);animation:gt 3.5s infinite}
+@keyframes gt{0%,92%,100%{transform:none;text-shadow:0 0 18px var(--cy),3px 0 var(--mg)}94%{transform:translateX(-6px) skewX(-6deg);text-shadow:-4px 0 var(--mg),4px 0 var(--cy)}96%{transform:translateX(6px)}}
+.hero-s{font-size:clamp(15px,3vh,24px);margin-top:8px;color:#fff;font-weight:700}.hero-d{font-size:clamp(14px,2.4vh,18px);color:var(--mu);margin:8px 0 clamp(12px,3.5vh,30px)}
+.pills{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}.pill{display:flex;align-items:center;gap:8px;padding:8px 18px;border:1px solid var(--c);color:var(--c);font-weight:700;font-size:17px;transition:.25s}.pill:hover{background:var(--c);color:#050814;box-shadow:0 0 20px var(--c)}
+.sol{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sol div{padding:18px 10px;text-align:center;font-weight:700;font-size:17px;border:1px solid rgba(74,222,128,.35);background:rgba(74,222,128,.06);transition:.25s}.sol div:hover{background:rgba(74,222,128,.15);transform:translateY(-3px)}
+.sol .ic{display:block;margin:0 auto 8px;font-size:32px;color:var(--gr);filter:drop-shadow(0 0 6px var(--gr))}
+.tt{display:grid;grid-template-columns:30px repeat(5,1fr);gap:5px;font-size:15px;text-align:center}.th{padding:5px 0;color:var(--mu);border-bottom:1px solid rgba(34,211,238,.25);font-family:var(--hd)}
+.tc{min-height:50px;border:1px dashed rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:var(--mu)}
+.co{width:100%;height:100%;min-height:46px;display:flex;align-items:center;justify-content:center;font-weight:900;background:var(--c);color:#050814;box-shadow:0 0 14px var(--c);animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{opacity:0;transform:scale(.4);filter:brightness(3)}to{opacity:1;transform:none;filter:none}}
+.pomo{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ringw{position:relative;width:210px;height:210px}.ringw svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ringw .time{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--hd);font-weight:900;font-size:46px;font-variant-numeric:tabular-nums;text-shadow:0 0 14px var(--rs)}
+.btn{margin-top:16px;background:transparent;color:var(--rs);border:1px solid var(--rs);padding:9px 26px;font-family:inherit;font-size:17px;font-weight:700;cursor:pointer;transition:.2s}.btn:hover{background:var(--rs);color:#050814;box-shadow:0 0 20px var(--rs)}
+.toms{display:flex;gap:6px;align-items:center;min-height:34px;margin-top:12px;font-size:15px;color:var(--mu)}.toms svg{width:28px;height:28px;animation:tp .6s cubic-bezier(.34,1.56,.64,1)}@keyframes tp{from{opacity:0;transform:translateY(-30px) scale(.3)}to{opacity:1;transform:none}}
+.task{display:flex;align-items:center;gap:14px;padding:14px 16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);cursor:pointer;font-weight:700;font-size:17px;transition:.25s}.task:hover{border-color:var(--gr);transform:translateX(4px)}
+.cb{width:24px;height:24px;border:2px solid var(--mu);display:flex;align-items:center;justify-content:center;transition:.25s}.cb .ic{opacity:0;color:#050814;font-size:16px;stroke-width:3}
+.task.done .cb{background:var(--gr);border-color:var(--gr);box-shadow:0 0 14px var(--gr);transform:scale(1.12)}.task.done .cb .ic{opacity:1}.task.done .tx{text-decoration:line-through;color:var(--mu)}
+.task small{display:block;color:var(--mu);font-weight:400;font-size:14px}.task>.ic{margin-left:auto;font-size:20px;color:var(--rs)}
+.toast{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#050814;border:1px solid var(--gr);color:var(--gr);padding:12px 22px;font-size:16px;font-weight:900;white-space:nowrap;box-shadow:0 0 30px rgba(74,222,128,.5);display:none;z-index:9}
+.toast.go{display:block;animation:tf 1.2s ease forwards}@keyframes tf{0%{opacity:0;transform:translate(-50%,-20%) scale(.8)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}100%{opacity:0;transform:translate(-50%,-90%)}}
+.view{overflow:hidden;flex:1;display:flex;align-items:center}.track{display:flex;width:100%;transition:transform .65s cubic-bezier(.6,0,.2,1)}
+.pc{flex:none;width:100%;text-align:center}.pc .em{font-size:110px;line-height:1.1;display:inline-block;animation:idle 3s ease-in-out infinite alternate;filter:drop-shadow(0 0 22px var(--c))}
+@keyframes idle{to{transform:translateY(-10px)}}
+.pc b{display:block;font-size:24px;margin-top:6px}.pc i{display:inline-block;font-style:normal;margin-top:6px;padding:2px 12px;border:1px solid var(--c);color:var(--c);font-size:15px;font-weight:700}
+.pc p{margin-top:12px;font-size:16px;color:#cbd5e1}
+.thumbs{display:flex;justify-content:center;gap:12px;padding-top:14px;border-top:1px solid rgba(34,211,238,.25)}
+.tp{width:60px;height:60px;border:2px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;opacity:.35;filter:grayscale(.8);transition:.35s cubic-bezier(.34,1.56,.64,1)}
+.tp.on{opacity:1;filter:none;border-color:var(--c);transform:translateY(-6px) scale(1.12);box-shadow:0 0 22px var(--c)}
+.bg{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero{position:relative;z-index:1}
+.scene{perspective:700px;height:clamp(80px,15vh,120px);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.cube{position:relative;width:70px;height:70px;transform-style:preserve-3d;animation:cr 10s linear infinite}
+.cube.in{width:34px;height:34px;position:absolute;left:18px;top:18px;animation:cr2 6s linear infinite}
+.cube i{position:absolute;inset:0;border:1.5px solid #22d3ee;background:rgba(34,211,238,.06);box-shadow:0 0 12px rgba(34,211,238,.4) inset}
+.cube.in i{border-color:#e879f9;box-shadow:0 0 10px rgba(232,121,249,.4) inset}
+.cube i:nth-child(1){transform:translateZ(35px)}.cube i:nth-child(2){transform:rotateY(180deg) translateZ(35px)}.cube i:nth-child(3){transform:rotateY(90deg) translateZ(35px)}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(35px)}.cube i:nth-child(5){transform:rotateX(90deg) translateZ(35px)}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(35px)}
+.cube.in i:nth-child(1){transform:translateZ(17px)}.cube.in i:nth-child(2){transform:rotateY(180deg) translateZ(17px)}.cube.in i:nth-child(3){transform:rotateY(90deg) translateZ(17px)}.cube.in i:nth-child(4){transform:rotateY(-90deg) translateZ(17px)}.cube.in i:nth-child(5){transform:rotateX(90deg) translateZ(17px)}.cube.in i:nth-child(6){transform:rotateX(-90deg) translateZ(17px)}
+@keyframes cr{to{transform:rotateX(360deg) rotateY(360deg)}}@keyframes cr2{to{transform:rotateX(-360deg) rotateY(-360deg)}}
+.rain{position:absolute;inset:0;overflow:hidden;opacity:.6;-webkit-mask-image:radial-gradient(ellipse at center,transparent 22%,#000 72%);mask-image:radial-gradient(ellipse at center,transparent 22%,#000 72%)}
+.rain span{position:absolute;top:0;font:12px/14px monospace;text-align:center;background:linear-gradient(transparent,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent;animation:fall linear infinite}
+@keyframes fall{from{transform:translateY(-110%)}to{transform:translateY(780px)}}
+.scene.side{position:absolute;right:7%;top:70%;height:auto;margin:0;transform:translateY(-50%) scale(1.4);z-index:1}
+.orbw{position:absolute;left:6%;top:70%;transform:translateY(-50%) scale(1);z-index:1;width:160px;height:160px}
+.orbw .core{position:absolute;inset:42px;border:2px solid var(--cy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--hd);font-weight:900;font-size:15px;letter-spacing:1px;color:var(--cy);text-shadow:0 0 10px var(--cy);animation:opl 2s ease-in-out infinite;box-shadow:0 0 18px var(--cy),inset 0 0 14px rgba(34,211,238,.25)}
+@keyframes opl{50%{transform:scale(1.15);border-color:var(--mg);box-shadow:0 0 36px var(--mg),inset 0 0 14px rgba(232,121,249,.3)}}
+.orbw .path{position:absolute;inset:0;border:1px dashed rgba(34,211,238,.3);border-radius:50%}
+.orbw .ring{position:absolute;inset:0;animation:osp 10s linear infinite}
+@keyframes osp{to{transform:rotate(360deg)}}
+.orbw .ring .ic{position:absolute;width:42px;height:42px;font-size:42px;color:var(--c);filter:drop-shadow(0 0 7px var(--c));animation:osp 10s linear infinite reverse,obn 1.6s ease-in-out infinite alternate}
+@keyframes obn{from{scale:.85}to{scale:1.2}}
+.orbw .ring .ic:nth-child(1){top:-21px;left:59px}.orbw .ring .ic:nth-child(2){right:-21px;top:59px;animation-delay:0s,.4s}.orbw .ring .ic:nth-child(3){bottom:-21px;left:59px;animation-delay:0s,.8s}.orbw .ring .ic:nth-child(4){left:-21px;top:59px;animation-delay:0s,1.2s}
+@media(max-width:1200px){.orbw{display:none}}
+.two{position:relative;z-index:1}.net{pointer-events:none}
+#netOut{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:0;pointer-events:none;display:none}
+.g3{position:absolute;top:50%;width:165px;height:165px;perspective:700px;transform:translateY(-50%);z-index:1}
+.g3.l{left:4%}.g3.r{right:4%}
+.g3 i{position:absolute;border-radius:50%;border:2px solid var(--c);box-shadow:0 0 14px var(--c),inset 0 0 14px var(--c)}
+.g3 i:nth-child(1){inset:0;--c:#22d3ee;animation:g3x 6s linear infinite}
+.g3 i:nth-child(2){inset:14px;--c:#e879f9;animation:g3y 5s linear infinite}
+.g3.r i{animation-direction:reverse}
+@keyframes g3x{to{transform:rotateX(360deg)}}@keyframes g3y{to{transform:rotateY(360deg)}}@keyframes g3z{from{transform:rotateX(70deg) rotateZ(0)}to{transform:rotateX(70deg) rotateZ(360deg)}}
+@media(max-width:1200px){.g3{display:none}}
+/* 最後一頁：光速隧道開場，旋轉結束後跳出 Display Time */
+.tunnel{position:absolute;inset:0;overflow:hidden;z-index:3;pointer-events:none;animation:tfade .5s ease 2.1s forwards}
+.tunnel i{position:absolute;left:50%;top:50%;width:1500px;height:1500px;border:10px solid #22d3ee;will-change:transform,opacity;opacity:0;animation:tw 1.5s cubic-bezier(.5,0,.9,.6) both;animation-delay:calc(var(--k)*.25s)}
+.tunnel i:nth-child(even){border-color:#e879f9}
+@keyframes tw{from{transform:translate(-50%,-50%) scale(.02) rotate(0);opacity:0}20%{opacity:1}to{transform:translate(-50%,-50%) scale(1) rotate(150deg);opacity:0}}
+@keyframes tfade{to{opacity:0;visibility:hidden}}
+.slide[data-i="6"] .hero{opacity:0;animation:dtpop .9s cubic-bezier(.34,1.56,.64,1) 2.2s forwards}
+@keyframes dtpop{from{opacity:0;transform:scale(.2);filter:blur(10px) brightness(3)}to{opacity:1;transform:none;filter:none}}
+.g3{opacity:0;animation:dtfade .8s ease 2.4s forwards}
+@keyframes dtfade{to{opacity:1}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+<symbol id="bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+<symbol id="pal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="16" cy="10" r="1"/></symbol>
+<symbol id="ph" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+<symbol id="tg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="9" cy="9" r="1.5"/></symbol>
+<symbol id="ch" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 18v-5M12 18V9M16 18v-8"/></symbol>
+<symbol id="lk" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005 0l3-3a4 4 0 00-5-5l-1 1M14 10a4 4 0 00-5 0l-3 3a4 4 0 005 5l1-1"/></symbol>
+<symbol id="sw" viewBox="0 0 24 24"><path d="M14 3h7v7l-9 9-4-4zM5 15l4 4M3 21l3-3"/></symbol>
+<symbol id="book" viewBox="0 0 24 24"><path d="M3 5c3-1.2 6-1 9 1 3-2 6-2.200 9-1v13c-3-1.200-6-1-9 1-3-2-6-2.200-9-1zM12 6v13"/></symbol>
+<symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="ok" viewBox="0 0 24 24"><path d="M5 12l4 4 10-10"/></symbol>
+<symbol id="paw" viewBox="0 0 24 24"><circle cx="6" cy="10" r="2"/><circle cx="10" cy="6" r="2"/><circle cx="14" cy="6" r="2"/><circle cx="18" cy="10" r="2"/><path d="M7 17c0-3 3-5 5-5s5 2 5 5c0 2-2 3-5 3s-5-1-5-3z"/></symbol>
+<symbol id="up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+<symbol id="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h6M9 14h6"/></symbol>
+<symbol id="tm" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></symbol>
+<symbol id="tom" viewBox="0 0 24 24"><circle cx="12" cy="14" r="8" fill="#ef4444" stroke="none"/><path d="M12 6c-1-3-4-3-5-2 2 0 3 1 4 2-2 0-4 1-4 1 2 0 4 0 5 1 1-1 3-1 5-1 0 0-2-1-4-1 1-1 2-2 4-2-1-1-4-1-5 2z" fill="#22c55e" stroke="none"/><circle cx="9" cy="12" r="1.6" fill="#fecaca" stroke="none"/></symbol>
+</defs></svg>
+<div class="top"><span><svg class="ic" style="font-size:22px"><use href="#tg"/></svg>STUDENTHUB</span><div class="cnt" id="cnt">1 / 7</div></div>
+<canvas id="netOut"></canvas>
+<main class="deck">
+
+<section class="slide on center" data-i="0"><canvas class="bg net"></canvas>
+ 
+ <div class="scene side"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i><div class="cube in"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+ <div class="orbw"><div class="path"></div><div class="core">APP</div><div class="ring"><svg class="ic" style="--c:#22d3ee"><use href="#cal"/></svg><svg class="ic" style="--c:#fb7185"><use href="#tm"/></svg><svg class="ic" style="--c:#4ade80"><use href="#book"/></svg><svg class="ic" style="--c:#fbbf24"><use href="#paw"/></svg></div></div>
+ <div class="hero" style="display:flex;flex-direction:column;align-items:center">
+ 
+ <div class="hero-t">STUDENTHUB</div><div class="hero-s">學生課業專注管理系統</div><div class="hero-d">課表、專注、作業、養成，一個工作台搞定</div>
+ <div class="pills"><span class="pill" style="--c:#22d3ee"><svg class="ic"><use href="#cal"/></svg>課表</span><span class="pill" style="--c:#fb7185"><svg class="ic"><use href="#tm"/></svg>番茄鐘</span><span class="pill" style="--c:#4ade80"><svg class="ic"><use href="#book"/></svg>作業</span><span class="pill" style="--c:#fbbf24"><svg class="ic"><use href="#paw"/></svg>守護獸</span></div></div>
+</section>
+
+<section class="slide" data-i="1"><div class="two"><div>
+ <span class="tag" style="--c:#e879f9">WHY</span><h2>課業工具太零散</h2>
+ <div class="list" style="--c:#fb7185"><div class="item"><svg class="ic"><use href="#x"/></svg>課表只能靠截圖</div><div class="item"><svg class="ic"><use href="#x"/></svg>作業死線容易漏掉</div><div class="item"><svg class="ic"><use href="#x"/></svg>讀書缺乏動力</div></div></div>
+ <div class="mock"><div class="mh"><span>SOLUTION</span><span>解決方案</span></div><div class="sol">
+ <div><svg class="ic"><use href="#cal"/></svg>貼上文字自動排課表</div><div><svg class="ic"><use href="#ph"/></svg>一鍵匯出手機桌布</div><div><svg class="ic"><use href="#tm"/></svg>作業旁直接開始專注</div><div><svg class="ic"><use href="#paw"/></svg>專注賺經驗養神獸</div></div></div></div></section>
+
+<section class="slide" data-i="2"><div class="two"><div>
+ <span class="tag">MODULE 01</span><h2>智慧課表</h2>
+ <div class="list"><div class="item"><svg class="ic"><use href="#bolt"/></svg>選課文字貼上即解析</div><div class="item"><svg class="ic"><use href="#pal"/></svg>自訂背景與配色</div><div class="item"><svg class="ic"><use href="#ph"/></svg>匯出高清桌布</div></div></div>
+ <div class="mock"><div class="mh"><span>TIMETABLE</span><span>自動匯入中</span></div><div class="tt" id="tt"></div></div></div></section>
+
+<section class="slide" data-i="3"><div class="two"><div>
+ <span class="tag" style="--c:#fb7185">MODULE 02</span><h2>沉浸番茄鐘</h2>
+ <div class="list" style="--c:#fb7185"><div class="item"><svg class="ic"><use href="#tg"/></svg>倒數、打卡、長期目標</div><div class="item"><svg class="ic"><use href="#img"/></svg>全螢幕專注背景</div><div class="item"><svg class="ic"><use href="#ch"/></svg>專注時數統計圖表</div></div></div>
+ <div class="mock"><div class="mh"><span>FOCUS</span><span style="color:#fb7185">專注中</span></div><div class="pomo">
+  <div class="ringw"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" fill="none" stroke="rgba(251,113,133,.15)" stroke-width="8"/><circle id="rg" cx="100" cy="100" r="88" fill="none" stroke="#fb7185" stroke-width="8" stroke-dasharray="553" stroke-dashoffset="553" style="filter:drop-shadow(0 0 8px #fb7185)"/></svg><div class="time" id="tv">25:00</div></div>
+  <button class="btn" id="tb" onclick="toggleTimer()">暫停</button><div class="toms" id="toms"></div></div></div></div></section>
+
+<section class="slide" data-i="4"><div class="two"><div>
+ <span class="tag" style="--c:#4ade80">MODULE 03</span><h2>作業死線討伐</h2>
+ <div class="list" style="--c:#4ade80"><div class="item"><svg class="ic"><use href="#cal"/></svg>月曆與週檢視</div><div class="item"><svg class="ic"><use href="#lk"/></svg>連動課表科目</div><div class="item"><svg class="ic"><use href="#sw"/></svg>一鍵開始專注</div></div></div>
+ <div class="mock"><div class="mh"><span>QUESTS</span><span>自動討伐中</span></div>
+  <div class="task" onclick="done(this,'微積分習題',30,15)"><div class="cb"><svg class="ic"><use href="#ok"/></svg></div><div><div class="tx">微積分習題 Ch.4</div><small>明天到期 · 普通</small></div><svg class="ic"><use href="#tm"/></svg></div>
+  <div class="task" onclick="done(this,'網頁設計簡報',60,30)"><div class="cb"><svg class="ic"><use href="#ok"/></svg></div><div><div class="tx">網頁設計期末簡報</div><small>3 天後 · 困難</small></div><svg class="ic"><use href="#tm"/></svg></div>
+  <div class="task" onclick="done(this,'多益單字小考',20,10)"><div class="cb"><svg class="ic"><use href="#ok"/></svg></div><div><div class="tx">多益單字小考</div><small>週五 · 簡單</small></div><svg class="ic"><use href="#tm"/></svg></div>
+  <div class="toast" id="toast"></div></div></div></section>
+
+<section class="slide" data-i="5"><div class="two"><div>
+ <span class="tag" style="--c:#fbbf24">MODULE 04</span><h2>守護獸養成</h2>
+ <div class="list" style="--c:#fbbf24"><div class="item"><svg class="ic"><use href="#paw"/></svg>桌寵陪你讀書</div><div class="item"><svg class="ic"><use href="#up"/></svg>四階進化</div><div class="item"><svg class="ic"><use href="#coin"/></svg>金幣買零食餵養</div></div></div>
+ <div class="mock" id="pm"><div class="mh"><span>SELECT GUARDIAN</span><span style="color:#fbbf24">4 階進化</span></div>
+  <div class="view"><div class="track" id="track"></div></div><div class="thumbs" id="thumbs"></div></div></div></section>
+
+<section class="slide center" data-i="6"><div class="rain" id="rain"></div><div class="tunnel"><i style="--k:0"></i><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i></div><div class="g3 l"><i></i><i></i></div><div class="g3 r"><i></i><i></i></div><div class="hero" style="display:flex;flex-direction:column;align-items:center">
+ 
+ <div class="hero-t">Display Time</div></div></section>
+</main>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')],N=slides.length;let cur=0,busy=false;
+function go(n){
+  n=(n+N)%N;if(busy||n===cur)return;busy=true;
+  stopDemos();const a=slides[cur],b=slides[n];
+  a.classList.remove('on');a.classList.add('leave');b.classList.add('enter');
+  cur=n;document.getElementById('cnt').textContent=`${cur+1} / ${N}`;startDemo(cur);
+  setTimeout(()=>{a.classList.remove('leave');b.classList.remove('enter');b.classList.add('on');busy=false;},520);
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1);
+  if(e.key.toLowerCase()==='f')document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{});
+});
+addEventListener('click',e=>{
+  if(!e.isTrusted||e.target.closest('.task,.btn,.tp'))return;
+  if(e.clientX<innerWidth*.25)go(cur-1);else if(e.clientX>innerWidth*.75)go(cur+1);
+});
+let demoTO=[],demoIV=null,tvInt=null,tvTO=null;
+function stopDemos(){clearInterval(tvInt);tvInt=null;clearTimeout(tvTO);demoTO.forEach(clearTimeout);demoTO=[];clearInterval(demoIV);demoIV=null;}
+
+/* 課表 */
+const COURSES=[['微積分',0,[0,1],'#22d3ee'],['經濟學',2,[0],'#fbbf24'],['演算法',1,[1,2],'#e879f9'],['資料庫',3,[1,2],'#4ade80'],['網頁設計',4,[2,3],'#fb7185']];
+function buildTT(){
+  let h='<div class="th">節</div>'+['一','二','三','四','五'].map(d=>`<div class="th">${d}</div>`).join('');
+  for(let r=0;r<4;r++){h+=`<div class="tc">${r+1}</div>`;for(let c=0;c<5;c++)h+=`<div class="tc" id="c${r}${c}"></div>`;}
+  document.getElementById('tt').innerHTML=h;
+}
+/* 番茄鐘 */
+let sec=1500,paused=false,tn=0;
+function renderT(){
+  document.getElementById('tv').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+  document.getElementById('rg').style.strokeDashoffset=553*(sec/1500);
+}
+function startTimer(first){
+  clearInterval(tvInt);clearTimeout(tvTO);
+  if(first){tn=0;document.getElementById('toms').innerHTML='';}
+  sec=1500;paused=false;renderT();document.getElementById('tb').textContent='暫停';
+  tvInt=setInterval(()=>{
+    if(paused)return;sec-=25;
+    if(sec<=0){
+      sec=0;renderT();clearInterval(tvInt);tvInt=null;tn++;
+      const t=document.getElementById('toms');if(tn===1)t.innerHTML='獲得番茄 ';
+      t.insertAdjacentHTML('beforeend','<svg><use href="#tom"/></svg>');
+      document.getElementById('tb').textContent='專注完成';
+      tvTO=setTimeout(()=>startTimer(false),2000);
+    }else renderT();
+  },100);
+}
+function toggleTimer(){if(!tvInt)return;paused=!paused;document.getElementById('tb').textContent=paused?'繼續':'暫停';}
+/* 作業 */
+function done(el,t,exp,coin){
+  el.classList.toggle('done');
+  if(el.classList.contains('done')){
+    const x=document.getElementById('toast');x.classList.remove('go');void x.offsetWidth;
+    x.textContent=`討伐成功：${t}  +${exp} EXP  +${coin} 金幣`;x.classList.add('go');
+  }
+}
+/* 守護獸輪播 */
+const PETS=[['🐣','初生雛鳥','Lv.1~3','主人！今天也要一起專注喔','#facc15'],['🦊','靈性學業狐','Lv.4~6','靈感湧現！這題我看得懂了','#fb923c'],['🦌','專注幻獸鹿','Lv.7~9','進入心流，雜音消失','#22d3ee'],['🐉','時空守護龍神','Lv.10+','這學期 All Pass 沒問題','#e879f9']];
+let pi=0;
+function buildPets(){
+  const card=p=>`<div class="pc" style="--c:${p[4]}"><span class="em">${p[0]}</span><b>${p[1]}</b><i>${p[2]}</i><p>「${p[3]}」</p></div>`;
+  document.getElementById('track').innerHTML=PETS.map(card).join('')+card(PETS[0]);
+  document.getElementById('thumbs').innerHTML=PETS.map((p,k)=>`<div class="tp" style="--c:${p[4]}" onclick="pet(${k})">${p[0]}</div>`).join('');
+}
+function setThumb(k){document.querySelectorAll('.tp').forEach((t,j)=>t.classList.toggle('on',j===k));}
+function pet(k,animate=true){
+  const tr=document.getElementById('track');tr.style.transition=animate?'':'none';
+  tr.style.transform=`translateX(-${k*100}%)`;pi=k%4;setThumb(pi);
+  if(k===4)demoTO.push(setTimeout(()=>{tr.style.transition='none';tr.style.transform='translateX(0)';pi=0;},700));
+}
+function startDemo(i){
+  if(i===2){
+    COURSES.forEach(c=>c[2].forEach(r=>document.getElementById(`c${r}${c[1]}`).innerHTML=''));
+    COURSES.forEach((c,s)=>demoTO.push(setTimeout(()=>c[2].forEach(r=>{document.getElementById(`c${r}${c[1]}`).innerHTML=`<div class="co" style="--c:${c[3]}">${c[0]}</div>`;}),500*(s+1))));
+  }
+  if(i===3)startTimer(true);
+  if(i===4){
+    document.querySelectorAll('.task').forEach((t,k)=>{t.classList.remove('done');demoTO.push(setTimeout(()=>{if(!t.classList.contains('done'))t.click();},1200+k*3000));});
+    document.getElementById('toast').classList.remove('go');
+  }
+  if(i===5){
+    pet(0,false);demoIV=setInterval(()=>pet(pi+1),4000);
+  }
+}
+/* 粒子連線網：共用運算與繪製（距離比平方、同透明度的線與同顏色的點各一次畫完） */
+function mkP(n,w,h,av){const P=[];while(P.length<n){const x=Math.random()*w,y=Math.random()*h;if(av&&x>av.l&&x<av.r&&y>av.t&&y<av.b)continue;P.push({x,y,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6});}return P;}
+function stepNet(x,P,w,h,av,k){
+ x.clearRect(0,0,w,h);
+ for(const p of P){
+  let nx=p.x+p.vx*k,ny=p.y+p.vy*k;
+  if(nx<0||nx>w){p.vx*=-1;nx=p.x;}if(ny<0||ny>h){p.vy*=-1;ny=p.y;}
+  if(av){
+   if(p.x>av.l&&p.x<av.r&&p.y>av.t&&p.y<av.b){/* 縮放視窗後落在框內：推回最近的邊 */
+    const m=Math.min(p.x-av.l,av.r-p.x,p.y-av.t,av.b-p.y);
+    if(m===p.x-av.l){p.x=av.l-1;p.vx=-Math.abs(p.vx);}else if(m===av.r-p.x){p.x=av.r+1;p.vx=Math.abs(p.vx);}else if(m===p.y-av.t){p.y=av.t-1;p.vy=-Math.abs(p.vy);}else{p.y=av.b+1;p.vy=Math.abs(p.vy);}
+    nx=p.x;ny=p.y;
+   }else if(nx>av.l&&nx<av.r&&ny>av.t&&ny<av.b){/* 碰到框就彈開，粒子只留在框外 */
+    if(p.x<=av.l||p.x>=av.r)p.vx*=-1;else p.vy*=-1;nx=p.x;ny=p.y;
+   }
+  }
+  p.x=nx;p.y=ny;
+ }
+ const R2=16900,B=[[],[],[],[]];
+ for(let i=0;i<P.length;i++){const a=P[i];for(let j=i+1;j<P.length;j++){const b=P[j],dx=a.x-b.x,dy=a.y-b.y,d2=dx*dx+dy*dy;
+  if(d2<R2)B[Math.min(3,Math.floor((1-Math.sqrt(d2)/130)*4))].push(a.x,a.y,b.x,b.y);}}
+ x.lineWidth=1;
+ B.forEach((L,q)=>{if(!L.length)return;x.strokeStyle=`rgba(34,211,238,${(q+.5)/4*.4})`;x.beginPath();for(let i=0;i<L.length;i+=4){x.moveTo(L[i],L[i+1]);x.lineTo(L[i+2],L[i+3]);}x.stroke();});
+ [['#22d3ee',1],['#e879f9',0]].forEach(([c,o])=>{x.fillStyle=c;x.beginPath();P.forEach((p,i)=>{if((i%6!==0)===!!o){x.moveTo(p.x+2.6,p.y);x.arc(p.x,p.y,2.6,0,7);}});x.fill();});
+}
+/* 第 1 頁：框內粒子網 */
+const nets=[...document.querySelectorAll('canvas.net')].map(c=>({c,x:c.getContext('2d'),P:[],s:c.closest('.slide')}));
+function drawNet(n){
+ const w=n.s.clientWidth,h=n.s.clientHeight;if(!w||!h)return;
+ if(n.c.width!==w||n.c.height!==h){const ow=n.c.width,oh=n.c.height;n.c.width=w;n.c.height=h;n.P.forEach(p=>{p.x*=w/ow;p.y*=h/oh;});}
+ if(!n.P.length)n.P=mkP(Math.round(Math.min(65,Math.max(32,w*h/23000))),w,h);
+ stepNet(n.x,n.P,w,h,null,1);
+}
+/* 第 2~6 頁：粒子只活動在簡報框外面（碰到框會彈開），每兩幀畫一次（30fps）以減輕負擔 */
+const out=document.getElementById('netOut'),ox=out.getContext('2d');let OP=[];
+function drawOut(){
+ const show=cur>=1&&cur<=5;out.style.display=show?'block':'none';if(!show)return;
+ const w=innerWidth,h=innerHeight,f=slides[cur],av={l:f.offsetLeft,t:f.offsetTop,r:f.offsetLeft+f.offsetWidth,b:f.offsetTop+f.offsetHeight};
+ if(out.width!==w||out.height!==h){const ow=out.width,oh=out.height;out.width=w;out.height=h;OP.forEach(p=>{p.x*=w/ow;p.y*=h/oh;});}
+ if(!OP.length){const area=w*h-f.offsetWidth*f.offsetHeight;OP=mkP(Math.round(Math.min(150,Math.max(70,area/7000))),w,h,av);}
+ stepNet(ox,OP,w,h,av,2);
+ ox.clearRect(av.l,av.t,av.r-av.l,av.b-av.t);
+}
+let fr=0;
+(function loop(){
+ if((fr++&1)===0)drawOut();
+ nets.forEach(n=>{const c=n.s.classList;if(c.contains('on')||c.contains('enter')||c.contains('leave'))drawNet(n);});
+ requestAnimationFrame(loop);
+})();
+/* 結尾資料雨 */
+(function(){const r=document.getElementById('rain');
+ for(let i=0;i<30;i++){const s=document.createElement('span');
+  s.style.left=(i*3.3+1)+'%';s.style.animationDuration=(3+Math.random()*4)+'s';s.style.animationDelay=(-Math.random()*6)+'s';
+  s.innerHTML=Array.from({length:30},()=>Math.random()<.5?'0':'1').join('<br>');r.appendChild(s);}
+})();
+buildTT();buildPets();setThumb(0);startDemo(0);
+</script></body></html>
