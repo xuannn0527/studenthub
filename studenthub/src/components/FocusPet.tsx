@@ -20,6 +20,10 @@ export default function FocusPet() {
     return saved !== null ? saved === "true" : true;
   });
 
+  const [isIslandMode, setIsIslandMode] = useState<boolean>(() => {
+    return localStorage.getItem("hub_view_mode") === "island";
+  });
+
   const [customAvatar, setCustomAvatar] = useState<string | null>(() => {
     return localStorage.getItem("hub_custom_pet_avatar") || null;
   });
@@ -140,16 +144,22 @@ export default function FocusPet() {
       setCurrentOutfit(localStorage.getItem("hub_pet_outfit") || "default");
     };
 
+    const handleViewModeChange = (e: any) => {
+      setIsIslandMode(e.detail?.mode === "island");
+    };
+
     window.addEventListener("toggle_pet_visibility", handleToggleVisibility);
     window.addEventListener("custom_pet_avatar_updated", handleSyncAvatarNameAndOutfit);
     window.addEventListener("custom_pet_name_updated", handleSyncAvatarNameAndOutfit);
     window.addEventListener("pet_outfit_updated", handleSyncAvatarNameAndOutfit);
+    window.addEventListener("hub_view_mode_changed", handleViewModeChange);
 
     return () => {
       window.removeEventListener("toggle_pet_visibility", handleToggleVisibility);
       window.removeEventListener("custom_pet_avatar_updated", handleSyncAvatarNameAndOutfit);
       window.removeEventListener("custom_pet_name_updated", handleSyncAvatarNameAndOutfit);
       window.removeEventListener("pet_outfit_updated", handleSyncAvatarNameAndOutfit);
+      window.removeEventListener("hub_view_mode_changed", handleViewModeChange);
     };
   }, [isVisible]);
 
@@ -189,8 +199,17 @@ export default function FocusPet() {
       }
     };
 
+    const handleAddPetExp = (e: any) => {
+      const { exp = 0, coins = 0 } = e.detail || {};
+      handlePetReward({ detail: { expBonus: exp, coinsBonus: coins } });
+    };
+
     window.addEventListener("focus_pet_reward", handlePetReward);
-    return () => window.removeEventListener("focus_pet_reward", handlePetReward);
+    window.addEventListener("hub_add_pet_exp", handleAddPetExp);
+    return () => {
+      window.removeEventListener("focus_pet_reward", handlePetReward);
+      window.removeEventListener("hub_add_pet_exp", handleAddPetExp);
+    };
   }, [pet]);
 
   // 拖曳處理
@@ -313,6 +332,9 @@ export default function FocusPet() {
       </div>
     );
   };
+
+  // 當處於守護獸島模式時，寵物已在島嶼中央大顯身手，隱藏懸浮桌寵避免重疊
+  if (isIslandMode) return null;
 
   if (!isVisible) {
     return (

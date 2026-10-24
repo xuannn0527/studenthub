@@ -10,6 +10,7 @@ import {
 } from "./assignment";
 import PomodoroFullScreen from "./pomodoro/PomodoroFullScreen";
 import type { TodoItem } from "./pomodoro/pomodoroTypes";
+import CrusadeBattleModal from "./island/CrusadeBattleModal";
 
 export type { AssignmentItem };
 export { ACCENT_COLORS, extractDateOnly };
@@ -66,6 +67,9 @@ export default function AssignmentTracker() {
 
   // 當前正在專注討伐的作業項目
   const [activeFocusAssignment, setActiveFocusAssignment] = useState<AssignmentItem | null>(null);
+
+  // ⚔️ 討伐過場動畫對象
+  const [activeBattleAssignment, setActiveBattleAssignment] = useState<AssignmentItem | null>(null);
 
   // 新增 / 編輯對話框狀態
   const [modalMode, setModalMode] = useState<"add" | "edit" | null>(null);
@@ -210,29 +214,80 @@ export default function AssignmentTracker() {
 
   // 任務討伐完成 / ↺ 復原
   const handleToggleTask = (id: string) => {
-    setAssignments((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          const nextCompleted = !item.completed;
-          if (nextCompleted) {
-            const exp = item.expReward || 20;
-            const coins = item.coinReward || 10;
+    const target = assignments.find((item) => item.id === id);
+    if (!target) return;
 
-            window.dispatchEvent(
-              new CustomEvent("hub_add_pet_exp", { detail: { exp, coins } })
-            );
-
-            setRewardToast({ title: item.title, exp, coins, isRestore: false });
-            setTimeout(() => setRewardToast(null), 2800);
-          } else {
+    if (!target.completed) {
+      // 點擊「討伐」：觸發升級版討伐過場動畫與結算視窗
+      setActiveBattleAssignment(target);
+    } else {
+      // 點擊「復原」：直接復原為未完成
+      setAssignments((prev) =>
+        prev.map((item) => {
+          if (item.id === id) {
             setRewardToast({ title: item.title, exp: 0, coins: 0, isRestore: true });
             setTimeout(() => setRewardToast(null), 2200);
+            return { ...item, completed: false };
           }
-          return { ...item, completed: nextCompleted };
-        }
-        return item;
+          return item;
+        })
+      );
+    }
+  };
+
+  // ⚔️ 討伐動畫完成後結算與資料同步
+  const handleBattleComplete = (item: AssignmentItem) => {
+    const exp = item.expReward || 20;
+    const coins = item.coinReward || 10;
+
+    // 1. 同步標記待辦已完成
+    setAssignments((prev) =>
+      prev.map((a) => (a.id === item.id ? { ...a, completed: true } : a))
+    );
+
+    // 2. 更新 localStorage 內的寵物數值
+    try {
+      const savedPet = localStorage.getItem("hub_focus_pet");
+      const basePet = savedPet ? JSON.parse(savedPet) : { level: 1, exp: 0, maxExp: 100, coins: 50, happiness: 100 };
+      let newExp = basePet.exp + exp;
+      let newLevel = basePet.level;
+      let newMaxExp = basePet.maxExp;
+
+      while (newExp >= newMaxExp) {
+        newExp -= newMaxExp;
+        newLevel += 1;
+        newMaxExp = Math.round(newMaxExp * 1.3);
+      }
+
+      const nextPet = {
+        ...basePet,
+        level: newLevel,
+        exp: newExp,
+        maxExp: newMaxExp,
+        coins: basePet.coins + coins,
+        happiness: Math.min(100, basePet.happiness + 15),
+      };
+      localStorage.setItem("hub_focus_pet", JSON.stringify(nextPet));
+    } catch {}
+
+    // 3. 觸發全域廣播事件讓 FocusPet 與工坊即時更新
+    window.dispatchEvent(
+      new CustomEvent("focus_pet_reward", {
+        detail: {
+          expBonus: exp,
+          coinsBonus: coins,
+          message: `【${item.title}】討伐成功！+${exp} EXP / +${coins} 🪙`,
+        },
       })
     );
+    window.dispatchEvent(
+      new CustomEvent("hub_add_pet_exp", { detail: { exp, coins } })
+    );
+
+    // 4. 關閉戰鬥彈窗並浮字提示
+    setActiveBattleAssignment(null);
+    setRewardToast({ title: item.title, exp, coins, isRestore: false });
+    setTimeout(() => setRewardToast(null), 2800);
   };
 
   // 刪除任務
@@ -453,6 +508,13 @@ export default function AssignmentTracker() {
           onRecordCompleted={handleFocusComplete}
         />
       )}
+
+      {/* ⚔️ 升級版「討伐」過場動畫與結算視窗 */}
+      <CrusadeBattleModal
+        assignment={activeBattleAssignment}
+        onClose={() => setActiveBattleAssignment(null)}
+        onComplete={handleBattleComplete}
+      />
     </div>
   );
 }
