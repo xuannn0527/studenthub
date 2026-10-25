@@ -184,16 +184,18 @@ export default function PomodoroTimer() {
       {/* 🌟 2. 頂部導航列與狀態切換 */}
       <div
         style={{
-          backgroundColor: "#ffffff",
-          borderRadius: "20px",
+          backgroundColor: "rgba(15, 23, 42, 0.88)",
+          backdropFilter: "blur(16px)",
+          borderRadius: "24px",
           padding: "18px 26px",
-          border: "1px solid #e2e8f0",
-          boxShadow: "0 4px 16px rgba(0, 0, 0, 0.03)",
+          border: "1.5px solid rgba(56, 189, 248, 0.25)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(56, 189, 248, 0.05)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
           gap: "12px",
+          color: "#ffffff"
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
@@ -201,11 +203,12 @@ export default function PomodoroTimer() {
             style={{
               margin: 0,
               fontSize: "19px",
-              fontWeight: "800",
-              color: "#1e293b",
+              fontWeight: "900",
+              color: "#f8fafc",
               display: "flex",
               alignItems: "center",
               gap: "8px",
+              textShadow: "0 0 12px rgba(239, 68, 68, 0.4)",
             }}
           >
             <span>🍅</span>
@@ -215,7 +218,7 @@ export default function PomodoroTimer() {
           <div
             style={{
               display: "flex",
-              backgroundColor: "#f1f5f9",
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
               padding: "4px",
               borderRadius: "12px",
             }}
@@ -229,9 +232,9 @@ export default function PomodoroTimer() {
                 fontSize: "13px",
                 fontWeight: "700",
                 cursor: "pointer",
-                backgroundColor: activeTab === "todo" ? "#ffffff" : "transparent",
-                color: activeTab === "todo" ? "#1e293b" : "#64748b",
-                boxShadow: activeTab === "todo" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+                background: activeTab === "todo" ? "linear-gradient(135deg, #0284c7, #2563eb)" : "transparent",
+                color: activeTab === "todo" ? "#ffffff" : "#94a3b8",
+                boxShadow: activeTab === "todo" ? "0 2px 8px rgba(2, 132, 199, 0.4)" : "none",
                 transition: "all 0.15s",
               }}
             >
@@ -246,9 +249,9 @@ export default function PomodoroTimer() {
                 fontSize: "13px",
                 fontWeight: "700",
                 cursor: "pointer",
-                backgroundColor: activeTab === "stats" ? "#ffffff" : "transparent",
-                color: activeTab === "stats" ? "#1e293b" : "#64748b",
-                boxShadow: activeTab === "stats" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+                background: activeTab === "stats" ? "linear-gradient(135deg, #0284c7, #2563eb)" : "transparent",
+                color: activeTab === "stats" ? "#ffffff" : "#94a3b8",
+                boxShadow: activeTab === "stats" ? "0 2px 8px rgba(2, 132, 199, 0.4)" : "none",
                 transition: "all 0.15s",
               }}
             >
@@ -262,14 +265,14 @@ export default function PomodoroTimer() {
             onClick={() => setIsAddModalOpen(true)}
             style={{
               padding: "10px 22px",
-              backgroundColor: "#2563eb",
+              background: "linear-gradient(135deg, #0284c7, #2563eb)",
               color: "#ffffff",
               border: "none",
               borderRadius: "12px",
-              fontWeight: "700",
+              fontWeight: "800",
               fontSize: "13px",
               cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
+              boxShadow: "0 0 14px rgba(2, 132, 199, 0.4)",
               display: "flex",
               alignItems: "center",
               gap: "6px",
@@ -284,11 +287,13 @@ export default function PomodoroTimer() {
       {/* 🌟 3. 主內容區：待辦事項清單 或 數據統計分析 */}
       <div
         style={{
-          backgroundColor: "#ffffff",
-          borderRadius: "20px",
+          backgroundColor: "rgba(15, 23, 42, 0.88)",
+          backdropFilter: "blur(16px)",
+          borderRadius: "24px",
           padding: "24px 28px",
-          border: "1px solid #e2e8f0",
-          boxShadow: "0 4px 16px rgba(0, 0, 0, 0.03)",
+          border: "1.5px solid rgba(56, 189, 248, 0.25)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(56, 189, 248, 0.05)",
+          color: "#ffffff"
         }}
       >
         {activeTab === "todo" ? (
@@ -314,12 +319,13 @@ export default function PomodoroTimer() {
                   style={{
                     padding: "6px 14px",
                     borderRadius: "20px",
-                    border: filterType === filter.id ? "1px solid #2563eb" : "1px solid #e2e8f0",
-                    backgroundColor: filterType === filter.id ? "#eff6ff" : "#f8fafc",
-                    color: filterType === filter.id ? "#2563eb" : "#64748b",
+                    border: filterType === filter.id ? "1.5px solid #38bdf8" : "1px solid rgba(255, 255, 255, 0.12)",
+                    backgroundColor: filterType === filter.id ? "rgba(56, 189, 248, 0.18)" : "rgba(255, 255, 255, 0.06)",
+                    color: filterType === filter.id ? "#38bdf8" : "#94a3b8",
                     fontSize: "12px",
                     fontWeight: "700",
                     cursor: "pointer",
+                    boxShadow: filterType === filter.id ? "0 0 10px rgba(56, 189, 248, 0.25)" : "none",
                     transition: "all 0.15s",
                   }}
                 >
@@ -336,6 +342,8 @@ export default function PomodoroTimer() {
                   padding: "48px 0",
                   color: "#94a3b8",
                   fontSize: "14px",
+                  backgroundColor: "rgba(30, 41, 59, 0.4)",
+                  borderRadius: "14px",
                 }}
               >
                 目前此類別無事項，點擊右上角「＋ 新增待辦 / 目標」開始建立吧！
@@ -361,20 +369,21 @@ export default function PomodoroTimer() {
                     <div
                       key={todo.id}
                       style={{
-                        backgroundColor: "#f8fafc",
-                        border: "1px solid #e2e8f0",
+                        backgroundColor: "rgba(30, 41, 59, 0.6)",
+                        border: "1px solid rgba(255, 255, 255, 0.1)",
                         borderRadius: "16px",
                         padding: "20px",
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
                         gap: "14px",
+                        boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
                         transition: "border-color 0.15s, box-shadow 0.15s",
                       }}
                     >
                       <div style={{ flex: 1 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-                          <span style={{ fontSize: "16px", fontWeight: "800", color: "#1e293b" }}>
+                          <span style={{ fontSize: "16px", fontWeight: "800", color: "#f8fafc" }}>
                             {todo.title}
                           </span>
                           <span
@@ -383,16 +392,23 @@ export default function PomodoroTimer() {
                               fontWeight: "700",
                               color:
                                 todo.type === "habit"
-                                  ? "#059669"
+                                  ? "#34d399"
                                   : todo.type === "target"
-                                  ? "#d97706"
-                                  : "#2563eb",
+                                  ? "#fbbf24"
+                                  : "#38bdf8",
                               backgroundColor:
                                 todo.type === "habit"
-                                  ? "#ecfdf5"
+                                  ? "rgba(16, 185, 129, 0.2)"
                                   : todo.type === "target"
-                                  ? "#fffbeb"
-                                  : "#eff6ff",
+                                  ? "rgba(245, 158, 11, 0.2)"
+                                  : "rgba(56, 189, 248, 0.2)",
+                              border: `1px solid ${
+                                todo.type === "habit"
+                                  ? "rgba(16, 185, 129, 0.4)"
+                                  : todo.type === "target"
+                                  ? "rgba(245, 158, 11, 0.4)"
+                                  : "rgba(56, 189, 248, 0.4)"
+                              }`,
                               padding: "2px 8px",
                               borderRadius: "6px",
                             }}
@@ -404,7 +420,7 @@ export default function PomodoroTimer() {
                         <div
                           style={{
                             fontSize: "12px",
-                            color: "#64748b",
+                            color: "#94a3b8",
                             fontWeight: "600",
                             display: "flex",
                             flexDirection: "column",
@@ -420,7 +436,7 @@ export default function PomodoroTimer() {
                           </span>
 
                           {todo.type === "habit" && (
-                            <span style={{ color: "#059669" }}>
+                            <span style={{ color: "#34d399" }}>
                               🌱 目標：
                               {todo.habitFrequency === "daily"
                                 ? "每日"
@@ -433,7 +449,7 @@ export default function PomodoroTimer() {
 
                           {todo.type === "target" && (
                             <div>
-                              <div style={{ display: "flex", justifyContent: "space-between", color: "#d97706", marginBottom: "4px" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", color: "#fbbf24", marginBottom: "4px" }}>
                                 <span>截止日期：{todo.targetDeadline || "無"}</span>
                                 <span>
                                   進度：{todo.targetCurrentAmount || 0} / {todo.targetTotalAmount || 0} 分 ({targetPercent}%)
@@ -442,7 +458,7 @@ export default function PomodoroTimer() {
                               <div
                                 style={{
                                   height: "6px",
-                                  backgroundColor: "#e2e8f0",
+                                  backgroundColor: "rgba(255, 255, 255, 0.12)",
                                   borderRadius: "4px",
                                   overflow: "hidden",
                                 }}
@@ -451,7 +467,7 @@ export default function PomodoroTimer() {
                                   style={{
                                     height: "100%",
                                     width: `${targetPercent}%`,
-                                    backgroundColor: "#d97706",
+                                    background: "linear-gradient(90deg, #f59e0b, #fbbf24)",
                                     borderRadius: "4px",
                                   }}
                                 />
@@ -466,16 +482,16 @@ export default function PomodoroTimer() {
                           onClick={() => handleStartFocus(todo)}
                           style={{
                             padding: "9px 18px",
-                            backgroundColor: todo.timingType === "none" ? "#10b981" : "#1e293b",
+                            background: todo.timingType === "none" ? "linear-gradient(135deg, #10b981, #059669)" : "linear-gradient(135deg, #0284c7, #2563eb)",
                             color: "#ffffff",
                             border: "none",
                             borderRadius: "10px",
                             fontSize: "13px",
-                            fontWeight: "700",
+                            fontWeight: "800",
                             cursor: "pointer",
-                            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                            boxShadow: "0 0 10px rgba(2, 132, 199, 0.35)",
                             whiteSpace: "nowrap",
-                            transition: "background-color 0.15s",
+                            transition: "transform 0.15s",
                           }}
                         >
                           {todo.timingType === "none" ? "✓ 一鍵打卡" : "▶ 開始專注"}
@@ -485,12 +501,15 @@ export default function PomodoroTimer() {
                           style={{
                             background: "none",
                             border: "none",
-                            color: "#cbd5e1",
+                            color: "#64748b",
                             fontSize: "16px",
                             cursor: "pointer",
                             padding: "6px",
                             borderRadius: "6px",
+                            transition: "color 0.15s",
                           }}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = "#f87171")}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = "#64748b")}
                           title="刪除待辦"
                         >
                           ✕

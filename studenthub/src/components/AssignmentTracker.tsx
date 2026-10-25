@@ -399,18 +399,19 @@ export default function AssignmentTracker() {
             top: "24px",
             left: "50%",
             transform: "translateX(-50%)",
-            backgroundColor: rewardToast.isRestore ? "#1e293b" : "#0f172a",
+            backgroundColor: "rgba(15, 23, 42, 0.95)",
+            backdropFilter: "blur(12px)",
             color: "#ffffff",
             padding: "10px 24px",
             borderRadius: "30px",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
             zIndex: 999999,
             display: "flex",
             alignItems: "center",
             gap: "10px",
             border: rewardToast.isRestore
-              ? "1px solid rgba(148, 163, 184, 0.4)"
-              : "1px solid rgba(255, 255, 255, 0.15)",
+              ? "1.5px solid rgba(148, 163, 184, 0.5)"
+              : "1.5px solid rgba(251, 191, 36, 0.6)",
           }}
         >
           <span style={{ fontSize: "18px" }}>{rewardToast.isRestore ? "↺" : "🎉"}</span>

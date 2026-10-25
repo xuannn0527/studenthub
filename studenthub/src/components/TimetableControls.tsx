@@ -161,22 +161,24 @@ export default function TimetableControls({
   return (
     <div style={{ 
       width: "380px", 
-      backgroundColor: "#ffffff", 
-      padding: "16px 20px", 
-      borderRadius: "16px", 
-      border: "1px solid #e2e8f0", 
-      boxShadow: "0 4px 16px rgba(0,0,0,0.05)", 
+      backgroundColor: "rgba(15, 23, 42, 0.88)", 
+      backdropFilter: "blur(16px)",
+      padding: "18px 20px", 
+      borderRadius: "20px", 
+      border: "1.5px solid rgba(56, 189, 248, 0.25)", 
+      boxShadow: "0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(56, 189, 248, 0.05)", 
       display: "flex", 
       flexDirection: "column", 
       gap: "10px", 
       flexShrink: 0, 
-      boxSizing: "border-box" 
+      boxSizing: "border-box",
+      color: "#ffffff"
     }}>
       
       {/* 標題列 */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", borderBottom: "1px solid #f1f5f9", paddingBottom: "8px" }}>
-        <span style={{ color: "#475569" }}>{Icons.settings}</span>
-        <h3 style={{ margin: 0, fontSize: "15px", fontWeight: "700", color: "#1e293b", letterSpacing: "0.2px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", paddingBottom: "10px" }}>
+        <span style={{ color: "#38bdf8", display: "flex", alignItems: "center" }}>{Icons.settings}</span>
+        <h3 style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "#f8fafc", letterSpacing: "0.2px" }}>
           課表與外觀設定
         </h3>
       </div>
@@ -185,13 +187,45 @@ export default function TimetableControls({
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
         <button 
           onClick={() => setIsMobileView(false)} 
-          style={{ padding: "8px 10px", backgroundColor: !isMobileView ? "#2563eb" : "#f8fafc", color: !isMobileView ? "#fff" : "#64748b", border: "1px solid", borderColor: !isMobileView ? "#2563eb" : "#e2e8f0", borderRadius: "8px", fontWeight: "600", cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", transition: "all 0.15s" }}
+          style={{
+            padding: "8px 10px",
+            background: !isMobileView ? "linear-gradient(135deg, #0284c7, #2563eb)" : "rgba(255, 255, 255, 0.06)",
+            color: !isMobileView ? "#fff" : "#94a3b8",
+            border: "1px solid",
+            borderColor: !isMobileView ? "rgba(56, 189, 248, 0.5)" : "rgba(255, 255, 255, 0.1)",
+            borderRadius: "8px",
+            fontWeight: "700",
+            cursor: "pointer",
+            fontSize: "12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "6px",
+            boxShadow: !isMobileView ? "0 0 12px rgba(2, 132, 199, 0.4)" : "none",
+            transition: "all 0.15s"
+          }}
         >
           {Icons.monitor} 3:4 網頁
         </button>
         <button 
           onClick={() => setIsMobileView(true)} 
-          style={{ padding: "8px 10px", backgroundColor: isMobileView ? "#1e293b" : "#f8fafc", color: isMobileView ? "#fff" : "#64748b", border: "1px solid", borderColor: isMobileView ? "#1e293b" : "#e2e8f0", borderRadius: "8px", fontWeight: "600", cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", transition: "all 0.15s" }}
+          style={{
+            padding: "8px 10px",
+            background: isMobileView ? "linear-gradient(135deg, #0284c7, #2563eb)" : "rgba(255, 255, 255, 0.06)",
+            color: isMobileView ? "#fff" : "#94a3b8",
+            border: "1px solid",
+            borderColor: isMobileView ? "rgba(56, 189, 248, 0.5)" : "rgba(255, 255, 255, 0.1)",
+            borderRadius: "8px",
+            fontWeight: "700",
+            cursor: "pointer",
+            fontSize: "12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "6px",
+            boxShadow: isMobileView ? "0 0 12px rgba(2, 132, 199, 0.4)" : "none",
+            transition: "all 0.15s"
+          }}
         >
           {Icons.smartphone} 9:16 手機
         </button>
@@ -203,63 +237,145 @@ export default function TimetableControls({
         style={{ 
           width: "100%",
           padding: "8px 10px", 
-          backgroundColor: "#f0fdf4", 
-          color: "#16a34a", 
-          border: "1px solid #bbf7d0", 
+          backgroundColor: "rgba(16, 185, 129, 0.15)", 
+          color: "#34d399", 
+          border: "1px solid rgba(16, 185, 129, 0.45)", 
           borderRadius: "8px", 
-          fontWeight: "600", 
+          fontWeight: "700", 
           cursor: "pointer", 
           fontSize: "12px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           gap: "6px",
+          boxShadow: "0 0 10px rgba(16, 185, 129, 0.2)",
           transition: "all 0.15s"
         }}
       >
         {Icons.import} 智慧匯入選課清單
       </button>
 
-      <div style={{ height: "1px", backgroundColor: "#f1f5f9" }}></div>
+      <div style={{ height: "1px", backgroundColor: "rgba(255, 255, 255, 0.08)" }}></div>
 
       {/* 手動排課表單 */}
       <form onSubmit={onSaveCourse} style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: "12px", fontWeight: "700", color: "#475569", display: "flex", alignItems: "center", gap: "5px" }}>
-            {Icons.plus} {editTargetIds ? "編輯選定課程" : "排定課程"}
+          <span style={{ fontSize: "12px", fontWeight: "700", color: "#94a3b8", display: "flex", alignItems: "center", gap: "5px" }}>
+            <span style={{ color: "#38bdf8" }}>{Icons.plus}</span> {editTargetIds ? "編輯選定課程" : "排定課程"}
           </span>
           {editTargetIds && (
-            <button type="button" onClick={onCancelEdit} style={{ fontSize: "11px", color: "#ef4444", border: "none", background: "none", cursor: "pointer", fontWeight: "600" }}>
+            <button type="button" onClick={onCancelEdit} style={{ fontSize: "11px", color: "#f87171", border: "none", background: "none", cursor: "pointer", fontWeight: "700" }}>
               取消編輯
             </button>
           )}
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: "6px" }}>
-          <input type="text" placeholder="課程名稱" value={name} onChange={(e) => setName(e.target.value)} required style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", outline: "none", fontSize: "12px" }} />
-          <input type="text" placeholder="教室 (如 BS440)" value={classroom} onChange={(e) => setClassroom(e.target.value)} style={{ padding: "6px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", outline: "none", fontSize: "12px" }} />
+          <input
+            type="text"
+            placeholder="課程名稱"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            style={{
+              padding: "7px 10px",
+              borderRadius: "6px",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              backgroundColor: "rgba(30, 41, 59, 0.75)",
+              color: "#ffffff",
+              outline: "none",
+              fontSize: "12px"
+            }}
+          />
+          <input
+            type="text"
+            placeholder="教室 (如 BS440)"
+            value={classroom}
+            onChange={(e) => setClassroom(e.target.value)}
+            style={{
+              padding: "7px 10px",
+              borderRadius: "6px",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              backgroundColor: "rgba(30, 41, 59, 0.75)",
+              color: "#ffffff",
+              outline: "none",
+              fontSize: "12px"
+            }}
+          />
         </div>
         
         {!editTargetIds && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "6px" }}>
-            <select value={day} onChange={(e) => setDay(e.target.value as Course["day"])} style={{ padding: "6px 8px", borderRadius: "6px", border: "1px solid #cbd5e1", backgroundColor: "#fff", fontSize: "12px" }}>
-              {DAYS.map((d) => <option key={d} value={d}>{DAY_LABELS[d]}</option>)}
+            <select
+              value={day}
+              onChange={(e) => setDay(e.target.value as Course["day"])}
+              style={{
+                padding: "6px 8px",
+                borderRadius: "6px",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                backgroundColor: "#1e293b",
+                color: "#ffffff",
+                fontSize: "12px"
+              }}
+            >
+              {DAYS.map((d) => <option key={d} value={d} style={{ backgroundColor: "#1e293b", color: "#ffffff" }}>{DAY_LABELS[d]}</option>)}
             </select>
-            <select value={period} onChange={(e) => setPeriod(Number(e.target.value))} style={{ padding: "6px 8px", borderRadius: "6px", border: "1px solid #cbd5e1", backgroundColor: "#fff", fontSize: "12px" }}>
+            <select
+              value={period}
+              onChange={(e) => setPeriod(Number(e.target.value))}
+              style={{
+                padding: "6px 8px",
+                borderRadius: "6px",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                backgroundColor: "#1e293b",
+                color: "#ffffff",
+                fontSize: "12px"
+              }}
+            >
               {PERIOD_KEYS.map((pKey) => (
-                <option key={pKey} value={pKey}>
+                <option key={pKey} value={pKey} style={{ backgroundColor: "#1e293b", color: "#ffffff" }}>
                   {pKey === 9 ? "中午" : `第 ${pKey} 節`}
                 </option>
               ))}
             </select>
-            <button type="submit" style={{ padding: "6px 10px", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", fontWeight: "600", cursor: "pointer", fontSize: "12px" }}>
+            <button
+              type="submit"
+              style={{
+                padding: "6px 10px",
+                background: "linear-gradient(135deg, #0284c7, #2563eb)",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                fontWeight: "700",
+                cursor: "pointer",
+                fontSize: "12px",
+                boxShadow: "0 0 10px rgba(2, 132, 199, 0.35)"
+              }}
+            >
               新增
             </button>
           </div>
         )}
 
         {editTargetIds && (
-          <button type="submit" style={{ padding: "6px 10px", backgroundColor: "#16a34a", color: "#fff", border: "none", borderRadius: "6px", fontWeight: "600", cursor: "pointer", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+          <button
+            type="submit"
+            style={{
+              padding: "7px 10px",
+              background: "linear-gradient(135deg, #10b981, #059669)",
+              color: "#fff",
+              border: "none",
+              borderRadius: "6px",
+              fontWeight: "700",
+              cursor: "pointer",
+              fontSize: "12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px",
+              boxShadow: "0 0 10px rgba(16, 185, 129, 0.4)"
+            }}
+          >
             {Icons.check} 儲存修改
           </button>
         )}
@@ -267,36 +383,72 @@ export default function TimetableControls({
 
       {/* 編輯 / 刪除與清空控制 */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
-        <button onClick={() => setIsManageMode(!isManageMode)} style={{ padding: "6px 10px", backgroundColor: isManageMode ? "#fee2e2" : "#f8fafc", color: isManageMode ? "#ef4444" : "#475569", border: "1px solid", borderColor: isManageMode ? "#fca5a5" : "#e2e8f0", borderRadius: "6px", fontWeight: "600", cursor: "pointer", fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center", gap: "5px" }}>
+        <button
+          onClick={() => setIsManageMode(!isManageMode)}
+          style={{
+            padding: "7px 10px",
+            backgroundColor: isManageMode ? "rgba(239, 68, 68, 0.2)" : "rgba(255, 255, 255, 0.06)",
+            color: isManageMode ? "#f87171" : "#cbd5e1",
+            border: "1px solid",
+            borderColor: isManageMode ? "rgba(239, 68, 68, 0.5)" : "rgba(255, 255, 255, 0.12)",
+            borderRadius: "6px",
+            fontWeight: "700",
+            cursor: "pointer",
+            fontSize: "11px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "5px",
+            boxShadow: isManageMode ? "0 0 10px rgba(239, 68, 68, 0.25)" : "none",
+            transition: "all 0.15s"
+          }}
+        >
           {Icons.edit} {isManageMode ? "結束管理" : "管理課程"}
         </button>
-        <button onClick={onClearAll} style={{ padding: "6px 10px", backgroundColor: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", borderRadius: "6px", fontWeight: "600", cursor: "pointer", fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center", gap: "5px" }}>
+        <button
+          onClick={onClearAll}
+          style={{
+            padding: "7px 10px",
+            backgroundColor: "rgba(239, 68, 68, 0.15)",
+            color: "#f87171",
+            border: "1px solid rgba(239, 68, 68, 0.4)",
+            borderRadius: "6px",
+            fontWeight: "700",
+            cursor: "pointer",
+            fontSize: "11px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "5px",
+            transition: "all 0.15s"
+          }}
+        >
           {Icons.trash} 清空課表
         </button>
       </div>
 
-      <div style={{ height: "1px", backgroundColor: "#f1f5f9" }}></div>
+      <div style={{ height: "1px", backgroundColor: "rgba(255, 255, 255, 0.08)" }}></div>
 
       {/* 外觀風格設定 */}
       <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
-        <span style={{ fontSize: "12px", fontWeight: "700", color: "#475569", display: "flex", alignItems: "center", gap: "6px" }}>
-          {Icons.palette} 外觀風格
+        <span style={{ fontSize: "12px", fontWeight: "700", color: "#94a3b8", display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{ color: "#38bdf8" }}>{Icons.palette}</span> 外觀風格
         </span>
         
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#f8fafc", padding: "4px 8px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
-            <span style={{ fontSize: "11px", color: "#64748b" }}>卡片色彩</span>
-            <input type="color" value={cardColor} onChange={(e) => onUpdateSettings("hub_card_color", e.target.value)} style={{ border: "none", width: "20px", height: "20px", cursor: "pointer", borderRadius: "4px" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "rgba(30, 41, 59, 0.65)", padding: "5px 8px", borderRadius: "6px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+            <span style={{ fontSize: "11px", color: "#94a3b8" }}>卡片色彩</span>
+            <input type="color" value={cardColor} onChange={(e) => onUpdateSettings("hub_card_color", e.target.value)} style={{ border: "none", width: "22px", height: "22px", cursor: "pointer", borderRadius: "4px", backgroundColor: "transparent" }} />
           </div>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#f8fafc", padding: "4px 8px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
-            <span style={{ fontSize: "11px", color: "#64748b" }}>文字色彩</span>
-            <input type="color" value={textColor} onChange={(e) => onUpdateSettings("hub_text_color", e.target.value)} style={{ border: "none", width: "20px", height: "20px", cursor: "pointer", borderRadius: "4px" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "rgba(30, 41, 59, 0.65)", padding: "5px 8px", borderRadius: "6px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+            <span style={{ fontSize: "11px", color: "#94a3b8" }}>文字色彩</span>
+            <input type="color" value={textColor} onChange={(e) => onUpdateSettings("hub_text_color", e.target.value)} style={{ border: "none", width: "22px", height: "22px", cursor: "pointer", borderRadius: "4px", backgroundColor: "transparent" }} />
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "#f8fafc", padding: "4px 8px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
-          <span style={{ fontSize: "11px", color: "#64748b", whiteSpace: "nowrap" }}>透明度 {cardOpacity}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", backgroundColor: "rgba(30, 41, 59, 0.65)", padding: "5px 8px", borderRadius: "6px", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+          <span style={{ fontSize: "11px", color: "#94a3b8", whiteSpace: "nowrap" }}>透明度 {cardOpacity}</span>
           <input type="range" min="0.1" max="1" step="0.05" value={cardOpacity} onChange={(e) => onUpdateSettings("hub_card_opacity", e.target.value)} style={{ flex: 1, cursor: "pointer" }} />
         </div>
 
@@ -308,12 +460,12 @@ export default function TimetableControls({
               onClick={() => setIsAdjustingPos(!isAdjustingPos)} 
               style={{ 
                 padding: "6px 8px", 
-                backgroundColor: isAdjustingPos ? "#eff6ff" : "#f8fafc", 
-                color: isAdjustingPos ? "#2563eb" : "#475569", 
+                backgroundColor: isAdjustingPos ? "rgba(56, 189, 248, 0.18)" : "rgba(255, 255, 255, 0.06)", 
+                color: isAdjustingPos ? "#38bdf8" : "#cbd5e1", 
                 border: "1px solid", 
-                borderColor: isAdjustingPos ? "#93c5fd" : "#e2e8f0", 
+                borderColor: isAdjustingPos ? "rgba(56, 189, 248, 0.45)" : "rgba(255, 255, 255, 0.12)", 
                 borderRadius: "6px", 
-                fontWeight: "600", 
+                fontWeight: "700", 
                 cursor: "pointer", 
                 fontSize: "11px",
                 display: "flex",
@@ -324,25 +476,54 @@ export default function TimetableControls({
             >
               {Icons.move} {isAdjustingPos ? "收合微調 ▲" : "微調位置 ▼"}
             </button>
-            <button onClick={onRemoveImage} style={{ padding: "6px 8px", backgroundColor: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", borderRadius: "6px", fontWeight: "600", cursor: "pointer", fontSize: "11px" }}>
+            <button
+              onClick={onRemoveImage}
+              style={{
+                padding: "6px 8px",
+                backgroundColor: "rgba(239, 68, 68, 0.15)",
+                color: "#f87171",
+                border: "1px solid rgba(239, 68, 68, 0.4)",
+                borderRadius: "6px",
+                fontWeight: "700",
+                cursor: "pointer",
+                fontSize: "11px"
+              }}
+            >
               移除背景圖
             </button>
           </div>
         ) : (
-          <button onClick={() => fileInputRef.current?.click()} style={{ padding: "7px 10px", backgroundColor: "#f8fafc", color: "#475569", border: "1px solid #e2e8f0", borderRadius: "6px", fontWeight: "600", cursor: "pointer", fontSize: "11px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              padding: "7px 10px",
+              backgroundColor: "rgba(255, 255, 255, 0.06)",
+              color: "#cbd5e1",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              borderRadius: "6px",
+              fontWeight: "700",
+              cursor: "pointer",
+              fontSize: "11px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px",
+              transition: "all 0.15s"
+            }}
+          >
             {Icons.image} 上傳背景桌布
           </button>
         )}
 
         {/* 🌟 桌布位置微調區：支援「確認／完成」收合 */}
         {bgImage && isAdjustingPos && (
-          <div style={{ backgroundColor: "#f8fafc", padding: "8px 10px", borderRadius: "8px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "6px", animation: "fadeIn 0.15s ease" }}>
+          <div style={{ backgroundColor: "rgba(30, 41, 59, 0.75)", padding: "10px", borderRadius: "8px", border: "1px solid rgba(56, 189, 248, 0.25)", display: "flex", flexDirection: "column", gap: "6px", animation: "fadeIn 0.15s ease" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "11px", fontWeight: "700", color: "#334155", display: "flex", alignItems: "center", gap: "4px" }}>
+              <span style={{ fontSize: "11px", fontWeight: "700", color: "#38bdf8", display: "flex", alignItems: "center", gap: "4px" }}>
                 {Icons.move} 桌布位置微調
               </span>
               <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                <button onClick={onResetBgPos} style={{ border: "none", background: "none", fontSize: "10px", color: "#64748b", cursor: "pointer", textDecoration: "underline" }}>
+                <button onClick={onResetBgPos} style={{ border: "none", background: "none", fontSize: "10px", color: "#94a3b8", cursor: "pointer", textDecoration: "underline" }}>
                   重置
                 </button>
                 {/* 🌟 確認 / 完成收合按鍵 */}
@@ -350,16 +531,17 @@ export default function TimetableControls({
                   onClick={() => setIsAdjustingPos(false)} 
                   style={{ 
                     padding: "2px 8px", 
-                    backgroundColor: "#16a34a", 
+                    background: "linear-gradient(135deg, #10b981, #059669)", 
                     color: "#fff", 
                     border: "none", 
                     borderRadius: "4px", 
                     fontSize: "10px", 
-                    fontWeight: "700", 
+                    fontWeight: "800", 
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
-                    gap: "2px"
+                    gap: "2px",
+                    boxShadow: "0 0 6px rgba(16, 185, 129, 0.4)"
                   }}
                   title="完成調整並收合"
                 >
@@ -369,41 +551,41 @@ export default function TimetableControls({
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ fontSize: "10px", color: "#64748b", width: "45px" }}>水平 (X)</span>
+              <span style={{ fontSize: "10px", color: "#94a3b8", width: "45px" }}>水平 (X)</span>
               <input type="range" min="0" max="100" value={bgPosX} onChange={(e) => onUpdateBgPos(Number(e.target.value), bgPosY, bgZoom)} style={{ flex: 1, cursor: "pointer" }} />
-              <span style={{ fontSize: "10px", color: "#94a3b8", width: "26px", textAlign: "right" }}>{bgPosX}%</span>
+              <span style={{ fontSize: "10px", color: "#cbd5e1", width: "26px", textAlign: "right" }}>{bgPosX}%</span>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ fontSize: "10px", color: "#64748b", width: "45px" }}>垂直 (Y)</span>
+              <span style={{ fontSize: "10px", color: "#94a3b8", width: "45px" }}>垂直 (Y)</span>
               <input type="range" min="0" max="100" value={bgPosY} onChange={(e) => onUpdateBgPos(bgPosX, Number(e.target.value), bgZoom)} style={{ flex: 1, cursor: "pointer" }} />
-              <span style={{ fontSize: "10px", color: "#94a3b8", width: "26px", textAlign: "right" }}>{bgPosY}%</span>
+              <span style={{ fontSize: "10px", color: "#cbd5e1", width: "26px", textAlign: "right" }}>{bgPosY}%</span>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ fontSize: "10px", color: "#64748b", width: "45px" }}>縮放比</span>
+              <span style={{ fontSize: "10px", color: "#94a3b8", width: "45px" }}>縮放比</span>
               <input type="range" min="100" max="200" step="5" value={bgZoom} onChange={(e) => onUpdateBgPos(bgPosX, bgPosY, Number(e.target.value))} style={{ flex: 1, cursor: "pointer" }} />
-              <span style={{ fontSize: "10px", color: "#94a3b8", width: "26px", textAlign: "right" }}>{bgZoom}%</span>
+              <span style={{ fontSize: "10px", color: "#cbd5e1", width: "26px", textAlign: "right" }}>{bgZoom}%</span>
             </div>
           </div>
         )}
       </div>
 
-      <div style={{ height: "1px", backgroundColor: "#f1f5f9" }}></div>
+      <div style={{ height: "1px", backgroundColor: "rgba(255, 255, 255, 0.08)" }}></div>
 
       {/* 🌟 匯出按鈕：永遠保持在底部清晰可見 */}
       <button 
         onClick={onExportImage} 
         style={{ 
           padding: "10px", 
-          backgroundColor: "#ea580c", 
+          background: "linear-gradient(135deg, #f59e0b, #ea580c)", 
           color: "#ffffff", 
           border: "none", 
           borderRadius: "8px", 
-          fontWeight: "700", 
+          fontWeight: "800", 
           cursor: "pointer", 
           fontSize: "13px", 
-          boxShadow: "0 2px 6px rgba(234,88,12,0.2)",
+          boxShadow: "0 0 16px rgba(245, 158, 11, 0.35)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

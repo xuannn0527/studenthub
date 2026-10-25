@@ -67,7 +67,7 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(15, 23, 42, 0.65)",
+        backgroundColor: "rgba(10, 15, 30, 0.75)",
         backdropFilter: "blur(8px)",
         display: "flex",
         alignItems: "center",
@@ -79,13 +79,15 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
     >
       <div
         style={{
-          backgroundColor: "#ffffff",
+          backgroundColor: "rgba(15, 23, 42, 0.95)",
+          backdropFilter: "blur(16px)",
+          border: "1.5px solid rgba(56, 189, 248, 0.3)",
           width: "480px",
           maxWidth: "100%",
           borderRadius: "24px",
           padding: "28px",
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-          color: "#1e293b",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.15)",
+          color: "#ffffff",
           boxSizing: "border-box",
           maxHeight: "90vh",
           overflowY: "auto",
@@ -95,22 +97,28 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
         {/* 頂部標題與關閉按鈕 */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#0f172a" }}>
+            <h3 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#f8fafc", textShadow: "0 0 12px rgba(56, 189, 248, 0.3)" }}>
               ✨ 新增待辦與專注目標
             </h3>
-            <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
+            <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#94a3b8" }}>
               設定專注時長、習慣培養或長期里程碑
             </p>
           </div>
           <button
             onClick={onClose}
             style={{
-              background: "none",
-              border: "none",
-              fontSize: "20px",
+              background: "rgba(30, 41, 59, 0.6)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              borderRadius: "8px",
+              fontSize: "16px",
               cursor: "pointer",
               color: "#94a3b8",
-              padding: "4px",
+              width: "32px",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.15s",
             }}
           >
             ✕
@@ -123,7 +131,8 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
             display: "grid",
             gridTemplateColumns: "1fr 1fr 1fr",
             gap: "6px",
-            backgroundColor: "#f1f5f9",
+            backgroundColor: "rgba(30, 41, 59, 0.6)",
+            border: "1px solid rgba(56, 189, 248, 0.15)",
             padding: "5px",
             borderRadius: "14px",
             marginBottom: "20px",
@@ -139,9 +148,9 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
               fontSize: "13px",
               fontWeight: "700",
               cursor: "pointer",
-              backgroundColor: taskType === "timer" ? "#ffffff" : "transparent",
-              color: taskType === "timer" ? "#2563eb" : "#64748b",
-              boxShadow: taskType === "timer" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+              backgroundColor: taskType === "timer" ? "#2563eb" : "transparent",
+              color: taskType === "timer" ? "#ffffff" : "#94a3b8",
+              boxShadow: taskType === "timer" ? "0 0 12px rgba(37, 99, 235, 0.5)" : "none",
               transition: "all 0.15s",
             }}
           >
@@ -157,9 +166,9 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
               fontSize: "13px",
               fontWeight: "700",
               cursor: "pointer",
-              backgroundColor: taskType === "habit" ? "#ffffff" : "transparent",
-              color: taskType === "habit" ? "#059669" : "#64748b",
-              boxShadow: taskType === "habit" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+              backgroundColor: taskType === "habit" ? "#059669" : "transparent",
+              color: taskType === "habit" ? "#ffffff" : "#94a3b8",
+              boxShadow: taskType === "habit" ? "0 0 12px rgba(5, 150, 105, 0.5)" : "none",
               transition: "all 0.15s",
             }}
           >
@@ -175,9 +184,9 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
               fontSize: "13px",
               fontWeight: "700",
               cursor: "pointer",
-              backgroundColor: taskType === "target" ? "#ffffff" : "transparent",
-              color: taskType === "target" ? "#d97706" : "#64748b",
-              boxShadow: taskType === "target" ? "0 2px 6px rgba(0,0,0,0.06)" : "none",
+              backgroundColor: taskType === "target" ? "#d97706" : "transparent",
+              color: taskType === "target" ? "#ffffff" : "#94a3b8",
+              boxShadow: taskType === "target" ? "0 0 12px rgba(217, 119, 6, 0.5)" : "none",
               transition: "all 0.15s",
             }}
           >
@@ -187,7 +196,7 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
 
         {/* 2. 事項名稱輸入框 */}
         <div style={{ marginBottom: "18px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: "700", color: "#334155", marginBottom: "6px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: "700", color: "#cbd5e1", marginBottom: "6px" }}>
             事項名稱
           </label>
           <input
@@ -205,10 +214,12 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
             style={{
               width: "100%",
               padding: "12px 14px",
-              border: "1px solid #cbd5e1",
+              backgroundColor: "rgba(30, 41, 59, 0.75)",
+              border: "1px solid rgba(56, 189, 248, 0.25)",
               borderRadius: "12px",
               fontSize: "14px",
               outline: "none",
+              color: "#ffffff",
               boxSizing: "border-box",
             }}
           />
@@ -218,8 +229,8 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
         {taskType === "habit" && (
           <div
             style={{
-              backgroundColor: "#f0fdf4",
-              border: "1px solid #bbf7d0",
+              backgroundColor: "rgba(16, 185, 129, 0.08)",
+              border: "1px solid rgba(16, 185, 129, 0.3)",
               borderRadius: "14px",
               padding: "16px",
               marginBottom: "18px",
@@ -228,29 +239,30 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
               gap: "12px",
             }}
           >
-            <div style={{ fontSize: "13px", fontWeight: "700", color: "#166534" }}>🌱 習慣養成目標設定</div>
+            <div style={{ fontSize: "13px", fontWeight: "700", color: "#34d399" }}>🌱 習慣養成目標設定</div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "13px", color: "#374151", fontWeight: "600" }}>週期頻率：</span>
+              <span style={{ fontSize: "13px", color: "#cbd5e1", fontWeight: "600" }}>週期頻率：</span>
               <select
                 value={habitFrequency}
                 onChange={(e) => setHabitFrequency(e.target.value as any)}
                 style={{
                   padding: "6px 12px",
                   borderRadius: "8px",
-                  border: "1px solid #86efac",
-                  backgroundColor: "#ffffff",
+                  border: "1px solid rgba(16, 185, 129, 0.4)",
+                  backgroundColor: "rgba(15, 23, 42, 0.9)",
+                  color: "#ffffff",
                   fontSize: "13px",
                   fontWeight: "700",
                 }}
               >
-                <option value="daily">每日</option>
-                <option value="weekly">每週</option>
-                <option value="monthly">每月</option>
+                <option value="daily" style={{ background: "#0f172a", color: "#ffffff" }}>每日</option>
+                <option value="weekly" style={{ background: "#0f172a", color: "#ffffff" }}>每週</option>
+                <option value="monthly" style={{ background: "#0f172a", color: "#ffffff" }}>每月</option>
               </select>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "13px", color: "#374151", fontWeight: "600" }}>目標額度：</span>
+              <span style={{ fontSize: "13px", color: "#cbd5e1", fontWeight: "600" }}>目標額度：</span>
               <input
                 type="number"
                 min="1"
@@ -260,7 +272,9 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
                   width: "80px",
                   padding: "6px 10px",
                   borderRadius: "8px",
-                  border: "1px solid #86efac",
+                  border: "1px solid rgba(16, 185, 129, 0.4)",
+                  backgroundColor: "rgba(15, 23, 42, 0.9)",
+                  color: "#ffffff",
                   textAlign: "center",
                   fontSize: "13px",
                   fontWeight: "700",
@@ -272,14 +286,15 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
                 style={{
                   padding: "6px 12px",
                   borderRadius: "8px",
-                  border: "1px solid #86efac",
-                  backgroundColor: "#ffffff",
+                  border: "1px solid rgba(16, 185, 129, 0.4)",
+                  backgroundColor: "rgba(15, 23, 42, 0.9)",
+                  color: "#ffffff",
                   fontSize: "13px",
                   fontWeight: "700",
                 }}
               >
-                <option value="minutes">分鐘</option>
-                <option value="times">次數</option>
+                <option value="minutes" style={{ background: "#0f172a", color: "#ffffff" }}>分鐘</option>
+                <option value="times" style={{ background: "#0f172a", color: "#ffffff" }}>次數</option>
               </select>
             </div>
           </div>
@@ -289,8 +304,8 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
         {taskType === "target" && (
           <div
             style={{
-              backgroundColor: "#fffbeb",
-              border: "1px solid #fde68a",
+              backgroundColor: "rgba(245, 158, 11, 0.08)",
+              border: "1px solid rgba(245, 158, 11, 0.3)",
               borderRadius: "14px",
               padding: "16px",
               marginBottom: "18px",
@@ -299,9 +314,9 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
               gap: "12px",
             }}
           >
-            <div style={{ fontSize: "13px", fontWeight: "700", color: "#92400e" }}>🎯 長期目標設定</div>
+            <div style={{ fontSize: "13px", fontWeight: "700", color: "#fbbf24" }}>🎯 長期目標設定</div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "13px", color: "#374151", fontWeight: "600" }}>截止日期：</span>
+              <span style={{ fontSize: "13px", color: "#cbd5e1", fontWeight: "600" }}>截止日期：</span>
               <input
                 type="date"
                 value={targetDeadline}
@@ -309,8 +324,9 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
                 style={{
                   padding: "6px 12px",
                   borderRadius: "8px",
-                  border: "1px solid #fcd34d",
-                  backgroundColor: "#ffffff",
+                  border: "1px solid rgba(245, 158, 11, 0.4)",
+                  backgroundColor: "rgba(15, 23, 42, 0.9)",
+                  color: "#ffffff",
                   fontSize: "13px",
                   fontWeight: "700",
                 }}
@@ -318,7 +334,7 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <span style={{ fontSize: "13px", color: "#374151", fontWeight: "600" }}>總目標分鐘：</span>
+              <span style={{ fontSize: "13px", color: "#cbd5e1", fontWeight: "600" }}>總目標分鐘：</span>
               <input
                 type="number"
                 min="10"
@@ -329,13 +345,15 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
                   width: "100px",
                   padding: "6px 10px",
                   borderRadius: "8px",
-                  border: "1px solid #fcd34d",
+                  border: "1px solid rgba(245, 158, 11, 0.4)",
+                  backgroundColor: "rgba(15, 23, 42, 0.9)",
+                  color: "#ffffff",
                   textAlign: "center",
                   fontSize: "13px",
                   fontWeight: "700",
                 }}
               />
-              <span style={{ fontSize: "12px", color: "#b45309" }}>
+              <span style={{ fontSize: "12px", color: "#fcd34d" }}>
                 ({Math.floor(targetTotalAmount / 60)} 小時 {targetTotalAmount % 60} 分鐘)
               </span>
             </div>
@@ -344,7 +362,7 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
 
         {/* 5. 三種計時機制選擇 */}
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: "700", color: "#334155", marginBottom: "8px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: "700", color: "#cbd5e1", marginBottom: "8px" }}>
             單次計時機制
           </label>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px", marginBottom: "12px" }}>
@@ -354,13 +372,15 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
               style={{
                 padding: "10px 0",
                 border: "1px solid",
-                borderColor: timingType === "countdown" ? "#2563eb" : "#cbd5e1",
-                backgroundColor: timingType === "countdown" ? "#eff6ff" : "#ffffff",
-                color: timingType === "countdown" ? "#2563eb" : "#64748b",
+                borderColor: timingType === "countdown" ? "#38bdf8" : "rgba(255, 255, 255, 0.1)",
+                backgroundColor: timingType === "countdown" ? "rgba(56, 189, 248, 0.15)" : "rgba(30, 41, 59, 0.5)",
+                color: timingType === "countdown" ? "#38bdf8" : "#94a3b8",
+                boxShadow: timingType === "countdown" ? "0 0 10px rgba(56, 189, 248, 0.3)" : "none",
                 borderRadius: "10px",
                 fontSize: "13px",
                 fontWeight: "700",
                 cursor: "pointer",
+                transition: "all 0.15s",
               }}
             >
               ⏱ 倒計時
@@ -371,13 +391,15 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
               style={{
                 padding: "10px 0",
                 border: "1px solid",
-                borderColor: timingType === "countup" ? "#2563eb" : "#cbd5e1",
-                backgroundColor: timingType === "countup" ? "#eff6ff" : "#ffffff",
-                color: timingType === "countup" ? "#2563eb" : "#64748b",
+                borderColor: timingType === "countup" ? "#38bdf8" : "rgba(255, 255, 255, 0.1)",
+                backgroundColor: timingType === "countup" ? "rgba(56, 189, 248, 0.15)" : "rgba(30, 41, 59, 0.5)",
+                color: timingType === "countup" ? "#38bdf8" : "#94a3b8",
+                boxShadow: timingType === "countup" ? "0 0 10px rgba(56, 189, 248, 0.3)" : "none",
                 borderRadius: "10px",
                 fontSize: "13px",
                 fontWeight: "700",
                 cursor: "pointer",
+                transition: "all 0.15s",
               }}
             >
               📈 正向計時
@@ -388,13 +410,15 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
               style={{
                 padding: "10px 0",
                 border: "1px solid",
-                borderColor: timingType === "none" ? "#2563eb" : "#cbd5e1",
-                backgroundColor: timingType === "none" ? "#eff6ff" : "#ffffff",
-                color: timingType === "none" ? "#2563eb" : "#64748b",
+                borderColor: timingType === "none" ? "#38bdf8" : "rgba(255, 255, 255, 0.1)",
+                backgroundColor: timingType === "none" ? "rgba(56, 189, 248, 0.15)" : "rgba(30, 41, 59, 0.5)",
+                color: timingType === "none" ? "#38bdf8" : "#94a3b8",
+                boxShadow: timingType === "none" ? "0 0 10px rgba(56, 189, 248, 0.3)" : "none",
                 borderRadius: "10px",
                 fontSize: "13px",
                 fontWeight: "700",
                 cursor: "pointer",
+                transition: "all 0.15s",
               }}
             >
               ✓ 不計時打卡
@@ -405,15 +429,17 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
           {timingType === "countdown" && (
             <div
               style={{
-                backgroundColor: "#f8fafc",
+                backgroundColor: "rgba(30, 41, 59, 0.5)",
                 padding: "14px",
                 borderRadius: "12px",
-                border: "1px solid #e2e8f0",
+                border: "1px solid rgba(56, 189, 248, 0.15)",
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                <span style={{ fontSize: "12px", color: "#64748b", fontWeight: "600" }}>單次專注分鐘</span>
-                <span style={{ fontSize: "16px", color: "#2563eb", fontWeight: "800" }}>{durationMinutes} 分鐘</span>
+                <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600" }}>單次專注分鐘</span>
+                <span style={{ fontSize: "16px", color: "#38bdf8", fontWeight: "800", textShadow: "0 0 8px rgba(56, 189, 248, 0.5)" }}>
+                  {durationMinutes} 分鐘
+                </span>
               </div>
               <input
                 type="range"
@@ -422,7 +448,7 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
                 step="5"
                 value={durationMinutes}
                 onChange={(e) => setDurationMinutes(Number(e.target.value))}
-                style={{ width: "100%", cursor: "pointer", accentColor: "#2563eb" }}
+                style={{ width: "100%", cursor: "pointer", accentColor: "#38bdf8" }}
               />
               <div style={{ display: "flex", gap: "6px", marginTop: "10px" }}>
                 {[15, 25, 30, 45, 60].map((m) => (
@@ -436,10 +462,12 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
                       fontSize: "11px",
                       fontWeight: "700",
                       borderRadius: "6px",
-                      border: durationMinutes === m ? "1px solid #2563eb" : "1px solid #e2e8f0",
-                      backgroundColor: durationMinutes === m ? "#2563eb" : "#ffffff",
-                      color: durationMinutes === m ? "#ffffff" : "#64748b",
+                      border: durationMinutes === m ? "1px solid #38bdf8" : "1px solid rgba(255, 255, 255, 0.1)",
+                      backgroundColor: durationMinutes === m ? "#38bdf8" : "rgba(30, 41, 59, 0.8)",
+                      color: durationMinutes === m ? "#0f172a" : "#94a3b8",
+                      boxShadow: durationMinutes === m ? "0 0 8px rgba(56, 189, 248, 0.4)" : "none",
                       cursor: "pointer",
+                      transition: "all 0.15s",
                     }}
                   >
                     {m}m
@@ -451,19 +479,20 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
         </div>
 
         {/* 底部按鈕 */}
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", borderTop: "1px solid #f1f5f9", paddingTop: "16px" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", borderTop: "1px solid rgba(255, 255, 255, 0.1)", paddingTop: "16px" }}>
           <button
             type="button"
             onClick={onClose}
             style={{
               padding: "10px 20px",
-              backgroundColor: "#f1f5f9",
-              color: "#475569",
-              border: "none",
+              backgroundColor: "rgba(30, 41, 59, 0.8)",
+              color: "#94a3b8",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
               borderRadius: "10px",
               fontSize: "14px",
               fontWeight: "600",
               cursor: "pointer",
+              transition: "all 0.15s",
             }}
           >
             取消
@@ -473,14 +502,15 @@ export default function PomodoroAddModal({ isOpen, onClose, onAdd }: PomodoroAdd
             onClick={handleSubmit}
             style={{
               padding: "10px 28px",
-              backgroundColor: "#2563eb",
+              background: "linear-gradient(135deg, #38bdf8 0%, #2563eb 100%)",
               color: "#ffffff",
               border: "none",
               borderRadius: "10px",
               fontSize: "14px",
               fontWeight: "700",
               cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)",
+              boxShadow: "0 0 15px rgba(56, 189, 248, 0.4)",
+              transition: "all 0.15s",
             }}
           >
             確認新增

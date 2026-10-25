@@ -348,16 +348,18 @@ export default function FocusPet() {
           width: "52px",
           height: "52px",
           borderRadius: "50%",
-          backgroundColor: "#ffffff",
-          border: `3px solid ${profile.color}`,
-          boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+          backgroundColor: "rgba(15, 23, 42, 0.9)",
+          backdropFilter: "blur(12px)",
+          border: `2.5px solid ${profile.color || "#38bdf8"}`,
+          boxShadow: "0 0 20px rgba(56, 189, 248, 0.4), 0 4px 16px rgba(0,0,0,0.5)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          zIndex: 99999, // 用來確保浮在圖層最頂層的 CSS 屬性
+          zIndex: 99999,
           padding: 0,
-          overflow: "hidden"
+          overflow: "hidden",
+          transition: "all 0.2s",
         }}
       >
         {renderAvatarContent("26px")}
@@ -385,16 +387,16 @@ export default function FocusPet() {
       {/* 氣泡語錄 */}
       {showBubble && (
         <div style={{
-          backgroundColor: isFocusing ? "#eff6ff" : "rgba(255, 255, 255, 0.95)",
-          backdropFilter: "blur(6px)",
+          backgroundColor: isFocusing ? "rgba(15, 23, 42, 0.95)" : "rgba(15, 23, 42, 0.9)",
+          backdropFilter: "blur(12px)",
           padding: "6px 12px",
           borderRadius: "12px",
           fontSize: "11px",
           fontWeight: "700",
-          color: isFocusing ? "#1d4ed8" : "#334155",
+          color: isFocusing ? "#38bdf8" : "#f8fafc",
           border: "1px solid",
-          borderColor: isFocusing ? "#93c5fd" : "#e2e8f0",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          borderColor: isFocusing ? "rgba(56, 189, 248, 0.6)" : "rgba(56, 189, 248, 0.25)",
+          boxShadow: isFocusing ? "0 0 16px rgba(56, 189, 248, 0.35)" : "0 4px 16px rgba(0,0,0,0.4)",
           maxWidth: "180px",
           textAlign: "center",
           animation: "floatBubble 2s infinite ease-in-out",
@@ -414,12 +416,12 @@ export default function FocusPet() {
             position: "absolute",
             top: "-6px",
             right: "-6px",
-            width: "16px",
-            height: "16px",
-            backgroundColor: "rgba(100, 116, 139, 0.8)",
-            color: "#ffffff",
+            width: "18px",
+            height: "18px",
+            backgroundColor: "rgba(15, 23, 42, 0.9)",
+            color: "#94a3b8",
             borderRadius: "50%",
-            border: "1px solid #ffffff",
+            border: "1px solid rgba(56, 189, 248, 0.3)",
             fontSize: "9px",
             display: "flex",
             alignItems: "center",
@@ -452,8 +454,9 @@ export default function FocusPet() {
 
       {/* 顯示真實等級與當前金幣數量 */}
       <div style={{
-        backgroundColor: isFocusing ? "#2563eb" : "rgba(15, 23, 42, 0.75)",
-        backdropFilter: "blur(4px)",
+        backgroundColor: isFocusing ? "rgba(14, 165, 233, 0.25)" : "rgba(15, 23, 42, 0.88)",
+        backdropFilter: "blur(8px)",
+        border: isFocusing ? "1px solid #38bdf8" : "1px solid rgba(56, 189, 248, 0.25)",
         color: "#fff",
         padding: "3px 10px",
         borderRadius: "12px",
@@ -461,11 +464,11 @@ export default function FocusPet() {
         fontWeight: "bold",
         display: "flex",
         gap: "6px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.15)"
+        boxShadow: isFocusing ? "0 0 12px rgba(56, 189, 248, 0.4)" : "0 2px 8px rgba(0,0,0,0.3)"
       }}>
         <span>Lv.{pet.level}</span>
         <span style={{ color: "#fbbf24" }}>🪙{pet.coins}</span>
-        {isFocusing && <span style={{ color: "#93c5fd" }}>🔥陪讀中</span>}
+        {isFocusing && <span style={{ color: "#38bdf8", textShadow: "0 0 6px rgba(56, 189, 248, 0.6)" }}>🔥陪讀中</span>}
       </div>
 
       {/* 雙擊詳細選單 */}
@@ -474,11 +477,12 @@ export default function FocusPet() {
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
           style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "12px",
-            padding: "12px",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-            border: "1px solid #e2e8f0",
+            backgroundColor: "rgba(15, 23, 42, 0.95)",
+            backdropFilter: "blur(16px)",
+            borderRadius: "14px",
+            padding: "14px",
+            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(56, 189, 248, 0.2)",
+            border: "1.5px solid rgba(56, 189, 248, 0.3)",
             width: "160px",
             display: "flex",
             flexDirection: "column",
@@ -486,28 +490,30 @@ export default function FocusPet() {
             cursor: "default"
           }}
         >
-          <div style={{ fontSize: "11px", fontWeight: "bold", color: "#1e293b", textAlign: "center" }}>
+          <div style={{ fontSize: "11px", fontWeight: "bold", color: "#f8fafc", textAlign: "center" }}>
             {currentDisplayName}
           </div>
 
-          <div style={{ width: "100%", height: "5px", backgroundColor: "#f1f5f9", borderRadius: "99px", overflow: "hidden" }}>
-            <div style={{ width: `${expPercentage}%`, height: "100%", backgroundColor: profile.color }}></div>
+          <div style={{ width: "100%", height: "5px", backgroundColor: "rgba(30, 41, 59, 0.8)", borderRadius: "99px", overflow: "hidden" }}>
+            <div style={{ width: `${expPercentage}%`, height: "100%", backgroundColor: profile.color, boxShadow: `0 0 8px ${profile.color}` }}></div>
           </div>
-          <div style={{ fontSize: "9px", color: "#64748b", textAlign: "center" }}>
+          <div style={{ fontSize: "9px", color: "#94a3b8", textAlign: "center" }}>
             {pet.exp}/{pet.maxExp} EXP
           </div>
 
           <button
             onClick={handleFeed}
             style={{
-              padding: "5px 8px",
-              backgroundColor: "#ffedd5",
-              color: "#ea580c",
+              padding: "6px 8px",
+              background: "linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)",
+              color: "#ffffff",
               border: "none",
               borderRadius: "6px",
               fontSize: "10px",
               fontWeight: "bold",
-              cursor: "pointer"
+              cursor: "pointer",
+              boxShadow: "0 0 10px rgba(245, 158, 11, 0.3)",
+              transition: "all 0.15s",
             }}
           >
             🍖 餵食 (-15🪙 / +25EXP)

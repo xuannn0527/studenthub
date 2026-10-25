@@ -82,9 +82,11 @@ export const TimetableCanvas = forwardRef<HTMLDivElement, TimetableCanvasProps>(
           backgroundSize: bgImage ? (bgZoom === 100 ? "cover" : `${bgZoom}% auto`) : "cover",
           backgroundPosition: `${bgPosX}% ${bgPosY}%`,
           backgroundRepeat: "no-repeat",
-          borderRadius: "16px", 
-          border: isMobileView ? "8px solid #1e293b" : "1px solid #e2e8f0", 
-          boxShadow: isMobileView ? "0 20px 25px -5px rgba(0, 0, 0, 0.15)" : "0 4px 20px rgba(0, 0, 0, 0.06)",
+          borderRadius: "20px", 
+          border: isMobileView ? "8px solid #0f172a" : "1.5px solid rgba(56, 189, 248, 0.3)", 
+          boxShadow: isMobileView 
+            ? "0 20px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.25)" 
+            : "0 12px 35px rgba(0, 0, 0, 0.55), 0 0 25px rgba(56, 189, 248, 0.18)",
           position: "relative",
           overflow: "hidden",
           flexShrink: 0,

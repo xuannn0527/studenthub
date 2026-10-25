@@ -37,48 +37,48 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
   const maxDayMins = Math.max(...past7Days.map((d) => d.dayMins), 60);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px", color: "#ffffff" }}>
       {/* 頂部指標區塊：累計指標與今日表現 */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "18px" }}>
         {/* 卡片 1: 累計專注指標 */}
         <div
           style={{
-            backgroundColor: "#f8fafc",
-            border: "1px solid #e2e8f0",
+            backgroundColor: "rgba(30, 41, 59, 0.6)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
             borderRadius: "18px",
             padding: "22px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
-            <span style={{ fontSize: "14px", fontWeight: "800", color: "#1e293b", display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ fontSize: "14px", fontWeight: "800", color: "#f8fafc", display: "flex", alignItems: "center", gap: "6px" }}>
               <span>📈</span> 累計專注指標
             </span>
-            <span style={{ fontSize: "12px", color: "#64748b", fontWeight: "600" }}>歷史累積</span>
+            <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600" }}>歷史累積</span>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", textAlign: "center", gap: "8px" }}>
-            <div style={{ backgroundColor: "#ffffff", padding: "14px 8px", borderRadius: "12px", border: "1px solid #f1f5f9" }}>
+            <div style={{ backgroundColor: "rgba(15, 23, 42, 0.65)", padding: "14px 8px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
               <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "700" }}>總次數</div>
-              <div style={{ fontSize: "24px", fontWeight: "800", color: "#1e293b", marginTop: "4px" }}>
-                {totalCount} <span style={{ fontSize: "12px", fontWeight: "600" }}>次</span>
+              <div style={{ fontSize: "24px", fontWeight: "800", color: "#f8fafc", marginTop: "4px" }}>
+                {totalCount} <span style={{ fontSize: "12px", fontWeight: "600", color: "#94a3b8" }}>次</span>
               </div>
             </div>
 
-            <div style={{ backgroundColor: "#ffffff", padding: "14px 8px", borderRadius: "12px", border: "1px solid #f1f5f9" }}>
+            <div style={{ backgroundColor: "rgba(15, 23, 42, 0.65)", padding: "14px 8px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
               <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "700" }}>總時長</div>
-              <div style={{ fontSize: "24px", fontWeight: "800", color: "#2563eb", marginTop: "4px" }}>
+              <div style={{ fontSize: "24px", fontWeight: "800", color: "#38bdf8", marginTop: "4px", textShadow: "0 0 10px rgba(56, 189, 248, 0.4)" }}>
                 {totalHours}
-                <span style={{ fontSize: "11px", fontWeight: "600", color: "#64748b" }}>h </span>
+                <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8" }}>h </span>
                 {totalRemMins}
-                <span style={{ fontSize: "11px", fontWeight: "600", color: "#64748b" }}>m</span>
+                <span style={{ fontSize: "11px", fontWeight: "600", color: "#94a3b8" }}>m</span>
               </div>
             </div>
 
-            <div style={{ backgroundColor: "#ffffff", padding: "14px 8px", borderRadius: "12px", border: "1px solid #f1f5f9" }}>
+            <div style={{ backgroundColor: "rgba(15, 23, 42, 0.65)", padding: "14px 8px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
               <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "700" }}>平均每次</div>
-              <div style={{ fontSize: "24px", fontWeight: "800", color: "#10b981", marginTop: "4px" }}>
-                {avgMinutes} <span style={{ fontSize: "12px", fontWeight: "600" }}>分</span>
+              <div style={{ fontSize: "24px", fontWeight: "800", color: "#34d399", marginTop: "4px", textShadow: "0 0 10px rgba(52, 211, 153, 0.4)" }}>
+                {avgMinutes} <span style={{ fontSize: "12px", fontWeight: "600", color: "#94a3b8" }}>分</span>
               </div>
             </div>
           </div>
@@ -87,38 +87,38 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
         {/* 卡片 2: 今日專注表現 */}
         <div
           style={{
-            backgroundColor: "#f8fafc",
-            border: "1px solid #e2e8f0",
+            backgroundColor: "rgba(30, 41, 59, 0.6)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
             borderRadius: "18px",
             padding: "22px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
-            <span style={{ fontSize: "14px", fontWeight: "800", color: "#1e293b", display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ fontSize: "14px", fontWeight: "800", color: "#f8fafc", display: "flex", alignItems: "center", gap: "6px" }}>
               <span>📅</span> 今日專注表現
             </span>
-            <span style={{ fontSize: "12px", color: "#64748b", fontWeight: "600" }}>{todayStr}</span>
+            <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600" }}>{todayStr}</span>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", textAlign: "center", gap: "8px" }}>
-            <div style={{ backgroundColor: "#ffffff", padding: "14px 8px", borderRadius: "12px", border: "1px solid #f1f5f9" }}>
+            <div style={{ backgroundColor: "rgba(15, 23, 42, 0.65)", padding: "14px 8px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
               <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "700" }}>今日次數</div>
-              <div style={{ fontSize: "24px", fontWeight: "800", color: "#1e293b", marginTop: "4px" }}>
-                {todayCount} <span style={{ fontSize: "12px", fontWeight: "600" }}>次</span>
+              <div style={{ fontSize: "24px", fontWeight: "800", color: "#f8fafc", marginTop: "4px" }}>
+                {todayCount} <span style={{ fontSize: "12px", fontWeight: "600", color: "#94a3b8" }}>次</span>
               </div>
             </div>
 
-            <div style={{ backgroundColor: "#ffffff", padding: "14px 8px", borderRadius: "12px", border: "1px solid #f1f5f9" }}>
+            <div style={{ backgroundColor: "rgba(15, 23, 42, 0.65)", padding: "14px 8px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
               <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "700" }}>今日專注</div>
-              <div style={{ fontSize: "24px", fontWeight: "800", color: "#d97706", marginTop: "4px" }}>
-                {todayMinutes} <span style={{ fontSize: "12px", fontWeight: "600" }}>分</span>
+              <div style={{ fontSize: "24px", fontWeight: "800", color: "#fbbf24", marginTop: "4px", textShadow: "0 0 10px rgba(251, 191, 36, 0.4)" }}>
+                {todayMinutes} <span style={{ fontSize: "12px", fontWeight: "600", color: "#94a3b8" }}>分</span>
               </div>
             </div>
 
-            <div style={{ backgroundColor: "#ffffff", padding: "14px 8px", borderRadius: "12px", border: "1px solid #f1f5f9" }}>
+            <div style={{ backgroundColor: "rgba(15, 23, 42, 0.65)", padding: "14px 8px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
               <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "700" }}>60分達成率</div>
-              <div style={{ fontSize: "24px", fontWeight: "800", color: goalRate >= 100 ? "#059669" : "#3b82f6", marginTop: "4px" }}>
+              <div style={{ fontSize: "24px", fontWeight: "800", color: goalRate >= 100 ? "#34d399" : "#38bdf8", marginTop: "4px", textShadow: goalRate >= 100 ? "0 0 10px rgba(52, 211, 153, 0.4)" : "0 0 10px rgba(56, 189, 248, 0.4)" }}>
                 {goalRate}%
               </div>
             </div>
@@ -126,17 +126,18 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
 
           {/* 今日 60 分鐘進度條 */}
           <div style={{ marginTop: "14px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#64748b", marginBottom: "4px", fontWeight: "600" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#94a3b8", marginBottom: "4px", fontWeight: "600" }}>
               <span>每日目標 (60分鐘)</span>
               <span>{todayMinutes} / 60 分</span>
             </div>
-            <div style={{ height: "6px", backgroundColor: "#e2e8f0", borderRadius: "4px", overflow: "hidden" }}>
+            <div style={{ height: "6px", backgroundColor: "rgba(255, 255, 255, 0.12)", borderRadius: "4px", overflow: "hidden" }}>
               <div
                 style={{
                   height: "100%",
                   width: `${goalRate}%`,
-                  backgroundColor: goalRate >= 100 ? "#10b981" : "#3b82f6",
+                  background: goalRate >= 100 ? "linear-gradient(90deg, #10b981, #34d399)" : "linear-gradient(90deg, #0284c7, #38bdf8)",
                   borderRadius: "4px",
+                  boxShadow: goalRate >= 100 ? "0 0 8px #34d399" : "0 0 8px #38bdf8",
                   transition: "width 0.4s ease",
                 }}
               />
@@ -148,18 +149,18 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
       {/* 3. 近 7 日時長直條圖 */}
       <div
         style={{
-          backgroundColor: "#f8fafc",
-          border: "1px solid #e2e8f0",
+          backgroundColor: "rgba(30, 41, 59, 0.6)",
+          border: "1px solid rgba(255, 255, 255, 0.1)",
           borderRadius: "18px",
           padding: "24px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-          <span style={{ fontSize: "14px", fontWeight: "800", color: "#1e293b", display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{ fontSize: "14px", fontWeight: "800", color: "#f8fafc", display: "flex", alignItems: "center", gap: "6px" }}>
             <span>📊</span> 近 7 日專注時長直條圖
           </span>
-          <span style={{ fontSize: "12px", color: "#64748b" }}>單位：分鐘 (m)</span>
+          <span style={{ fontSize: "12px", color: "#94a3b8" }}>單位：分鐘 (m)</span>
         </div>
 
         <div
@@ -170,7 +171,7 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
             height: "180px",
             gap: "12px",
             padding: "0 8px 10px 8px",
-            borderBottom: "1px solid #e2e8f0",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
           }}
         >
           {past7Days.map((day, idx) => {
@@ -192,8 +193,9 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
                   style={{
                     fontSize: "12px",
                     fontWeight: "800",
-                    color: day.isToday ? "#2563eb" : day.dayMins > 0 ? "#475569" : "#cbd5e1",
+                    color: day.isToday ? "#38bdf8" : day.dayMins > 0 ? "#e2e8f0" : "#64748b",
                     marginBottom: "8px",
+                    textShadow: day.isToday ? "0 0 8px rgba(56, 189, 248, 0.6)" : "none",
                   }}
                 >
                   {day.dayMins}m
@@ -205,14 +207,14 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
                     width: "100%",
                     maxWidth: "44px",
                     height: `${heightPercent}%`,
-                    backgroundColor: day.isToday
-                      ? "#2563eb"
+                    background: day.isToday
+                      ? "linear-gradient(180deg, #38bdf8, #2563eb)"
                       : day.dayMins > 0
-                      ? "#60a5fa"
-                      : "#e2e8f0",
+                      ? "linear-gradient(180deg, #60a5fa, #1d4ed8)"
+                      : "rgba(255, 255, 255, 0.08)",
                     borderRadius: "8px 8px 0 0",
                     transition: "height 0.4s ease, background-color 0.2s",
-                    boxShadow: day.isToday ? "0 4px 12px rgba(37, 99, 235, 0.3)" : "none",
+                    boxShadow: day.isToday ? "0 0 14px rgba(56, 189, 248, 0.5)" : "none",
                   }}
                 />
 
@@ -220,7 +222,7 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
                 <span
                   style={{
                     fontSize: "11px",
-                    color: day.isToday ? "#2563eb" : "#64748b",
+                    color: day.isToday ? "#38bdf8" : "#94a3b8",
                     marginTop: "10px",
                     fontWeight: day.isToday ? "800" : "600",
                     textAlign: "center",
@@ -238,14 +240,15 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
       {records.length > 0 && (
         <div
           style={{
-            backgroundColor: "#f8fafc",
-            border: "1px solid #e2e8f0",
+            backgroundColor: "rgba(30, 41, 59, 0.6)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
             borderRadius: "18px",
             padding: "20px",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-            <span style={{ fontSize: "13px", fontWeight: "700", color: "#1e293b" }}>
+            <span style={{ fontSize: "13px", fontWeight: "700", color: "#f8fafc" }}>
               🕒 最近專注紀錄 (近 10 筆)
             </span>
             {onClearRecords && (
@@ -254,9 +257,9 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
                 style={{
                   background: "none",
                   border: "none",
-                  color: "#ef4444",
+                  color: "#f87171",
                   fontSize: "12px",
-                  fontWeight: "600",
+                  fontWeight: "700",
                   cursor: "pointer",
                 }}
               >
@@ -273,24 +276,25 @@ export default function PomodoroStats({ records, onClearRecords }: PomodoroStats
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#ffffff",
+                  backgroundColor: "rgba(15, 23, 42, 0.65)",
                   padding: "10px 14px",
                   borderRadius: "10px",
-                  border: "1px solid #f1f5f9",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
                   fontSize: "13px",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span style={{ color: "#2563eb", fontWeight: "700" }}>✓</span>
-                  <span style={{ fontWeight: "700", color: "#1e293b" }}>{r.todoTitle}</span>
+                  <span style={{ color: "#38bdf8", fontWeight: "700" }}>✓</span>
+                  <span style={{ fontWeight: "700", color: "#f8fafc" }}>{r.todoTitle}</span>
                   <span style={{ fontSize: "11px", color: "#94a3b8" }}>
                     {r.timestamp} {r.timeStr}
                   </span>
                 </div>
                 <span
                   style={{
-                    backgroundColor: "#eff6ff",
-                    color: "#2563eb",
+                    backgroundColor: "rgba(56, 189, 248, 0.15)",
+                    color: "#38bdf8",
+                    border: "1px solid rgba(56, 189, 248, 0.3)",
                     padding: "3px 10px",
                     borderRadius: "12px",
                     fontWeight: "700",

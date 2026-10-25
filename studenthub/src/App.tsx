@@ -32,8 +32,23 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ display: "flex", width: "100vw", height: "100vh", backgroundColor: "#f8fafc", color: "#0f172a", fontFamily: "sans-serif", overflow: "hidden", position: "relative" }}>
-      
+    <div
+      style={{
+        display: "flex",
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "#0b132b",
+        backgroundImage: `
+          radial-gradient(ellipse at 50% 20%, rgba(56, 189, 248, 0.15) 0%, rgba(15, 23, 42, 0) 65%),
+          radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.15) 0%, rgba(15, 23, 42, 0) 60%),
+          linear-gradient(180deg, #0c1a30 0%, #172554 45%, #0f172a 100%)
+        `,
+        color: "#ffffff",
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
       <style>{`
         html, body, #root {
           margin: 0 !important;
@@ -49,29 +64,57 @@ export default function App() {
           from { opacity: 0; transform: scale(0.99); }
           to { opacity: 1; transform: scale(1); }
         }
+        /* 科技風自訂捲軸 */
+        ::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+          background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+          background: rgba(56, 189, 248, 0.3);
+          border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(56, 189, 248, 0.6);
+        }
       `}</style>
 
-      {/* 👈 左側邊欄 (Sidebar) */}
+      {/* 👈 左側邊欄 (Sidebar) - 深色系科技風格 */}
       <aside
         style={{
           width: "250px",
-          backgroundColor: "#ffffff",
-          borderRight: "1px solid #e2e8f0",
+          backgroundColor: "rgba(11, 19, 43, 0.88)",
+          backdropFilter: "blur(16px)",
+          borderRight: "1.5px solid rgba(56, 189, 248, 0.18)",
           display: "flex",
           flexDirection: "column",
           padding: "24px 20px",
           flexShrink: 0,
-          boxShadow: "2px 0 12px rgba(0,0,0,0.03)",
+          boxShadow: "4px 0 24px rgba(0,0,0,0.4)",
           zIndex: 20,
           height: "100vh",
           boxSizing: "border-box",
         }}
       >
         <div style={{ marginBottom: "18px", paddingLeft: "4px" }}>
-          <h1 style={{ margin: "0 0 6px 0", fontSize: "21px", color: "#1e293b", display: "flex", alignItems: "center", gap: "8px" }}>
+          <h1
+            style={{
+              margin: "0 0 6px 0",
+              fontSize: "21px",
+              fontWeight: "900",
+              color: "#ffffff",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              letterSpacing: "-0.3px",
+              textShadow: "0 0 12px rgba(56, 189, 248, 0.5)",
+            }}
+          >
             🎓 StudentHub
           </h1>
-          <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>個人化學業專注儀表板</p>
+          <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>個人化學業專注儀表板</p>
         </div>
 
         {/* 🌟 雙模式切換開關 (Dual Mode Toggle) */}
@@ -79,11 +122,12 @@ export default function App() {
           style={{
             marginBottom: "20px",
             padding: "4px",
-            backgroundColor: "#f1f5f9",
+            backgroundColor: "rgba(15, 23, 42, 0.75)",
             borderRadius: "12px",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
             display: "flex",
             gap: "4px",
-            boxShadow: "inset 0 1px 2px rgba(0,0,0,0.06)",
+            boxShadow: "inset 0 1px 4px rgba(0,0,0,0.4)",
           }}
         >
           <button
@@ -91,14 +135,14 @@ export default function App() {
             style={{
               flex: 1,
               padding: "8px 0",
-              border: "none",
+              border: viewMode === "desktop" ? "1px solid rgba(56, 189, 248, 0.4)" : "none",
               borderRadius: "8px",
-              backgroundColor: viewMode === "desktop" ? "#ffffff" : "transparent",
-              color: viewMode === "desktop" ? "#0f172a" : "#64748b",
-              fontWeight: "700",
+              background: viewMode === "desktop" ? "linear-gradient(135deg, #0284c7, #2563eb)" : "transparent",
+              color: viewMode === "desktop" ? "#ffffff" : "#94a3b8",
+              fontWeight: "800",
               fontSize: "12px",
               cursor: "pointer",
-              boxShadow: viewMode === "desktop" ? "0 2px 6px rgba(0,0,0,0.08)" : "none",
+              boxShadow: viewMode === "desktop" ? "0 2px 10px rgba(2, 132, 199, 0.45)" : "none",
               transition: "all 0.2s ease",
               display: "flex",
               alignItems: "center",
@@ -113,14 +157,14 @@ export default function App() {
             style={{
               flex: 1,
               padding: "8px 0",
-              border: "none",
+              border: viewMode === "island" ? "1px solid rgba(6, 182, 212, 0.4)" : "none",
               borderRadius: "8px",
-              backgroundColor: viewMode === "island" ? "#0284c7" : "transparent",
-              color: viewMode === "island" ? "#ffffff" : "#64748b",
-              fontWeight: "700",
+              background: viewMode === "island" ? "linear-gradient(135deg, #06b6d4, #0284c7)" : "transparent",
+              color: viewMode === "island" ? "#ffffff" : "#94a3b8",
+              fontWeight: "800",
               fontSize: "12px",
               cursor: "pointer",
-              boxShadow: viewMode === "island" ? "0 2px 8px rgba(2, 132, 199, 0.35)" : "none",
+              boxShadow: viewMode === "island" ? "0 2px 10px rgba(6, 182, 212, 0.45)" : "none",
               transition: "all 0.2s ease",
               display: "flex",
               alignItems: "center",
@@ -140,13 +184,14 @@ export default function App() {
               style={{
                 padding: "12px 16px",
                 textAlign: "left",
-                backgroundColor: activeTab === "timetable" ? "#eff6ff" : "transparent",
-                color: activeTab === "timetable" ? "#2563eb" : "#475569",
-                border: "none",
+                backgroundColor: activeTab === "timetable" ? "rgba(56, 189, 248, 0.15)" : "transparent",
+                color: activeTab === "timetable" ? "#38bdf8" : "#94a3b8",
+                border: activeTab === "timetable" ? "1px solid rgba(56, 189, 248, 0.45)" : "1px solid transparent",
                 borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
+                fontWeight: "700",
                 fontSize: "14px",
+                boxShadow: activeTab === "timetable" ? "0 0 14px rgba(56, 189, 248, 0.25)" : "none",
                 transition: "all 0.2s ease",
               }}
             >
@@ -158,13 +203,14 @@ export default function App() {
               style={{
                 padding: "12px 16px",
                 textAlign: "left",
-                backgroundColor: activeTab === "pomodoro" ? "#fef2f2" : "transparent",
-                color: activeTab === "pomodoro" ? "#ef4444" : "#475569",
-                border: "none",
+                backgroundColor: activeTab === "pomodoro" ? "rgba(239, 68, 68, 0.15)" : "transparent",
+                color: activeTab === "pomodoro" ? "#f87171" : "#94a3b8",
+                border: activeTab === "pomodoro" ? "1px solid rgba(239, 68, 68, 0.45)" : "1px solid transparent",
                 borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
+                fontWeight: "700",
                 fontSize: "14px",
+                boxShadow: activeTab === "pomodoro" ? "0 0 14px rgba(239, 68, 68, 0.25)" : "none",
                 transition: "all 0.2s ease",
               }}
             >
@@ -176,13 +222,14 @@ export default function App() {
               style={{
                 padding: "12px 16px",
                 textAlign: "left",
-                backgroundColor: activeTab === "assignments" ? "#ecfdf5" : "transparent",
-                color: activeTab === "assignments" ? "#10b981" : "#475569",
-                border: "none",
+                backgroundColor: activeTab === "assignments" ? "rgba(16, 185, 129, 0.15)" : "transparent",
+                color: activeTab === "assignments" ? "#34d399" : "#94a3b8",
+                border: activeTab === "assignments" ? "1px solid rgba(16, 185, 129, 0.45)" : "1px solid transparent",
                 borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
+                fontWeight: "700",
                 fontSize: "14px",
+                boxShadow: activeTab === "assignments" ? "0 0 14px rgba(16, 185, 129, 0.25)" : "none",
                 transition: "all 0.2s ease",
               }}
             >
@@ -194,13 +241,14 @@ export default function App() {
               style={{
                 padding: "12px 16px",
                 textAlign: "left",
-                backgroundColor: activeTab === "pet" ? "#fff7ed" : "transparent",
-                color: activeTab === "pet" ? "#ea580c" : "#475569",
-                border: "none",
+                backgroundColor: activeTab === "pet" ? "rgba(245, 158, 11, 0.15)" : "transparent",
+                color: activeTab === "pet" ? "#fbbf24" : "#94a3b8",
+                border: activeTab === "pet" ? "1px solid rgba(245, 158, 11, 0.45)" : "1px solid transparent",
                 borderRadius: "10px",
                 cursor: "pointer",
-                fontWeight: "600",
+                fontWeight: "700",
                 fontSize: "14px",
+                boxShadow: activeTab === "pet" ? "0 0 14px rgba(245, 158, 11, 0.25)" : "none",
                 transition: "all 0.2s ease",
               }}
             >
@@ -212,13 +260,14 @@ export default function App() {
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <div
               style={{
-                backgroundColor: "#f0f9ff",
-                border: "1px solid #bae6fd",
+                backgroundColor: "rgba(15, 23, 42, 0.7)",
+                border: "1px solid rgba(56, 189, 248, 0.35)",
                 borderRadius: "12px",
                 padding: "14px",
                 fontSize: "12px",
-                color: "#0369a1",
+                color: "#93c5fd",
                 lineHeight: "1.5",
+                boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
               }}
             >
               <div style={{ fontWeight: "800", marginBottom: "4px", display: "flex", alignItems: "center", gap: "6px" }}>
@@ -233,9 +282,9 @@ export default function App() {
                 marginTop: "10px",
                 padding: "10px 14px",
                 borderRadius: "10px",
-                border: "1px solid #cbd5e1",
-                backgroundColor: "#ffffff",
-                color: "#1e293b",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                backgroundColor: "rgba(255, 255, 255, 0.08)",
+                color: "#ffffff",
                 fontSize: "12px",
                 fontWeight: "700",
                 cursor: "pointer",
@@ -243,8 +292,11 @@ export default function App() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "6px",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                transition: "all 0.15s ease",
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.15)")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.08)")}
             >
               <span>↩️</span> 返回桌面工作區
             </button>
@@ -259,22 +311,29 @@ export default function App() {
               marginTop: "auto",
               padding: "12px 14px",
               borderRadius: "12px",
-              background: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+              background: "linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(37, 99, 235, 0.2) 100%)",
+              border: "1.5px solid rgba(56, 189, 248, 0.4)",
               color: "#ffffff",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               gap: "10px",
-              boxShadow: "0 4px 12px rgba(2, 132, 199, 0.25)",
-              transition: "transform 0.15s ease",
+              boxShadow: "0 4px 16px rgba(2, 132, 199, 0.25)",
+              transition: "transform 0.15s ease, border-color 0.15s ease",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-2px)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "translateY(0)")}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.8)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.borderColor = "rgba(56, 189, 248, 0.4)";
+            }}
           >
             <span style={{ fontSize: "22px" }}>🏝️</span>
             <div>
-              <div style={{ fontSize: "12px", fontWeight: "800" }}>探索守護獸島</div>
-              <div style={{ fontSize: "10px", opacity: 0.85 }}>進入島嶼修煉與討伐 ➔</div>
+              <div style={{ fontSize: "12px", fontWeight: "800", color: "#e0f2fe" }}>探索守護獸島</div>
+              <div style={{ fontSize: "10px", color: "#93c5fd" }}>進入島嶼修煉與討伐 ➔</div>
             </div>
           </div>
         )}

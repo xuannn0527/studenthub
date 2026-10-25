@@ -96,8 +96,8 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "rgba(15, 23, 42, 0.5)",
-        backdropFilter: "blur(6px)",
+        backgroundColor: "rgba(10, 15, 30, 0.75)",
+        backdropFilter: "blur(8px)",
         zIndex: 99999,
         display: "flex",
         justifyContent: "center",
@@ -107,22 +107,25 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
       <div 
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: "680px", // 🌟 大幅拓寬
+          width: "680px",
           maxWidth: "92vw",
-          backgroundColor: "#ffffff",
-          borderRadius: "20px",
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+          backgroundColor: "rgba(15, 23, 42, 0.95)",
+          backdropFilter: "blur(16px)",
+          borderRadius: "24px",
+          border: "1.5px solid rgba(56, 189, 248, 0.3)",
+          boxShadow: "0 25px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.15)",
           padding: "28px 32px",
           display: "flex",
           flexDirection: "column",
           gap: "18px",
+          color: "#ffffff",
           animation: "modalFadeIn 0.2s ease-out"
         }}
       >
         {/* 頂部標題列 */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #f1f5f9", paddingBottom: "14px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", paddingBottom: "14px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span style={{ color: "#16a34a", display: "flex", alignItems: "center" }}>
+            <span style={{ color: "#34d399", display: "flex", alignItems: "center" }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
@@ -130,7 +133,7 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
                 <polyline points="9 15 12 18 15 15"></polyline>
               </svg>
             </span>
-            <h3 style={{ margin: 0, fontSize: "18px", fontWeight: "700", color: "#1e293b" }}>
+            <h3 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#f8fafc" }}>
               智慧匯入選課清單
             </h3>
           </div>
@@ -148,7 +151,7 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
               borderRadius: "8px",
               transition: "background-color 0.15s"
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f1f5f9")}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)")}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -159,7 +162,7 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
         </div>
 
         {/* 提示引導文字 */}
-        <p style={{ margin: 0, fontSize: "14px", color: "#64748b", lineHeight: "1.6" }}>
+        <p style={{ margin: 0, fontSize: "14px", color: "#94a3b8", lineHeight: "1.6" }}>
           前往學校選課系統複製【已選課程清單】並直接貼在下方，系統將自動解析星期、堂次、課程與教室名稱：
         </p>
 
@@ -172,19 +175,20 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
           style={{ 
             width: "100%", 
             padding: "16px", 
-            borderRadius: "12px", 
-            border: "1.5px solid #cbd5e1", 
+            borderRadius: "14px", 
+            border: "1.5px solid rgba(255, 255, 255, 0.15)", 
             fontSize: "13px", 
             lineHeight: "1.6",
             resize: "vertical", 
             boxSizing: "border-box",
             outline: "none",
             fontFamily: "inherit",
-            backgroundColor: "#f8fafc",
+            backgroundColor: "rgba(30, 41, 59, 0.8)",
+            color: "#ffffff",
             transition: "border-color 0.2s"
           }}
-          onFocus={(e) => (e.currentTarget.style.borderColor = "#22c55e")}
-          onBlur={(e) => (e.currentTarget.style.borderColor = "#cbd5e1")}
+          onFocus={(e) => (e.currentTarget.style.borderColor = "#38bdf8")}
+          onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.15)")}
         />
 
         {/* 底部動作按鈕 */}
@@ -193,11 +197,11 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
             onClick={onClose} 
             style={{
               padding: "10px 20px",
-              backgroundColor: "#f1f5f9",
-              color: "#475569",
-              border: "none",
+              backgroundColor: "rgba(255, 255, 255, 0.08)",
+              color: "#cbd5e1",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
               borderRadius: "10px",
-              fontWeight: "600",
+              fontWeight: "700",
               cursor: "pointer",
               fontSize: "14px"
             }}
@@ -208,14 +212,14 @@ export default function ImportModal({ isOpen, onClose, onImportSuccess }: Import
             onClick={handleParseAndImport} 
             style={{
               padding: "10px 24px",
-              backgroundColor: "#16a34a",
+              background: "linear-gradient(135deg, #10b981, #059669)",
               color: "#ffffff",
               border: "none",
               borderRadius: "10px",
-              fontWeight: "700",
+              fontWeight: "800",
               cursor: "pointer",
               fontSize: "14px",
-              boxShadow: "0 2px 8px rgba(22,163,74,0.3)",
+              boxShadow: "0 0 14px rgba(16, 185, 129, 0.4)",
               transition: "transform 0.1s"
             }}
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}

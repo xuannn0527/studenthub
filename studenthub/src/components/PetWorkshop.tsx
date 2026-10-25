@@ -347,10 +347,37 @@ export default function PetWorkshop() {
     <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "960px", margin: "0 auto", width: "100%" }}>
       
       {/* 頂部狀態橫幅卡片 */}
-      <div style={{ backgroundColor: "#ffffff", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "20px" }}>
-        
+      <div
+        style={{
+          backgroundColor: "rgba(15, 23, 42, 0.88)",
+          backdropFilter: "blur(16px)",
+          padding: "24px",
+          borderRadius: "20px",
+          border: "1.5px solid rgba(56, 189, 248, 0.25)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.08)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "20px",
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <div style={{ width: "80px", height: "80px", borderRadius: "50%", backgroundColor: "#f8fafc", border: `3px solid ${profile.color}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "44px", boxShadow: "0 4px 12px rgba(0,0,0,0.06)", overflow: "hidden" }}>
+          <div
+            style={{
+              width: "80px",
+              height: "80px",
+              borderRadius: "50%",
+              backgroundColor: "rgba(30, 41, 59, 0.8)",
+              border: `3px solid ${profile.color}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "44px",
+              boxShadow: `0 0 20px ${profile.color}55`,
+              overflow: "hidden",
+            }}
+          >
             {customAvatar ? (
               <img src={customAvatar} alt="pet-avatar" style={{ width: "85%", height: "85%", objectFit: "contain" }} />
             ) : (
@@ -368,18 +395,66 @@ export default function PetWorkshop() {
                     placeholder="輸入守護獸名字..."
                     autoFocus
                     onKeyDown={(e) => e.key === "Enter" && handleSaveName()}
-                    style={{ padding: "4px 8px", borderRadius: "6px", border: "1.5px solid #2563eb", fontSize: "16px", fontWeight: "bold", outline: "none", width: "160px" }}
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      border: "1.5px solid #38bdf8",
+                      backgroundColor: "rgba(30, 41, 59, 0.8)",
+                      color: "#ffffff",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      outline: "none",
+                      width: "160px",
+                    }}
                   />
-                  <button onClick={handleSaveName} style={{ padding: "4px 10px", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", fontSize: "12px", fontWeight: "bold", cursor: "pointer" }}>儲存</button>
-                  <button onClick={() => setIsEditingName(false)} style={{ padding: "4px 8px", backgroundColor: "#f1f5f9", color: "#64748b", border: "none", borderRadius: "6px", fontSize: "12px", cursor: "pointer" }}>取消</button>
+                  <button
+                    onClick={handleSaveName}
+                    style={{
+                      padding: "4px 10px",
+                      backgroundColor: "#38bdf8",
+                      color: "#0f172a",
+                      border: "none",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                    }}
+                  >
+                    儲存
+                  </button>
+                  <button
+                    onClick={() => setIsEditingName(false)}
+                    style={{
+                      padding: "4px 8px",
+                      backgroundColor: "rgba(30, 41, 59, 0.8)",
+                      color: "#94a3b8",
+                      border: "none",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    取消
+                  </button>
                 </div>
               ) : (
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <h2 style={{ margin: 0, fontSize: "20px", color: "#1e293b" }}>{currentDisplayName}</h2>
+                  <h2 style={{ margin: 0, fontSize: "20px", color: "#f8fafc", textShadow: "0 0 10px rgba(56, 189, 248, 0.3)" }}>
+                    {currentDisplayName}
+                  </h2>
                   <button
                     onClick={handleStartEditName}
                     title="點擊修改名稱"
-                    style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", padding: "2px 4px", borderRadius: "4px", display: "flex", alignItems: "center" }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#94a3b8",
+                      cursor: "pointer",
+                      padding: "2px 4px",
+                      borderRadius: "4px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -389,14 +464,37 @@ export default function PetWorkshop() {
                 </div>
               )}
               
-              <span style={{ backgroundColor: "#eff6ff", color: "#2563eb", padding: "2px 8px", borderRadius: "99px", fontSize: "12px", fontWeight: "bold" }}>Lv.{pet.level}</span>
+              <span
+                style={{
+                  backgroundColor: "rgba(56, 189, 248, 0.15)",
+                  color: "#38bdf8",
+                  border: "1px solid rgba(56, 189, 248, 0.3)",
+                  padding: "2px 8px",
+                  borderRadius: "99px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                  boxShadow: "0 0 8px rgba(56, 189, 248, 0.2)",
+                }}
+              >
+                Lv.{pet.level}
+              </span>
             </div>
-            <p style={{ margin: "4px 0 10px 0", fontSize: "12px", color: "#64748b" }}>陪伴你每一次專注與學習的守護精靈</p>
+            <p style={{ margin: "4px 0 10px 0", fontSize: "12px", color: "#94a3b8" }}>
+              陪伴你每一次專注與學習的守護精靈
+            </p>
             
-            <div style={{ width: "240px", height: "8px", backgroundColor: "#f1f5f9", borderRadius: "99px", overflow: "hidden" }}>
-              <div style={{ width: `${expPercentage}%`, height: "100%", backgroundColor: profile.color, transition: "width 0.3s" }}></div>
+            <div style={{ width: "240px", height: "8px", backgroundColor: "rgba(30, 41, 59, 0.8)", borderRadius: "99px", overflow: "hidden" }}>
+              <div
+                style={{
+                  width: `${expPercentage}%`,
+                  height: "100%",
+                  backgroundColor: profile.color,
+                  boxShadow: `0 0 10px ${profile.color}`,
+                  transition: "width 0.3s",
+                }}
+              ></div>
             </div>
-            <div style={{ fontSize: "10px", color: "#94a3b8", marginTop: "4px" }}>
+            <div style={{ fontSize: "10px", color: "#64748b", marginTop: "4px" }}>
               經驗進度：{pet.exp} / {pet.maxExp} EXP ({expPercentage}%)
             </div>
           </div>
@@ -408,25 +506,39 @@ export default function PetWorkshop() {
             onClick={togglePetVisibility}
             style={{
               padding: "10px 14px",
-              backgroundColor: isPetVisible ? "#f1f5f9" : "#eff6ff",
-              color: isPetVisible ? "#475569" : "#2563eb",
+              backgroundColor: isPetVisible ? "rgba(30, 41, 59, 0.8)" : "rgba(56, 189, 248, 0.15)",
+              color: isPetVisible ? "#cbd5e1" : "#38bdf8",
               border: "1px solid",
-              borderColor: isPetVisible ? "#cbd5e1" : "#93c5fd",
+              borderColor: isPetVisible ? "rgba(255, 255, 255, 0.1)" : "rgba(56, 189, 248, 0.4)",
               borderRadius: "10px",
               fontSize: "12px",
               fontWeight: "bold",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              gap: "6px"
+              gap: "6px",
+              transition: "all 0.15s",
             }}
           >
             {isPetVisible ? "🙈 隱藏桌面寵物" : "👁️ 顯示桌面寵物"}
           </button>
 
-          <div style={{ backgroundColor: "#fffbeb", border: "1px solid #fef3c7", padding: "10px 16px", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <span style={{ fontSize: "10px", color: "#b45309", fontWeight: "600" }}>持有金幣</span>
-            <span style={{ fontSize: "18px", fontWeight: "bold", color: "#d97706" }}>🪙 {pet.coins}</span>
+          <div
+            style={{
+              backgroundColor: "rgba(245, 158, 11, 0.1)",
+              border: "1px solid rgba(245, 158, 11, 0.3)",
+              boxShadow: "0 0 15px rgba(245, 158, 11, 0.15)",
+              padding: "10px 16px",
+              borderRadius: "12px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <span style={{ fontSize: "10px", color: "#fbbf24", fontWeight: "600" }}>持有金幣</span>
+            <span style={{ fontSize: "18px", fontWeight: "bold", color: "#f59e0b", textShadow: "0 0 8px rgba(245, 158, 11, 0.4)" }}>
+              🪙 {pet.coins}
+            </span>
           </div>
 
           <button
@@ -440,7 +552,8 @@ export default function PetWorkshop() {
               fontSize: "12px",
               fontWeight: "bold",
               cursor: "pointer",
-              boxShadow: isDemoMode ? "0 4px 12px rgba(239,68,68,0.3)" : "0 4px 12px rgba(139,92,246,0.3)"
+              boxShadow: isDemoMode ? "0 0 15px rgba(239, 68, 68, 0.4)" : "0 0 15px rgba(139, 92, 246, 0.4)",
+              transition: "all 0.15s",
             }}
           >
             {isDemoMode ? "✕ 結束 DEMO" : "⚡ DEMO: 無限金幣"}
@@ -450,12 +563,24 @@ export default function PetWorkshop() {
       </div>
 
       {/* 🌟 守護獸造型衣櫃專區 */}
-      <div style={{ backgroundColor: "#ffffff", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: "16px" }}>
+      <div
+        style={{
+          backgroundColor: "rgba(15, 23, 42, 0.88)",
+          backdropFilter: "blur(16px)",
+          padding: "24px",
+          borderRadius: "20px",
+          border: "1.5px solid rgba(56, 189, 248, 0.25)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.08)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+        }}
+      >
         <div>
-          <h3 style={{ margin: 0, fontSize: "16px", color: "#1e293b", display: "flex", alignItems: "center", gap: "8px" }}>
+          <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
             👗 守護獸衣櫃與造型解鎖
           </h3>
-          <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
+          <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#94a3b8" }}>
             隨著守護獸等級提升，將自動解鎖對應的專屬服飾與頭銜！
           </p>
         </div>
@@ -470,32 +595,46 @@ export default function PetWorkshop() {
                 key={outfit.id} 
                 style={{ 
                   padding: "16px", 
-                  borderRadius: "12px", 
-                  border: isEquipped ? "2px solid #2563eb" : "1px solid #e2e8f0", 
-                  backgroundColor: isEquipped ? "#eff6ff" : (isUnlocked ? "#fafafa" : "#f1f5f9"), 
+                  borderRadius: "14px", 
+                  border: isEquipped ? "2px solid #38bdf8" : "1px solid rgba(255, 255, 255, 0.1)", 
+                  backgroundColor: isEquipped ? "rgba(56, 189, 248, 0.15)" : (isUnlocked ? "rgba(30, 41, 59, 0.6)" : "rgba(15, 23, 42, 0.5)"), 
+                  boxShadow: isEquipped ? "0 0 16px rgba(56, 189, 248, 0.25)" : "none",
                   display: "flex", 
                   flexDirection: "column", 
                   alignItems: "center", 
                   textAlign: "center", 
                   gap: "8px",
-                  opacity: isUnlocked ? 1 : 0.6
+                  opacity: isUnlocked ? 1 : 0.5,
+                  transition: "all 0.2s",
                 }}
               >
-                <span style={{ fontSize: "36px" }}>{outfit.icon}</span>
-                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#1e293b" }}>{outfit.name}</div>
-                <div style={{ fontSize: "11px", color: "#64748b" }}>{outfit.desc}</div>
+                <span style={{ fontSize: "36px", filter: isUnlocked ? "none" : "grayscale(100%)" }}>{outfit.icon}</span>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#f8fafc" }}>{outfit.name}</div>
+                <div style={{ fontSize: "11px", color: "#94a3b8" }}>{outfit.desc}</div>
 
                 {isEquipped ? (
-                  <span style={{ marginTop: "auto", fontSize: "11px", color: "#2563eb", fontWeight: "bold", padding: "4px 10px", backgroundColor: "#dbeafe", borderRadius: "6px" }}>使用中 ✔</span>
+                  <span style={{ marginTop: "auto", fontSize: "11px", color: "#38bdf8", fontWeight: "bold", padding: "4px 10px", backgroundColor: "rgba(56, 189, 248, 0.2)", borderRadius: "6px", border: "1px solid rgba(56, 189, 248, 0.4)" }}>使用中 ✔</span>
                 ) : isUnlocked ? (
                   <button 
                     onClick={() => handleEquipOutfit(outfit.id)}
-                    style={{ marginTop: "auto", width: "100%", padding: "6px", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", fontSize: "11px", fontWeight: "bold", cursor: "pointer" }}
+                    style={{
+                      marginTop: "auto",
+                      width: "100%",
+                      padding: "6px",
+                      background: "linear-gradient(135deg, #38bdf8 0%, #2563eb 100%)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "6px",
+                      fontSize: "11px",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                      boxShadow: "0 0 10px rgba(56, 189, 248, 0.3)",
+                    }}
                   >
                     穿戴造型
                   </button>
                 ) : (
-                  <span style={{ marginTop: "auto", fontSize: "11px", color: "#94a3b8", backgroundColor: "#e2e8f0", padding: "4px 8px", borderRadius: "6px", fontWeight: "600" }}>
+                  <span style={{ marginTop: "auto", fontSize: "11px", color: "#64748b", backgroundColor: "rgba(30, 41, 59, 0.6)", padding: "4px 8px", borderRadius: "6px", fontWeight: "600" }}>
                     Lv.{outfit.unlockLevel} 解鎖
                   </span>
                 )}
@@ -506,12 +645,26 @@ export default function PetWorkshop() {
       </div>
 
       {/* 自訂寵物與去背功能區 */}
-      <div style={{ backgroundColor: "#ffffff", padding: "18px 24px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
+      <div
+        style={{
+          backgroundColor: "rgba(15, 23, 42, 0.88)",
+          backdropFilter: "blur(16px)",
+          padding: "18px 24px",
+          borderRadius: "20px",
+          border: "1.5px solid rgba(56, 189, 248, 0.25)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.08)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "16px",
+        }}
+      >
         <div>
-          <h4 style={{ margin: 0, fontSize: "14px", color: "#1e293b", display: "flex", alignItems: "center", gap: "6px" }}>
+          <h4 style={{ margin: 0, fontSize: "14px", color: "#f8fafc", display: "flex", alignItems: "center", gap: "6px" }}>
             🎨 自訂專屬照片去背
           </h4>
-          <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#64748b" }}>
+          <p style={{ margin: "4px 0 0 0", fontSize: "12px", color: "#94a3b8" }}>
             上傳自定義角色照片，自動清除底色背景！
           </p>
         </div>
@@ -527,7 +680,17 @@ export default function PetWorkshop() {
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            style={{ padding: "8px 16px", backgroundColor: "#f5f3ff", color: "#7c3aed", border: "1px solid #ddd6fe", borderRadius: "8px", fontSize: "12px", fontWeight: "bold", cursor: "pointer" }}
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "rgba(139, 92, 246, 0.2)",
+              color: "#c084fc",
+              border: "1px solid rgba(139, 92, 246, 0.4)",
+              borderRadius: "8px",
+              fontSize: "12px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              boxShadow: "0 0 12px rgba(139, 92, 246, 0.2)",
+            }}
           >
             🖼️ 上傳照片自動去背
           </button>
@@ -535,7 +698,16 @@ export default function PetWorkshop() {
           {(customAvatar || customName || currentOutfit !== "default") && (
             <button
               onClick={handleResetAvatar}
-              style={{ padding: "8px 14px", backgroundColor: "#fee2e2", color: "#ef4444", border: "none", borderRadius: "8px", fontSize: "12px", fontWeight: "bold", cursor: "pointer" }}
+              style={{
+                padding: "8px 14px",
+                backgroundColor: "rgba(239, 68, 68, 0.15)",
+                color: "#f87171",
+                border: "1px solid rgba(239, 68, 68, 0.3)",
+                borderRadius: "8px",
+                fontSize: "12px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
             >
               🔄 恢復預設
             </button>
@@ -545,7 +717,19 @@ export default function PetWorkshop() {
 
       {/* 提示訊息 */}
       {message && (
-        <div style={{ backgroundColor: isDemoMode ? "#f5f3ff" : "#ecfdf5", border: isDemoMode ? "1px solid #ddd6fe" : "1px solid #a7f3d0", color: isDemoMode ? "#6d28d9" : "#065f46", padding: "12px 16px", borderRadius: "10px", fontSize: "13px", fontWeight: "bold", textAlign: "center" }}>
+        <div
+          style={{
+            backgroundColor: isDemoMode ? "rgba(139, 92, 246, 0.2)" : "rgba(16, 185, 129, 0.15)",
+            border: isDemoMode ? "1px solid rgba(139, 92, 246, 0.4)" : "1px solid rgba(16, 185, 129, 0.35)",
+            color: isDemoMode ? "#c084fc" : "#34d399",
+            boxShadow: isDemoMode ? "0 0 15px rgba(139, 92, 246, 0.2)" : "0 0 15px rgba(16, 185, 129, 0.2)",
+            padding: "12px 16px",
+            borderRadius: "12px",
+            fontSize: "13px",
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
           {message}
         </div>
       )}
@@ -554,32 +738,71 @@ export default function PetWorkshop() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "24px" }}>
         
         {/* 📜 冒險任務板 */}
-        <div style={{ backgroundColor: "#ffffff", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: "16px" }}>
-          <h3 style={{ margin: 0, fontSize: "16px", color: "#1e293b", display: "flex", alignItems: "center", gap: "8px" }}>
+        <div
+          style={{
+            backgroundColor: "rgba(15, 23, 42, 0.88)",
+            backdropFilter: "blur(16px)",
+            padding: "24px",
+            borderRadius: "20px",
+            border: "1.5px solid rgba(56, 189, 248, 0.25)",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.08)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
             📜 每日專注懸賞榜
           </h3>
-          <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>達成每日學習指標，換取大量成長經驗與金幣！</p>
+          <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>達成每日學習指標，換取大量成長經驗與金幣！</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {quests.map((q) => (
-              <div key={q.id} style={{ padding: "14px", borderRadius: "12px", border: "1px solid #f1f5f9", backgroundColor: q.claimed ? "#f8fafc" : "#ffffff", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
+              <div
+                key={q.id}
+                style={{
+                  padding: "14px",
+                  borderRadius: "14px",
+                  border: q.claimed ? "1px solid rgba(255, 255, 255, 0.05)" : "1px solid rgba(56, 189, 248, 0.2)",
+                  backgroundColor: q.claimed ? "rgba(30, 41, 59, 0.4)" : "rgba(30, 41, 59, 0.75)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
                 <div>
-                  <div style={{ fontSize: "14px", fontWeight: "bold", color: q.claimed ? "#94a3b8" : "#1e293b" }}>{q.title}</div>
-                  <div style={{ fontSize: "11px", color: "#64748b", margin: "2px 0 6px 0" }}>{q.desc}</div>
+                  <div style={{ fontSize: "14px", fontWeight: "bold", color: q.claimed ? "#64748b" : "#f8fafc" }}>
+                    {q.title}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "#94a3b8", margin: "2px 0 6px 0" }}>{q.desc}</div>
                   <div style={{ display: "flex", gap: "8px", fontSize: "11px", fontWeight: "600" }}>
-                    <span style={{ color: "#2563eb" }}>+{q.rewardExp} EXP</span>
-                    <span style={{ color: "#d97706" }}>+{q.rewardCoins} 🪙</span>
+                    <span style={{ color: "#38bdf8" }}>+{q.rewardExp} EXP</span>
+                    <span style={{ color: "#fbbf24" }}>+{q.rewardCoins} 🪙</span>
                   </div>
                 </div>
 
                 {q.claimed ? (
-                  <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "bold", padding: "6px 12px" }}>已領取 ✔</span>
+                  <span style={{ fontSize: "12px", color: "#64748b", fontWeight: "bold", padding: "6px 12px" }}>已領取 ✔</span>
                 ) : q.completed ? (
-                  <button onClick={() => handleClaimQuest(q.id)} style={{ padding: "8px 16px", backgroundColor: "#22c55e", color: "#fff", border: "none", borderRadius: "8px", fontWeight: "bold", fontSize: "12px", cursor: "pointer" }}>
+                  <button
+                    onClick={() => handleClaimQuest(q.id)}
+                    style={{
+                      padding: "8px 16px",
+                      background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "8px",
+                      fontWeight: "bold",
+                      fontSize: "12px",
+                      cursor: "pointer",
+                      boxShadow: "0 0 12px rgba(16, 185, 129, 0.4)",
+                    }}
+                  >
                     領取獎勵
                   </button>
                 ) : (
-                  <span style={{ fontSize: "11px", color: "#94a3b8", backgroundColor: "#f1f5f9", padding: "6px 10px", borderRadius: "6px", fontWeight: "600" }}>
+                  <span style={{ fontSize: "11px", color: "#94a3b8", backgroundColor: "rgba(15, 23, 42, 0.6)", padding: "6px 10px", borderRadius: "6px", fontWeight: "600", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
                     進行中 ({q.progress}/{q.maxProgress})
                   </span>
                 )}
@@ -589,22 +812,59 @@ export default function PetWorkshop() {
         </div>
 
         {/* 🍖 守護獸補給小舖 */}
-        <div style={{ backgroundColor: "#ffffff", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 8px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: "16px" }}>
-          <h3 style={{ margin: 0, fontSize: "16px", color: "#1e293b", display: "flex", alignItems: "center", gap: "8px" }}>
+        <div
+          style={{
+            backgroundColor: "rgba(15, 23, 42, 0.88)",
+            backdropFilter: "blur(16px)",
+            padding: "24px",
+            borderRadius: "20px",
+            border: "1.5px solid rgba(56, 189, 248, 0.25)",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.08)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          <h3 style={{ margin: 0, fontSize: "16px", color: "#f8fafc", display: "flex", alignItems: "center", gap: "8px" }}>
             🍖 守護獸補給小舖
           </h3>
-          <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>使用專注賺取之金幣購買美食，加速守護獸升級進化！</p>
+          <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>使用專注賺取之金幣購買美食，加速守護獸升級進化！</p>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             {FOODS.map((food) => (
-              <div key={food.id} style={{ padding: "14px", borderRadius: "12px", border: "1px solid #e2e8f0", backgroundColor: "#fafafa", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "6px" }}>
+              <div
+                key={food.id}
+                style={{
+                  padding: "14px",
+                  borderRadius: "14px",
+                  border: "1px solid rgba(56, 189, 248, 0.2)",
+                  backgroundColor: "rgba(30, 41, 59, 0.7)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  gap: "6px",
+                }}
+              >
                 <span style={{ fontSize: "32px" }}>{food.icon}</span>
-                <span style={{ fontSize: "13px", fontWeight: "bold", color: "#1e293b" }}>{food.name}</span>
-                <span style={{ fontSize: "10px", color: "#64748b" }}>+{food.exp} EXP</span>
+                <span style={{ fontSize: "13px", fontWeight: "bold", color: "#f8fafc" }}>{food.name}</span>
+                <span style={{ fontSize: "10px", color: "#38bdf8" }}>+{food.exp} EXP</span>
                 
                 <button 
                   onClick={() => handleBuyFood(food)} 
-                  style={{ marginTop: "6px", width: "100%", padding: "6px", backgroundColor: isDemoMode ? "#f5f3ff" : "#ffffff", color: isDemoMode ? "#7c3aed" : "#ea580c", border: isDemoMode ? "1px solid #ddd6fe" : "1px solid #fed7aa", borderRadius: "6px", fontSize: "11px", fontWeight: "bold", cursor: "pointer" }}
+                  style={{
+                    marginTop: "6px",
+                    width: "100%",
+                    padding: "7px",
+                    background: isDemoMode ? "linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)" : "linear-gradient(135deg, #f59e0b 0%, #ea580c 100%)",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "8px",
+                    fontSize: "11px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    boxShadow: isDemoMode ? "0 0 10px rgba(168, 85, 247, 0.3)" : "0 0 10px rgba(245, 158, 11, 0.3)",
+                  }}
                 >
                   {isDemoMode ? "⚡ 免費無限餵食" : `🪙 ${food.cost} 購買餵食`}
                 </button>

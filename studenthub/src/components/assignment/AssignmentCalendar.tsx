@@ -114,11 +114,13 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
   return (
     <div
       style={{
-        backgroundColor: "#ffffff",
+        backgroundColor: "rgba(15, 23, 42, 0.88)",
+        backdropFilter: "blur(16px)",
         borderRadius: "24px",
         padding: "24px 20px",
-        border: "1px solid #e2e8f0",
-        boxShadow: "0 6px 20px rgba(0, 0, 0, 0.03)",
+        border: "1.5px solid rgba(56, 189, 248, 0.25)",
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(56, 189, 248, 0.05)",
+        color: "#ffffff",
       }}
     >
       {/* 日曆頂部導航 */}
@@ -135,7 +137,7 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
         <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
           {viewMode === "month" ? (
             <>
-              <span style={{ fontSize: "44px", fontWeight: "900", color: "#0f172a", lineHeight: 1, letterSpacing: "-1px" }}>
+              <span style={{ fontSize: "44px", fontWeight: "900", color: "#f8fafc", lineHeight: 1, letterSpacing: "-1px", textShadow: "0 0 16px rgba(56, 189, 248, 0.4)" }}>
                 {currentMonth + 1}
               </span>
               <span style={{ fontSize: "14px", fontWeight: "700", color: "#94a3b8" }}>
@@ -144,10 +146,10 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
             </>
           ) : (
             <>
-              <span style={{ fontSize: "28px", fontWeight: "900", color: "#0f172a", lineHeight: 1 }}>
+              <span style={{ fontSize: "24px", fontWeight: "900", color: "#f8fafc", lineHeight: 1 }}>
                 {currentWeekDays[0]?.dateStr.slice(5)} ~ {currentWeekDays[6]?.dateStr.slice(5)}
               </span>
-              <span style={{ fontSize: "13px", fontWeight: "700", color: "#94a3b8" }}>
+              <span style={{ fontSize: "13px", fontWeight: "700", color: "#38bdf8" }}>
                 週死線檢視
               </span>
             </>
@@ -156,19 +158,19 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
 
         <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
           {/* 月視圖 / 週視圖切換 */}
-          <div style={{ display: "flex", backgroundColor: "#f1f5f9", padding: "2px", borderRadius: "14px" }}>
+          <div style={{ display: "flex", backgroundColor: "rgba(255, 255, 255, 0.08)", padding: "2px", borderRadius: "14px" }}>
             <button
               onClick={() => setViewMode("month")}
               style={{
                 padding: "4px 10px",
                 borderRadius: "12px",
                 border: "none",
-                backgroundColor: viewMode === "month" ? "#ffffff" : "transparent",
-                color: viewMode === "month" ? "#0f172a" : "#64748b",
+                background: viewMode === "month" ? "linear-gradient(135deg, #0284c7, #2563eb)" : "transparent",
+                color: viewMode === "month" ? "#ffffff" : "#94a3b8",
                 fontSize: "11px",
                 fontWeight: "700",
                 cursor: "pointer",
-                boxShadow: viewMode === "month" ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                boxShadow: viewMode === "month" ? "0 2px 8px rgba(2, 132, 199, 0.4)" : "none",
               }}
             >
               📅 月
@@ -182,12 +184,12 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                 padding: "4px 10px",
                 borderRadius: "12px",
                 border: "none",
-                backgroundColor: viewMode === "week" ? "#ffffff" : "transparent",
-                color: viewMode === "week" ? "#0f172a" : "#64748b",
+                background: viewMode === "week" ? "linear-gradient(135deg, #0284c7, #2563eb)" : "transparent",
+                color: viewMode === "week" ? "#ffffff" : "#94a3b8",
                 fontSize: "11px",
                 fontWeight: "700",
                 cursor: "pointer",
-                boxShadow: viewMode === "week" ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                boxShadow: viewMode === "week" ? "0 2px 8px rgba(2, 132, 199, 0.4)" : "none",
               }}
             >
               📆 週
@@ -202,16 +204,16 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
             style={{
               padding: "5px 12px",
               borderRadius: "16px",
-              border: "1.5px solid #0f172a",
-              backgroundColor: "#ffffff",
-              color: "#0f172a",
+              border: "1.5px solid #38bdf8",
+              backgroundColor: "rgba(56, 189, 248, 0.15)",
+              color: "#38bdf8",
               fontSize: "11px",
               fontWeight: "800",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               gap: "3px",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+              boxShadow: "0 0 10px rgba(56, 189, 248, 0.25)",
             }}
           >
             <span>⤺</span> TODAY
@@ -223,12 +225,12 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
               width: "30px",
               height: "30px",
               borderRadius: "8px",
-              border: "1px solid #e2e8f0",
-              backgroundColor: "#ffffff",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
+              backgroundColor: "rgba(255, 255, 255, 0.06)",
               cursor: "pointer",
               fontSize: "14px",
               fontWeight: "700",
-              color: "#475569",
+              color: "#cbd5e1",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -243,12 +245,12 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
               width: "30px",
               height: "30px",
               borderRadius: "8px",
-              border: "1px solid #e2e8f0",
-              backgroundColor: "#ffffff",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
+              backgroundColor: "rgba(255, 255, 255, 0.06)",
               cursor: "pointer",
               fontSize: "14px",
               fontWeight: "700",
-              color: "#475569",
+              color: "#cbd5e1",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -264,12 +266,13 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
               style={{
                 padding: "5px 9px",
                 borderRadius: "14px",
-                border: isWrapText ? "1.5px solid #2563eb" : "1.5px solid #cbd5e1",
-                backgroundColor: isWrapText ? "#eff6ff" : "#ffffff",
-                color: isWrapText ? "#2563eb" : "#475569",
+                border: isWrapText ? "1.5px solid #38bdf8" : "1px solid rgba(255, 255, 255, 0.15)",
+                backgroundColor: isWrapText ? "rgba(56, 189, 248, 0.15)" : "transparent",
+                color: isWrapText ? "#38bdf8" : "#94a3b8",
                 fontSize: "11px",
                 fontWeight: "700",
                 cursor: "pointer",
+                boxShadow: isWrapText ? "0 0 10px rgba(56, 189, 248, 0.2)" : "none",
               }}
               title="點擊切換：單行截斷 (省略號) 或 自動換行顯示全部"
             >
@@ -282,7 +285,7 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
       {/* ================= 📅 月視圖模式 ================= */}
       {viewMode === "month" && (
         <>
-          {/* 星期標頭 (六、日淡藍色) */}
+          {/* 星期標頭 (六、日霓虹天藍色) */}
           <div
             style={{
               display: "grid",
@@ -327,15 +330,28 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                     borderRadius: "12px",
                     padding: "6px 4px 8px 4px",
                     cursor: "pointer",
-                    backgroundColor: isSelected ? "#27272a" : isToday ? "#f0fdf4" : "transparent",
+                    backgroundColor: isSelected
+                      ? "rgba(56, 189, 248, 0.22)"
+                      : isToday
+                      ? "rgba(16, 185, 129, 0.12)"
+                      : "rgba(255, 255, 255, 0.02)",
                     color: isSelected
                       ? "#ffffff"
                       : !item.isCurrentMonth
-                      ? "#cbd5e1"
+                      ? "#475569"
                       : isWeekend
                       ? "#38bdf8"
-                      : "#1e293b",
-                    border: isToday && !isSelected ? "2px solid #22c55e" : "1px solid transparent",
+                      : "#f1f5f9",
+                    border: isSelected
+                      ? "1.5px solid #38bdf8"
+                      : isToday
+                      ? "2px solid #10b981"
+                      : "1px solid rgba(255, 255, 255, 0.05)",
+                    boxShadow: isSelected
+                      ? "0 0 15px rgba(56, 189, 248, 0.35)"
+                      : isToday
+                      ? "0 0 12px rgba(16, 185, 129, 0.25)"
+                      : "none",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -369,8 +385,8 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                             fontWeight: "700",
                             padding: "2px 4px",
                             borderRadius: "4px",
-                            backgroundColor: isSelected ? "rgba(255,255,255,0.22)" : colorObj.tagBg,
-                            color: isSelected ? "#ffffff" : colorObj.tagText,
+                            backgroundColor: isSelected ? "rgba(255,255,255,0.25)" : `${colorObj.bar}28`,
+                            color: "#ffffff",
                             borderLeft: `3px solid ${colorObj.bar}`,
                             whiteSpace: isWrapText ? "normal" : "nowrap",
                             wordBreak: isWrapText ? "break-all" : "normal",
@@ -382,6 +398,7 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                             WebkitBoxOrient: "vertical",
                             opacity: t.completed ? 0.45 : 1,
                             textDecoration: t.completed ? "line-through" : "none",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
                           }}
                           title={t.title + (t.completed ? " (已完成)" : "")}
                         >
@@ -398,7 +415,7 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                         marginTop: "auto",
                         fontSize: "11px",
                         fontWeight: "800",
-                        color: isSelected ? "#ffffff" : "#64748b",
+                        color: isSelected ? "#ffffff" : "#94a3b8",
                         textAlign: "center",
                         lineHeight: 1,
                         paddingTop: "2px",
@@ -438,19 +455,23 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                 key={dayItem.dateStr}
                 onClick={() => onSelectDate(dayItem.dateStr)}
                 style={{
-                  backgroundColor: isSelected ? "#f8fafc" : "#ffffff",
+                  backgroundColor: isSelected ? "rgba(56, 189, 248, 0.15)" : "rgba(30, 41, 59, 0.55)",
                   borderRadius: "14px",
                   padding: "10px 6px",
-                  border: isSelected ? "2px solid #0f172a" : isToday ? "2px solid #22c55e" : "1px solid #e2e8f0",
+                  border: isSelected
+                    ? "2px solid #38bdf8"
+                    : isToday
+                    ? "2px solid #10b981"
+                    : "1px solid rgba(255, 255, 255, 0.1)",
                   display: "flex",
                   flexDirection: "column",
                   cursor: "pointer",
                   transition: "all 0.15s ease",
-                  boxShadow: isSelected ? "0 4px 12px rgba(0,0,0,0.06)" : "none",
+                  boxShadow: isSelected ? "0 0 15px rgba(56, 189, 248, 0.3)" : "none",
                 }}
               >
                 {/* 星期與日期標頭 */}
-                <div style={{ textAlign: "center", marginBottom: "8px", paddingBottom: "6px", borderBottom: "1px dashed #e2e8f0" }}>
+                <div style={{ textAlign: "center", marginBottom: "8px", paddingBottom: "6px", borderBottom: "1px dashed rgba(255, 255, 255, 0.1)" }}>
                   <div style={{ fontSize: "12px", fontWeight: "700", color: isWeekend ? "#38bdf8" : "#94a3b8" }}>
                     週{dayItem.dayOfWeekName}
                   </div>
@@ -458,7 +479,7 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                     style={{
                       fontSize: "18px",
                       fontWeight: "900",
-                      color: isSelected ? "#0f172a" : isToday ? "#16a34a" : "#334155",
+                      color: isSelected ? "#ffffff" : isToday ? "#34d399" : "#e2e8f0",
                       marginTop: "2px",
                     }}
                   >
@@ -469,7 +490,7 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                 {/* 當日所有任務卡片垂直展開 */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px", overflowY: "auto", flex: 1 }}>
                   {dayTasks.length === 0 ? (
-                    <div style={{ textAlign: "center", fontSize: "11px", color: "#cbd5e1", marginTop: "24px" }}>
+                    <div style={{ textAlign: "center", fontSize: "11px", color: "#64748b", marginTop: "24px" }}>
                       無行程
                     </div>
                   ) : (
@@ -481,8 +502,8 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                           style={{
                             padding: "6px 5px",
                             borderRadius: "6px",
-                            backgroundColor: colorObj.tagBg,
-                            color: colorObj.tagText,
+                            backgroundColor: `${colorObj.bar}28`,
+                            color: "#ffffff",
                             borderLeft: `3px solid ${colorObj.bar}`,
                             fontSize: "11px",
                             fontWeight: "700",
@@ -490,11 +511,11 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
                             wordBreak: "break-all",
                             opacity: t.completed ? 0.5 : 1,
                             textDecoration: t.completed ? "line-through" : "none",
-                            boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
                           }}
                           title={t.title + (t.completed ? " (已完成)" : "")}
                         >
-                          <div style={{ fontSize: "10px", color: "#64748b", marginBottom: "2px" }}>
+                          <div style={{ fontSize: "10px", color: "#94a3b8", marginBottom: "2px" }}>
                             {t.dueDate?.includes(" ") ? t.dueDate.split(" ")[1] : "截止"}
                           </div>
                           <div>{t.title}</div>
@@ -510,10 +531,10 @@ export const AssignmentCalendar: React.FC<AssignmentCalendarProps> = ({
       )}
 
       {/* 行事曆底線提示 */}
-      <div style={{ marginTop: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", color: "#64748b" }}>
+      <div style={{ marginTop: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "11px", color: "#94a3b8" }}>
         <span>💡 已完成的事項會劃掉保留在日曆上</span>
         {selectedDate && (
-          <span style={{ fontWeight: "700", color: "#0f172a" }}>
+          <span style={{ fontWeight: "700", color: "#38bdf8" }}>
             選取：{selectedDate}
           </span>
         )}
